@@ -1,4 +1,4 @@
-import 'package:business_management/main.dart';
+import 'package:business_management/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
