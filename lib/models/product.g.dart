@@ -18,7 +18,7 @@ class ProductAdapter extends TypeAdapter<Product> {
     };
     return Product(
       name: fields[0] as String,
-      image: fields[1] as String,
+      image: fields[1] as String?,
       productCode: fields[2] as String,
       moldCode: fields[3] as String,
       printingWeight: fields[4] as double,
@@ -30,13 +30,14 @@ class ProductAdapter extends TypeAdapter<Product> {
       auxiliaryMaterial: fields[10] as String,
       machineTonnage: fields[11] as double,
       marketPrice: fields[12] as double,
+      productIndex: fields[13] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Product obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(11)
       ..write(obj.machineTonnage)
       ..writeByte(12)
-      ..write(obj.marketPrice);
+      ..write(obj.marketPrice)
+      ..writeByte(13)
+      ..write(obj.productIndex);
   }
 
   @override

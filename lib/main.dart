@@ -2,6 +2,7 @@ import 'package:business_management/functions/init_hive.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/db_error_page.dart';
 import 'package:business_management/screens/home_page.dart';
+import 'package:business_management/screens/product_add_edit_page.dart';
 import 'package:business_management/screens/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -21,11 +22,13 @@ void main() async {
 
   doWhenWindowReady(() {
     appWindow.maximize();
+    appWindow.minSize = const Size(1363, 725);
     appWindow.show();
   });
 }
 
 const backgroundColorHeavy = Color(0xff33333D);
+const backgroundColorLight = Color(0xff35353F);
 
 class App extends StatelessWidget {
   const App({Key? key, required this.isError}) : super(key: key);
@@ -40,12 +43,15 @@ class App extends StatelessWidget {
       child: MaterialApp(
         theme: Theme.of(context).copyWith(
           scaffoldBackgroundColor: backgroundColorHeavy,
+          scrollbarTheme: const ScrollbarThemeData()
+              .copyWith(thickness: MaterialStateProperty.all(15)),
         ),
         debugShowCheckedModeBanner: false,
         initialRoute: !isError ? 'home' : 'error',
         routes: {
           'home': (context) => const HomePage(),
           'products': (context) => const ProductsPage(),
+          'productAdd': (context) => const ProductPage(),
           'error': (context) => const DBErrorWidget(),
         },
       ),

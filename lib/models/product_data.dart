@@ -11,6 +11,9 @@ class ProductsData extends ChangeNotifier {
 
   void getProducts() {
     _products = _box.values.toList();
+
+    _products
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     notifyListeners();
   }
 
@@ -20,15 +23,7 @@ class ProductsData extends ChangeNotifier {
 
   int get productCount => _products.length;
 
-  void addProduct(Product newProduct) async {
-    _box.add(newProduct);
-
-    _products = _box.values.toList();
-
-    notifyListeners();
-  }
-
-  void deleteContact(key) async {
+  void deleteProduct(key) async {
     await _box.delete(key);
 
     _products = _box.values.toList();
@@ -36,17 +31,56 @@ class ProductsData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void editContact({required Product product, required int productKey}) async {
-    await _box.put(productKey, product);
+  void deleteAllProducts() async {
+    await _box.clear();
 
     _products = _box.values.toList();
-
-    _activeProduct = _box.get(productKey);
 
     notifyListeners();
   }
 
-  void setActiveContact(int key) async {
+  void addOrEditContact({
+    required String name,
+    required String? image,
+    required String productCode,
+    required String moldCode,
+    required double printingWeight,
+    required double unitWeight,
+    required int numberOfCompartments,
+    required double productionTime,
+    required String usedMaterial,
+    required String usedPaint,
+    required String auxiliaryMaterial,
+    required double machineTonnage,
+    required double marketPrice,
+    int? productIndex,
+  }) async {
+    await _box.put(
+      productIndex ?? _box.length,
+      Product(
+        name: name,
+        image: image,
+        productCode: productCode,
+        moldCode: moldCode,
+        printingWeight: printingWeight,
+        unitWeight: unitWeight,
+        numberOfCompartments: numberOfCompartments,
+        productionTime: productionTime,
+        usedMaterial: usedMaterial,
+        usedPaint: usedPaint,
+        auxiliaryMaterial: auxiliaryMaterial,
+        machineTonnage: machineTonnage,
+        marketPrice: marketPrice,
+        productIndex: productIndex ?? _box.length,
+      ),
+    );
+
+    _products = _box.values.toList();
+
+    notifyListeners();
+  }
+
+  void setActiveContact(key) async {
     _activeProduct = _box.get(key);
 
     notifyListeners();

@@ -1,9 +1,13 @@
+import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
+import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/home_page.dart';
 import 'package:business_management/screens/products_page.dart';
 import 'package:business_management/screens/settings_page.dart';
+import 'package:business_management/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LeftNavigationBar extends StatelessWidget {
   const LeftNavigationBar({
@@ -37,7 +41,7 @@ class LeftNavigationBar extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: SizeConfig.safeBlockHorizontal * 5,
+              height: SizeConfig.safeBlockVertical * 5,
             ),
             Expanded(
               child: Column(
@@ -67,7 +71,7 @@ class LeftNavigationBar extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: SizeConfig.safeBlockHorizontal * 15,
+              height: SizeConfig.safeBlockVertical * 15,
             ),
           ],
         ),
@@ -105,13 +109,12 @@ class _NavigationButtons extends StatelessWidget {
             color: isCurrentPage ? Colors.white : Colors.grey,
           ),
           iconSize: 50,
-          onPressed: () => Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, anim1, anim2) => pages[buttonNo],
-              transitionDuration: Duration.zero,
-            ),
-          ),
+          onPressed: () async {
+            if (buttonNo == 1) {
+              Provider.of<ProductsData>(context, listen: false).getProducts();
+            }
+            navigateWithoutAnim(context, pages[buttonNo]);
+          },
         ),
         if (isCurrentPage)
           Text(
@@ -123,6 +126,33 @@ class _NavigationButtons extends StatelessWidget {
               letterSpacing: 2,
             ),
           ),
+      ],
+    );
+  }
+}
+
+class TitleBarWithLeftNav extends StatelessWidget {
+  const TitleBarWithLeftNav({
+    Key? key,
+    required List<Widget> children,
+  })  : _children = children,
+        super(key: key);
+
+  final List<Widget> _children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const TitleBar(),
+        Expanded(
+          child: Row(
+            children: [
+              const LeftNavigationBar(pageNo: 1),
+              ..._children,
+            ],
+          ),
+        )
       ],
     );
   }

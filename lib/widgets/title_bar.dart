@@ -2,8 +2,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:business_management/main.dart';
 import 'package:flutter/material.dart';
 
-const backgroundColorLight = Color(0xff35353F);
-
 final buttonColors = WindowButtonColors(
   mouseOver: const Color(0xff42424f),
   mouseDown: const Color(0xff565666),
