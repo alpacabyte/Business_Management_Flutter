@@ -25,16 +25,19 @@ class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WindowTitleBarBox(
-      child: Material(
-        color: backgroundColorHeavy,
-        elevation: 1,
-        child: Row(
-          children: [
-            Expanded(child: MoveWindow()),
-            MinimizeWindowButton(colors: buttonColors),
-            MaximizeWindowButton(colors: buttonColors),
-            CloseWindowButton(colors: closeButtonColors),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 1),
+        child: Material(
+          color: backgroundColorHeavy,
+          elevation: 1,
+          child: Row(
+            children: [
+              Expanded(child: MoveWindow()),
+              MinimizeWindowButton(colors: buttonColors),
+              MaximizeWindowButton(colors: buttonColors),
+              CloseWindowButton(colors: closeButtonColors),
+            ],
+          ),
         ),
       ),
     );

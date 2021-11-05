@@ -2,6 +2,7 @@ import 'package:business_management/functions/init_hive.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/db_error_page.dart';
 import 'package:business_management/screens/home_page.dart';
+import 'package:business_management/screens/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:provider/provider.dart';
@@ -41,9 +42,10 @@ class App extends StatelessWidget {
           scaffoldBackgroundColor: backgroundColorHeavy,
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: !isError ? '/' : 'error',
+        initialRoute: !isError ? 'home' : 'error',
         routes: {
-          '/': (context) => const HomePage(),
+          'home': (context) => const HomePage(),
+          'products': (context) => const ProductsPage(),
           'error': (context) => const DBErrorWidget(),
         },
       ),
