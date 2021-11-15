@@ -1,5 +1,4 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:business_management/main.dart';
 import 'package:flutter/material.dart';
 
 final buttonColors = WindowButtonColors(
@@ -23,20 +22,13 @@ class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WindowTitleBarBox(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 1),
-        child: Material(
-          color: backgroundColorHeavy,
-          elevation: 1,
-          child: Row(
-            children: [
-              Expanded(child: MoveWindow()),
-              MinimizeWindowButton(colors: buttonColors),
-              MaximizeWindowButton(colors: buttonColors),
-              CloseWindowButton(colors: closeButtonColors),
-            ],
-          ),
-        ),
+      child: Row(
+        children: [
+          Expanded(child: MoveWindow()),
+          MinimizeWindowButton(colors: buttonColors),
+          MaximizeWindowButton(colors: buttonColors),
+          CloseWindowButton(colors: closeButtonColors),
+        ],
       ),
     );
   }

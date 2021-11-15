@@ -1,4 +1,5 @@
 import 'package:business_management/functions/init_hive.dart';
+import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/db_error_page.dart';
 import 'package:business_management/screens/home_page.dart';
@@ -19,13 +20,14 @@ void main() async {
   runApp(App(isError: isError));
 
   doWhenWindowReady(() {
-    appWindow.maximize();
     appWindow.minSize = const Size(1363, 725);
+    appWindow.maximize();
     appWindow.show();
   });
 }
 
-const backgroundColorHeavy = Color(0xff33333D);
+const appbarColor = Color(0xff27272e);
+const backgroundColorHeavy = Color(0xff2d2d36);
 const backgroundColorLight = Color(0xff35353F);
 
 class App extends StatelessWidget {
@@ -37,10 +39,11 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProductsData()),
+        ChangeNotifierProvider(create: (context) => CostumersData()),
       ],
       child: MaterialApp(
         theme: Theme.of(context).copyWith(
-          scaffoldBackgroundColor: backgroundColorHeavy,
+          scaffoldBackgroundColor: appbarColor,
           scrollbarTheme: const ScrollbarThemeData()
               .copyWith(thickness: MaterialStateProperty.all(15)),
         ),

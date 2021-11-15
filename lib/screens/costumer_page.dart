@@ -1,39 +1,38 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/product.dart';
-import 'package:business_management/models/product_data.dart';
-import 'package:business_management/screens/product_edit_page.dart';
-import 'package:business_management/screens/products_page.dart';
-import 'package:business_management/widgets/image_from_file.dart';
+import 'package:business_management/models/costumer.dart';
+import 'package:business_management/models/costumer_data.dart';
+import 'package:business_management/screens/costumer_edit_page.dart';
+import 'package:business_management/screens/costumers_page.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductPage extends StatefulWidget {
-  const ProductPage({
+class CostumerPage extends StatefulWidget {
+  const CostumerPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ProductPage> createState() => _ProductPageState();
+  State<CostumerPage> createState() => _CostumerPageState();
 }
 
-class _ProductPageState extends State<ProductPage> {
+class _CostumerPageState extends State<CostumerPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      body: Consumer<ProductsData>(
+      body: Consumer<CostumersData>(
         builder: (context, productsData, child) {
-          Product currentProduct = productsData.activeProduct!;
+          Costumer currentCostumer = productsData.currentCostumer!;
           return TitleBarWithLeftNav(
-            page: Pages.products,
+            page: Pages.costumers,
             children: [
               const Spacer(),
-              _ProductProperties(currentProduct: currentProduct),
+              _CostumerProperties(currentCostumer: currentCostumer),
               const Spacer(),
-              _ProductPageButtons(currentProduct: currentProduct),
+              _ProductPageButtons(currentCostumer: currentCostumer),
               const Spacer(),
             ],
           );
@@ -43,13 +42,13 @@ class _ProductPageState extends State<ProductPage> {
   }
 }
 
-class _ProductProperties extends StatelessWidget {
-  const _ProductProperties({
+class _CostumerProperties extends StatelessWidget {
+  const _CostumerProperties({
     Key? key,
-    required this.currentProduct,
+    required this.currentCostumer,
   }) : super(key: key);
 
-  final Product currentProduct;
+  final Costumer currentCostumer;
 
   @override
   Widget build(BuildContext context) {
@@ -59,87 +58,93 @@ class _ProductProperties extends StatelessWidget {
       child: Container(
         width: 1000,
         height: SizeConfig.safeBlockVertical * 85,
-        padding: const EdgeInsets.symmetric(vertical: 9),
+        padding: const EdgeInsets.only(top: 25, bottom: 25),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ImageFromFile(
-                image: currentProduct.image,
-                width: 650,
-                height: 200,
-              ),
               const SizedBox(height: 40),
+              SizedBox(
+                width: 650,
+                height: 50,
+                child: FittedBox(
+                  child: Text(
+                    currentCostumer.corporateTitle,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xffdbdbdb),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 25),
+                height: 5,
+                width: 750,
+                color: backgroundColorHeavy,
+              ),
               Wrap(
                 spacing: 150,
                 runSpacing: 45,
                 children: [
                   _PropertyText(
-                    title: "Name",
-                    text: currentProduct.name,
+                    title: "E-Mail",
+                    text: currentCostumer.email,
                   ),
                   _PropertyText(
-                    title: "Product Code",
-                    text: currentProduct.productCode,
+                    title: "Phone Number",
+                    text: currentCostumer.phoneNumber,
                   ),
                   _PropertyText(
-                    title: "Mold Code",
-                    text: currentProduct.moldCode,
+                    title: "Tax Administration",
+                    text: currentCostumer.taxAdministration,
                   ),
                   _PropertyText(
-                    title: "Printing Weight",
-                    text: currentProduct.printingWeight.toString(),
+                    title: "Tax Number",
+                    text: currentCostumer.taxNumber,
                   ),
                   _PropertyText(
-                    title: "Unit Weight",
-                    text: currentProduct.unitWeight.toString(),
+                    title: "Created",
+                    text: currentCostumer.creationDate,
                   ),
                   _PropertyText(
-                    title: "Number of Compartments",
-                    text: currentProduct.numberOfCompartments.toString(),
+                    title: "Last Modified",
+                    text: currentCostumer.lastModifiedDate ?? "-",
                   ),
                   _PropertyText(
-                    title: "Production Time",
-                    text: currentProduct.productionTime.toString(),
+                    title: "Address",
+                    text: currentCostumer.address,
                   ),
                   _PropertyText(
-                    title: "Used Material",
-                    text: currentProduct.usedMaterial,
+                    title: "Total Balance",
+                    text: "${currentCostumer.balance.toString()} TL",
                   ),
-                  _PropertyText(
-                    title: "Used Paint",
-                    text: currentProduct.usedPaint,
-                  ),
-                  _PropertyText(
-                    title: "Auxiliary Material",
-                    text: currentProduct.auxiliaryMaterial,
-                  ),
-                  _PropertyText(
-                    title: "Machine Tonnage",
-                    text: currentProduct.machineTonnage.toString(),
-                  ),
-                  _PropertyText(
-                    title: "Market Price",
-                    text: currentProduct.marketPrice.toString(),
-                  ),
-                  _PropertyText(
-                      title: "Created", text: currentProduct.creationDate),
-                  _PropertyText(
-                      title: "Last Modified",
-                      text: currentProduct.lastModifiedDate ?? "-"),
                 ],
               ),
               const SizedBox(height: 25),
               Align(
                 alignment: const Alignment(0.75, 0),
                 child: Text(
-                  "Product No: ${currentProduct.productIndex}",
+                  "Product No: ${currentCostumer.costumerIndex}",
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 25),
+                height: 5,
+                width: 750,
+                color: backgroundColorHeavy,
+              ),
+              const Text(
+                "Last Transactions",
+                style: TextStyle(color: Color(0xffdbdbdb), fontSize: 20),
+              ),
+              Column(
+                children: [],
               ),
             ],
           ),
@@ -189,10 +194,10 @@ class _PropertyText extends StatelessWidget {
 class _ProductPageButtons extends StatelessWidget {
   const _ProductPageButtons({
     Key? key,
-    required this.currentProduct,
+    required this.currentCostumer,
   }) : super(key: key);
 
-  final Product currentProduct;
+  final Costumer currentCostumer;
 
   @override
   Widget build(BuildContext context) {
@@ -219,8 +224,8 @@ class _ProductPageButtons extends StatelessWidget {
               child: IconButton(
                 onPressed: () => navigateWithoutAnim(
                   context,
-                  ProductEditPage(
-                    currentProduct: currentProduct,
+                  CostumerEditPage(
+                    currentCostumer: currentCostumer,
                   ),
                 ),
                 icon: Container(
@@ -257,7 +262,7 @@ class _ProductPageButtons extends StatelessWidget {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, anim1, anim2) =>
-                        const ProductsPage(),
+                        const CostumersPage(),
                     transitionDuration: Duration.zero,
                   ),
                 ),

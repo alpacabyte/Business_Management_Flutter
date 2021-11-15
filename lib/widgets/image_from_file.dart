@@ -10,12 +10,14 @@ class ImageFromFile extends StatelessWidget {
     required this.height,
     this.fontSize,
     this.errorWidth,
+    this.errorColor,
   }) : super(key: key);
 
   final String? image;
   final double width, height;
   final double? fontSize;
   final double? errorWidth;
+  final Color? errorColor;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class ImageFromFile extends StatelessWidget {
       width: errorWidth ?? height,
       height: height,
       decoration: BoxDecoration(
-        color: backgroundColorHeavy,
+        color: errorColor ?? backgroundColorHeavy,
         borderRadius: BorderRadius.circular(16),
       ),
       alignment: Alignment.center,

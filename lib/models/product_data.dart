@@ -1,6 +1,7 @@
 import 'package:business_management/models/product.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 class ProductsData extends ChangeNotifier {
   final Box<Product> _box = Hive.box<Product>("productsBox");
@@ -45,7 +46,6 @@ class ProductsData extends ChangeNotifier {
     required String productCode,
     required String moldCode,
     required double printingWeight,
-    required double unitWeight,
     required int numberOfCompartments,
     required double productionTime,
     required String usedMaterial,
@@ -62,7 +62,9 @@ class ProductsData extends ChangeNotifier {
         productCode: productCode,
         moldCode: moldCode,
         printingWeight: printingWeight,
-        unitWeight: unitWeight,
+        unitWeight: numberOfCompartments != 0
+            ? printingWeight / numberOfCompartments
+            : printingWeight / 1,
         numberOfCompartments: numberOfCompartments,
         productionTime: productionTime,
         usedMaterial: usedMaterial,
@@ -71,6 +73,7 @@ class ProductsData extends ChangeNotifier {
         machineTonnage: machineTonnage,
         marketPrice: marketPrice,
         productIndex: _box.length,
+        creationDate: DateFormat('yMd').format(DateTime.now()),
       ),
     );
 
@@ -85,7 +88,6 @@ class ProductsData extends ChangeNotifier {
     required String productCode,
     required String moldCode,
     required double printingWeight,
-    required double unitWeight,
     required int numberOfCompartments,
     required double productionTime,
     required String usedMaterial,
@@ -94,6 +96,7 @@ class ProductsData extends ChangeNotifier {
     required double machineTonnage,
     required double marketPrice,
     required int productIndex,
+    required String creationDate,
   }) async {
     await _box.put(
       productIndex,
@@ -103,7 +106,9 @@ class ProductsData extends ChangeNotifier {
         productCode: productCode,
         moldCode: moldCode,
         printingWeight: printingWeight,
-        unitWeight: unitWeight,
+        unitWeight: numberOfCompartments != 0
+            ? printingWeight / numberOfCompartments
+            : printingWeight / 1,
         numberOfCompartments: numberOfCompartments,
         productionTime: productionTime,
         usedMaterial: usedMaterial,
@@ -112,6 +117,8 @@ class ProductsData extends ChangeNotifier {
         machineTonnage: machineTonnage,
         marketPrice: marketPrice,
         productIndex: productIndex,
+        lastModifiedDate: DateFormat('yMd').format(DateTime.now()),
+        creationDate: creationDate,
       ),
     );
 
@@ -122,7 +129,7 @@ class ProductsData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setActiveContact(key) async {
+  void setActiveProduct(key) async {
     _activeProduct = _box.get(key);
 
     notifyListeners();

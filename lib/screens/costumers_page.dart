@@ -1,17 +1,16 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/product.dart';
-import 'package:business_management/models/product_data.dart';
-import 'package:business_management/screens/product_add_page.dart';
-import 'package:business_management/screens/product_page.dart';
-import 'package:business_management/widgets/image_from_file.dart';
+import 'package:business_management/models/costumer.dart';
+import 'package:business_management/models/costumer_data.dart';
+import 'package:business_management/screens/costumer_add_page.dart';
+import 'package:business_management/screens/costumer_page.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductsPage extends StatelessWidget {
-  const ProductsPage({Key? key}) : super(key: key);
+class CostumersPage extends StatelessWidget {
+  const CostumersPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +22,7 @@ class ProductsPage extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.products,
+        page: Pages.costumers,
         children: [
           const Spacer(),
           Container(
@@ -37,12 +36,12 @@ class ProductsPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 _HeaderTile(tileTextStyle: tileTextStyle),
-                _ProductsListView(tileTextStyle: tileTextStyle),
+                _CostumersListView(tileTextStyle: tileTextStyle),
               ],
             ),
           ),
           const Spacer(),
-          const _ProductButtons(),
+          const _CostumerButtons(),
           const Spacer(),
         ],
       ),
@@ -50,8 +49,8 @@ class ProductsPage extends StatelessWidget {
   }
 }
 
-class _ProductsListView extends StatelessWidget {
-  const _ProductsListView({
+class _CostumersListView extends StatelessWidget {
+  const _CostumersListView({
     Key? key,
     required this.tileTextStyle,
   }) : super(key: key);
@@ -64,21 +63,21 @@ class _ProductsListView extends StatelessWidget {
     return SizedBox(
       width: 850,
       height: SizeConfig.safeBlockVertical * 70,
-      child: ListView.separated(
-        padding: const EdgeInsets.only(top: 10),
-        itemBuilder: (context, index) => Consumer<ProductsData>(
-          builder: (context, productsData, child) {
-            Product currentProduct = productsData.getProduct(index);
-            return ProductTile(
-              currentProduct: currentProduct,
+      child: Consumer<CostumersData>(
+        builder: (context, costumersData, child) {
+          return ListView.separated(
+            padding: const EdgeInsets.only(top: 10),
+            itemBuilder: (context, index) => CostumerTile(
+              currentCostumer: costumersData.getCostumer(index),
               tileTextStyle: tileTextStyle,
-            );
-          },
-        ),
-        itemCount: Provider.of<ProductsData>(context).productCount,
-        separatorBuilder: (BuildContext context, int index) => const SizedBox(
-          height: 10,
-        ),
+            ),
+            itemCount: costumersData.costumerCount,
+            separatorBuilder: (BuildContext context, int index) =>
+                const SizedBox(
+              height: 10,
+            ),
+          );
+        },
       ),
     );
   }
@@ -98,35 +97,27 @@ class _HeaderTile extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10, bottom: 5),
       child: Material(
         color: appbarColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 5,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 100),
           height: 50,
           width: 850,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: 200,
+                width: 250,
                 child: Text(
-                  "Image",
+                  "Corporate Title",
                   textAlign: TextAlign.center,
                   style: tileTextStyle,
                 ),
               ),
               SizedBox(
-                width: 200,
+                width: 250,
                 child: Text(
-                  "Name",
-                  textAlign: TextAlign.center,
-                  style: tileTextStyle,
-                ),
-              ),
-              SizedBox(
-                width: 200,
-                child: Text(
-                  "Price",
+                  "Phone",
                   textAlign: TextAlign.center,
                   style: tileTextStyle,
                 ),
@@ -139,22 +130,22 @@ class _HeaderTile extends StatelessWidget {
   }
 }
 
-class ProductTile extends StatefulWidget {
-  const ProductTile({
+class CostumerTile extends StatefulWidget {
+  const CostumerTile({
     Key? key,
-    required Product currentProduct,
+    required Costumer currentCostumer,
     required this.tileTextStyle,
-  })  : _currentProduct = currentProduct,
+  })  : _currentCostumer = currentCostumer,
         super(key: key);
 
-  final Product _currentProduct;
+  final Costumer _currentCostumer;
   final TextStyle tileTextStyle;
 
   @override
-  State<ProductTile> createState() => _ProductTileState();
+  State<CostumerTile> createState() => _CostumerTileState();
 }
 
-class _ProductTileState extends State<ProductTile> {
+class _CostumerTileState extends State<CostumerTile> {
   final Color normalColor = backgroundColorHeavy;
   final Color mouseOverColor = const Color(0xff3c3c47);
   bool isEnter = false;
@@ -163,12 +154,12 @@ class _ProductTileState extends State<ProductTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<ProductsData>(context, listen: false).setActiveProduct(
-          widget._currentProduct.productIndex,
+        Provider.of<CostumersData>(context, listen: false).setCurrentCostumer(
+          widget._currentCostumer.costumerIndex,
         );
         navigateWithoutAnim(
           context,
-          const ProductPage(),
+          const CostumerPage(),
         );
       },
       child: MouseRegion(
@@ -179,39 +170,25 @@ class _ProductTileState extends State<ProductTile> {
           color: !isEnter ? normalColor : mouseOverColor,
           elevation: 2,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
+            padding: const EdgeInsets.symmetric(horizontal: 100),
             height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: ImageFromFile(
-                    image: widget._currentProduct.image,
-                    width: 150,
-                    height: 40,
-                    fontSize: 14,
-                    errorWidth: 150,
-                    errorColor: backgroundColorLight,
-                  ),
-                ),
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
+                SizedBox(
+                  width: 250,
                   child: Text(
-                    widget._currentProduct.name,
+                    widget._currentCostumer.corporateTitle,
                     textAlign: TextAlign.center,
                     style: widget.tileTextStyle,
-                    overflow: TextOverflow.ellipsis,
                     maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
+                SizedBox(
+                  width: 250,
                   child: Text(
-                    "${widget._currentProduct.marketPrice.toString()} TL",
+                    widget._currentCostumer.phoneNumber,
                     textAlign: TextAlign.center,
                     style: widget.tileTextStyle,
                     maxLines: 1,
@@ -239,8 +216,8 @@ class _ProductTileState extends State<ProductTile> {
   }
 }
 
-class _ProductButtons extends StatelessWidget {
-  const _ProductButtons({
+class _CostumerButtons extends StatelessWidget {
+  const _CostumerButtons({
     Key? key,
   }) : super(key: key);
 
@@ -271,7 +248,7 @@ class _ProductButtons extends StatelessWidget {
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, anim1, anim2) =>
-                        const ProductAddPage(),
+                        const CostumerAddPage(),
                     transitionDuration: Duration.zero,
                   ),
                 ),
@@ -306,8 +283,8 @@ class _ProductButtons extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () =>
-                    Provider.of<ProductsData>(context, listen: false)
-                        .deleteAllProducts(),
+                    Provider.of<CostumersData>(context, listen: false)
+                        .deleteAllCostumers(),
                 icon: Container(
                   width: 45,
                   height: 45,

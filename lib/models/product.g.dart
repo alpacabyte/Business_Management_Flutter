@@ -31,13 +31,15 @@ class ProductAdapter extends TypeAdapter<Product> {
       machineTonnage: fields[11] as double,
       marketPrice: fields[12] as double,
       productIndex: fields[13] as int,
+      creationDate: fields[14] as String,
+      lastModifiedDate: fields[15] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Product obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -65,7 +67,11 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(12)
       ..write(obj.marketPrice)
       ..writeByte(13)
-      ..write(obj.productIndex);
+      ..write(obj.productIndex)
+      ..writeByte(14)
+      ..write(obj.creationDate)
+      ..writeByte(15)
+      ..write(obj.lastModifiedDate);
   }
 
   @override

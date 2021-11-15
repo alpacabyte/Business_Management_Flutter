@@ -48,6 +48,12 @@ class Product extends HiveObject {
   @HiveField(13)
   final int productIndex;
 
+  @HiveField(14)
+  final String creationDate;
+
+  @HiveField(15)
+  final String? lastModifiedDate;
+
   // Constructor
   Product({
     required this.name,
@@ -64,5 +70,7 @@ class Product extends HiveObject {
     required this.machineTonnage,
     required this.marketPrice,
     required this.productIndex,
+    required this.creationDate,
+    this.lastModifiedDate,
   });
 }

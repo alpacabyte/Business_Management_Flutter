@@ -1,7 +1,9 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
+import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/product_data.dart';
+import 'package:business_management/screens/costumers_page.dart';
 import 'package:business_management/screens/home_page.dart';
 import 'package:business_management/screens/products_page.dart';
 import 'package:business_management/screens/settings_page.dart';
@@ -12,72 +14,63 @@ import 'package:provider/provider.dart';
 class LeftNavigationBar extends StatelessWidget {
   const LeftNavigationBar({
     Key? key,
-    required this.pageNo,
+    required this.page,
   }) : super(key: key);
 
-  final int pageNo;
+  final Pages page;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Material(
-      color: backgroundColorHeavy,
-      elevation: 10,
-      child: SizedBox(
-        width: 250,
-        child: Column(
-          children: [
-            const SizedBox(height: 35),
-            ShaderMask(
-              shaderCallback: (Rect bounds) => const RadialGradient(
-                center: Alignment.center,
-                radius: 0.5,
-                colors: [Colors.blue, Colors.red],
-                tileMode: TileMode.mirror,
-              ).createShader(bounds),
-              child: const Icon(
-                Icons.settings_input_antenna,
-                color: Color(0xff6e0a1e),
-                size: 100,
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.safeBlockVertical * 5,
-            ),
-            Expanded(
+    return SizedBox(
+      width: 100,
+      child: Stack(
+        children: [
+          Align(
+            alignment: const Alignment(0, -0.1),
+            child: SizedBox(
+              height: 500,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _NavigationButtons(
                     icon: Icons.home,
                     text: "Home",
-                    isCurrentPage: pageNo == 0,
+                    isCurrentPage: page == Pages.home,
                     buttonNo: 0,
                   ),
-                  const SizedBox(height: 30),
                   _NavigationButtons(
                     icon: Icons.inventory_2_outlined,
                     text: "Products",
-                    isCurrentPage: pageNo == 1,
+                    isCurrentPage: page == Pages.products,
                     buttonNo: 1,
                   ),
-                  const SizedBox(height: 30),
+                  _NavigationButtons(
+                    icon: Icons.person,
+                    text: "Costumers",
+                    isCurrentPage: page == Pages.costumers,
+                    buttonNo: 2,
+                  ),
                   _NavigationButtons(
                     icon: Icons.settings,
                     text: "Settings",
-                    isCurrentPage: pageNo == 2,
-                    buttonNo: 2,
+                    isCurrentPage: page == Pages.settings,
+                    buttonNo: 3,
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: SizeConfig.safeBlockVertical * 15,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+enum Pages {
+  home,
+  products,
+  costumers,
+  settings,
 }
 
 class _NavigationButtons extends StatelessWidget {
@@ -99,6 +92,7 @@ class _NavigationButtons extends StatelessWidget {
     const List<Widget> pages = [
       HomePage(),
       ProductsPage(),
+      CostumersPage(),
       Settings(),
     ];
     return Column(
@@ -108,10 +102,13 @@ class _NavigationButtons extends StatelessWidget {
             icon,
             color: isCurrentPage ? Colors.white : Colors.grey,
           ),
-          iconSize: 50,
-          onPressed: () async {
+          iconSize: 35,
+          onPressed: () {
             if (buttonNo == 1) {
               Provider.of<ProductsData>(context, listen: false).getProducts();
+            } else if (buttonNo == 2) {
+              Provider.of<CostumersData>(context, listen: false)
+                  .getCostumersList();
             }
             navigateWithoutAnim(context, pages[buttonNo]);
           },
@@ -121,11 +118,13 @@ class _NavigationButtons extends StatelessWidget {
             text,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 15,
               fontWeight: FontWeight.w700,
-              letterSpacing: 2,
+              letterSpacing: 0.75,
             ),
-          ),
+          )
+        else
+          const SizedBox(height: 20),
       ],
     );
   }
@@ -135,10 +134,12 @@ class TitleBarWithLeftNav extends StatelessWidget {
   const TitleBarWithLeftNav({
     Key? key,
     required List<Widget> children,
+    required this.page,
   })  : _children = children,
         super(key: key);
 
   final List<Widget> _children;
+  final Pages page;
 
   @override
   Widget build(BuildContext context) {
@@ -147,9 +148,23 @@ class TitleBarWithLeftNav extends StatelessWidget {
         const TitleBar(),
         Expanded(
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const LeftNavigationBar(pageNo: 1),
-              ..._children,
+              LeftNavigationBar(page: page),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.only(topLeft: Radius.circular(16)),
+                    color: backgroundColorHeavy,
+                  ),
+                  child: Row(
+                    children: [
+                      ..._children,
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         )

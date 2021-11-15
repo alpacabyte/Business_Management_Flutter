@@ -6,12 +6,10 @@ import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/product_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
-import 'package:business_management/widgets/custom_text_field.dart';
-import 'package:business_management/widgets/image_from_file.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
+import 'package:business_management/widgets/product_form.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
@@ -31,6 +29,7 @@ class ProductEditPage extends StatefulWidget {
 class _ProductEditPageState extends State<ProductEditPage> {
   XFile? imageFile;
   String? imagePath;
+  String creationDate = "";
 
   @override
   void initState() {
@@ -38,6 +37,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
     final Product currentProduct = widget.currentProduct;
 
+    creationDate = currentProduct.creationDate;
     imagePath = currentProduct.image;
     _nameController.text =
         currentProduct.name != "null" ? currentProduct.name : "";
@@ -46,7 +46,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
     _moldCodeController.text =
         currentProduct.moldCode != "null" ? currentProduct.moldCode : "";
     _printingWeightController.text = currentProduct.printingWeight.toString();
-    _unitWeightController.text = currentProduct.unitWeight.toString();
     _numberOfCompartmentsController.text =
         currentProduct.numberOfCompartments.toString();
     _productionTimeController.text = currentProduct.productionTime.toString();
@@ -69,7 +68,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final TextEditingController _moldCodeController = TextEditingController();
   final TextEditingController _printingWeightController =
       TextEditingController();
-  final TextEditingController _unitWeightController = TextEditingController();
   final TextEditingController _numberOfCompartmentsController =
       TextEditingController();
   final TextEditingController _productionTimeController =
@@ -88,15 +86,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
     SizeConfig().init(context);
     return Scaffold(
       body: TitleBarWithLeftNav(
+        page: Pages.products,
         children: [
           const Spacer(),
-          _ProductProperties(
+          ProductForm(
             image: imagePath,
             nameController: _nameController,
             productCodeController: _productCodeController,
             moldCodeController: _moldCodeController,
             printingWeightController: _printingWeightController,
-            unitWeightController: _unitWeightController,
             numberOfCompartmentsController: _numberOfCompartmentsController,
             productionTimeController: _productionTimeController,
             usedMaterialController: _usedMaterialController,
@@ -146,9 +144,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
     double? printingWeight = _printingWeightController.text != ""
         ? double.parse(_printingWeightController.text)
         : 0;
-    double? unitWeight = _unitWeightController.text != ""
-        ? double.parse(_unitWeightController.text)
-        : 0;
     int? numberOfCompartments = _numberOfCompartmentsController.text != ""
         ? int.parse(_numberOfCompartmentsController.text)
         : 0;
@@ -186,7 +181,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
       productCode: productCode,
       moldCode: moldCode,
       printingWeight: printingWeight,
-      unitWeight: unitWeight,
       numberOfCompartments: numberOfCompartments,
       productionTime: productionTime,
       usedMaterial: usedMaterial,
@@ -195,184 +189,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
       machineTonnage: machineTonnage,
       marketPrice: marketPrice,
       productIndex: widget.currentProduct.productIndex,
+      creationDate: creationDate,
     );
 
     navigateWithoutAnim(context, const ProductPage());
-  }
-}
-
-class _ProductProperties extends StatelessWidget {
-  const _ProductProperties({
-    Key? key,
-    required this.image,
-    required TextEditingController nameController,
-    required TextEditingController productCodeController,
-    required TextEditingController moldCodeController,
-    required TextEditingController printingWeightController,
-    required TextEditingController unitWeightController,
-    required TextEditingController numberOfCompartmentsController,
-    required TextEditingController productionTimeController,
-    required TextEditingController usedMaterialController,
-    required TextEditingController usedPaintController,
-    required TextEditingController auxiliaryMaterialController,
-    required TextEditingController machineTonnageController,
-    required TextEditingController marketPriceController,
-    required Function imageSelect,
-  })  : _nameController = nameController,
-        _productCodeController = productCodeController,
-        _moldCodeController = moldCodeController,
-        _printingWeightController = printingWeightController,
-        _unitWeightController = unitWeightController,
-        _numberOfCompartmentsController = numberOfCompartmentsController,
-        _productionTimeController = productionTimeController,
-        _usedMaterialController = usedMaterialController,
-        _usedPaintController = usedPaintController,
-        _auxiliaryMaterialController = auxiliaryMaterialController,
-        _machineTonnageController = machineTonnageController,
-        _marketPriceController = marketPriceController,
-        _imageSelect = imageSelect,
-        super(key: key);
-
-  final String? image;
-  final TextEditingController _nameController;
-  final TextEditingController _productCodeController;
-  final TextEditingController _moldCodeController;
-  final TextEditingController _printingWeightController;
-  final TextEditingController _unitWeightController;
-  final TextEditingController _numberOfCompartmentsController;
-  final TextEditingController _productionTimeController;
-  final TextEditingController _usedMaterialController;
-  final TextEditingController _usedPaintController;
-  final TextEditingController _auxiliaryMaterialController;
-  final TextEditingController _machineTonnageController;
-  final TextEditingController _marketPriceController;
-  final Function _imageSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: backgroundColorLight,
-      elevation: 5,
-      child: SizedBox(
-        width: 850,
-        height: SizeConfig.safeBlockVertical * 85,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 15),
-              ImageFromFile(
-                image: image,
-                width: 650,
-                height: 200,
-              ),
-              IconButton(
-                onPressed: () => _imageSelect(),
-                icon: Container(
-                  width: 45,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color(0xffa81633),
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.add_a_photo,
-                    color: Color(0xffa81633),
-                    size: 20,
-                  ),
-                ),
-                iconSize: 50,
-              ),
-              Wrap(
-                spacing: 50,
-                runSpacing: 24,
-                children: [
-                  CustomTextField(
-                    title: "Name",
-                    controller: _nameController,
-                  ),
-                  CustomTextField(
-                    title: "Product Code",
-                    controller: _productCodeController,
-                  ),
-                  CustomTextField(
-                    title: "Mold Code",
-                    controller: _moldCodeController,
-                  ),
-                  CustomTextField(
-                    title: "Printing Weight",
-                    controller: _printingWeightController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^(\d+)?\.?\d{0,5}'),
-                      ),
-                    ],
-                  ),
-                  CustomTextField(
-                    title: "Unit Weight",
-                    controller: _unitWeightController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^(\d+)?\.?\d{0,5}'),
-                      ),
-                    ],
-                  ),
-                  CustomTextField(
-                    title: "Number of Compartments",
-                    controller: _numberOfCompartmentsController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-                  CustomTextField(
-                    title: "Production Time",
-                    controller: _productionTimeController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^(\d+)?\.?\d{0,5}'),
-                      ),
-                    ],
-                  ),
-                  CustomTextField(
-                    title: "Used Material",
-                    controller: _usedMaterialController,
-                  ),
-                  CustomTextField(
-                    title: "Used Paint",
-                    controller: _usedPaintController,
-                  ),
-                  CustomTextField(
-                    title: "Auxiliary Material",
-                    controller: _auxiliaryMaterialController,
-                  ),
-                  CustomTextField(
-                    title: "Machine Tonnage",
-                    controller: _machineTonnageController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^(\d+)?\.?\d{0,5}'),
-                      ),
-                    ],
-                  ),
-                  CustomTextField(
-                    title: "Market Price",
-                    controller: _marketPriceController,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^(\d+)?\.?\d{0,5}'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
 
