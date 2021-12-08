@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:business_management/functions/get_app_documents_dir.dart';
 import 'package:business_management/models/product.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +20,7 @@ class ProductsData extends ChangeNotifier {
 
     _products
         .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+
     notifyListeners();
   }
 
@@ -136,4 +142,22 @@ class ProductsData extends ChangeNotifier {
   }
 
   Product? get activeProduct => _activeProduct;
+
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> list = _products.map((e) => e.toJson()).toList();
+    return {"products": list};
+  }
+
+  Future<void> saveJson() async {
+    final String timeNow =
+        DateFormat("dd.MM.yyyy-HH.mm").format(DateTime.now());
+
+    _products = _box.values.toList();
+
+    final String path = await getAppDocDirFolder("Backups");
+
+    final File file = File("$path/$timeNow.txt");
+
+    file.writeAsString(json.encode(toJson()));
+  }
 }

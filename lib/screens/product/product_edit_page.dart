@@ -2,27 +2,65 @@ import 'package:business_management/functions/get_app_documents_dir.dart';
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
+import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
-import 'package:business_management/screens/products_page.dart';
+import 'package:business_management/screens/product/product_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
-import 'package:business_management/widgets/product_form.dart';
+import 'package:business_management/screens/product/product_form.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:file_selector_platform_interface/file_selector_platform_interface.dart';
 
-class ProductAddPage extends StatefulWidget {
-  const ProductAddPage({Key? key}) : super(key: key);
+class ProductEditPage extends StatefulWidget {
+  const ProductEditPage({
+    Key? key,
+    required this.currentProduct,
+  }) : super(key: key);
+
+  final Product currentProduct;
 
   @override
-  State<ProductAddPage> createState() => _ProductAddPageState();
+  State<ProductEditPage> createState() => _ProductEditPageState();
 }
 
-class _ProductAddPageState extends State<ProductAddPage> {
+class _ProductEditPageState extends State<ProductEditPage> {
   XFile? imageFile;
   String? imagePath;
+  String creationDate = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    final Product currentProduct = widget.currentProduct;
+
+    creationDate = currentProduct.creationDate;
+    imagePath = currentProduct.image;
+    _nameController.text =
+        currentProduct.name != "null" ? currentProduct.name : "";
+    _productCodeController.text =
+        currentProduct.productCode != "null" ? currentProduct.productCode : "";
+    _moldCodeController.text =
+        currentProduct.moldCode != "null" ? currentProduct.moldCode : "";
+    _printingWeightController.text = currentProduct.printingWeight.toString();
+    _numberOfCompartmentsController.text =
+        currentProduct.numberOfCompartments.toString();
+    _productionTimeController.text = currentProduct.productionTime.toString();
+    _usedMaterialController.text = currentProduct.usedMaterial != "null"
+        ? currentProduct.usedMaterial
+        : "";
+    _usedPaintController.text =
+        currentProduct.usedPaint != "null" ? currentProduct.usedPaint : "";
+    _auxiliaryMaterialController.text =
+        currentProduct.auxiliaryMaterial != "null"
+            ? currentProduct.auxiliaryMaterial
+            : "";
+    _machineTonnageController.text = currentProduct.machineTonnage.toString();
+    _marketPriceController.text = currentProduct.marketPrice.toString();
+  }
 
   // #region Controllers
   final TextEditingController _nameController = TextEditingController();
@@ -76,8 +114,8 @@ class _ProductAddPageState extends State<ProductAddPage> {
             ),
           ),
           const Spacer(),
-          _ProductPageButtons(addOrEditProduct: _addProduct),
-          const Spacer(),
+          _ProductPageButtons(addOrEditProduct: _editProduct),
+          const SizedBox(width: 20),
         ],
       ),
     );
@@ -96,7 +134,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
     return imageFile;
   }
 
-  void _addProduct() async {
+  void _editProduct() async {
     String? name = _nameController.text != "" ? _nameController.text : "null";
     String? productCode = _productCodeController.text != ""
         ? _productCodeController.text
@@ -137,7 +175,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
       await imageFile!.saveTo(imagePath!);
     }
 
-    await Provider.of<ProductsData>(context, listen: false).addProduct(
+    await Provider.of<ProductsData>(context, listen: false).editProduct(
       name: name,
       image: imagePath,
       productCode: productCode,
@@ -150,7 +188,11 @@ class _ProductAddPageState extends State<ProductAddPage> {
       auxiliaryMaterial: auxiliaryMaterial,
       machineTonnage: machineTonnage,
       marketPrice: marketPrice,
+      productIndex: widget.currentProduct.productIndex,
+      creationDate: creationDate,
     );
+
+    navigateWithoutAnim(context, const ProductPage());
   }
 }
 
@@ -176,49 +218,26 @@ class _ProductPageButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircleIconButton(
-              onPressed: () async {
-                await _saveProduct();
-                navigateWithoutAnim(context, const ProductAddPage());
-              },
-              toolTipText: "Save the product and create another",
-              preferBelow: false,
-              icon: Icons.edit,
+              onPressed: _saveProduct,
+              toolTipText: "Save product",
+              icon: Icons.done,
             ),
             Container(
               height: 2,
               width: 150,
               color: Colors.black26,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CircleIconButton(
-                  onPressed: () async {
-                    await _saveProduct();
-                    navigateWithoutAnim(context, const ProductsPage());
-                  },
-                  toolTipText: "Save the product and go to list",
-                  icon: Icons.done,
+            CircleIconButton(
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, anim1, anim2) => const ProductPage(),
+                  transitionDuration: Duration.zero,
                 ),
-                Container(
-                  height: 75,
-                  width: 2,
-                  color: Colors.black26,
-                ),
-                CircleIconButton(
-                  onPressed: () => Navigator.pushReplacement(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, anim1, anim2) =>
-                          const ProductsPage(),
-                      transitionDuration: Duration.zero,
-                    ),
-                  ),
-                  toolTipText: 'Cancel and go back',
-                  icon: Icons.close,
-                  iconSize: 30,
-                ),
-              ],
+              ),
+              toolTipText: 'Cancel and go back',
+              icon: Icons.close,
+              iconSize: 30,
             ),
           ],
         ),

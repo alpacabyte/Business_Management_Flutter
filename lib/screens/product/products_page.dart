@@ -3,8 +3,8 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
-import 'package:business_management/screens/product_add_page.dart';
-import 'package:business_management/screens/product_page.dart';
+import 'package:business_management/screens/product/product_add_page.dart';
+import 'package:business_management/screens/product/product_page.dart';
 import 'package:business_management/widgets/image_from_file.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ class ProductsPage extends StatelessWidget {
           ),
           const Spacer(),
           const _ProductButtons(),
-          const Spacer(),
+          const SizedBox(width: 20),
         ],
       ),
     );

@@ -1,4 +1,3 @@
-import 'package:business_management/models/product.dart';
 import 'package:hive/hive.dart';
 
 part 'transaction.g.dart';
@@ -7,9 +6,6 @@ part 'transaction.g.dart';
 class Transaction extends HiveObject {
   @HiveField(0)
   final String comment;
-
-  @HiveField(1)
-  final String productName;
 
   @HiveField(2)
   final int quantity;
@@ -26,40 +22,14 @@ class Transaction extends HiveObject {
   @HiveField(6)
   final double totalPrice;
 
+  bool isSelected;
+
   Transaction({
     required this.comment,
-    required this.quantity,
     required this.transactionDate,
-    required this.productName,
     required this.unitPrice,
-  })  : isSale = true,
-        totalPrice = quantity * unitPrice;
-
-  Transaction.saleWithProduct({
-    required this.comment,
-    required this.quantity,
-    required this.transactionDate,
-    required Product product,
-  })  : isSale = true,
-        productName = product.name,
-        unitPrice = product.marketPrice,
-        totalPrice = quantity * product.marketPrice;
-
-  Transaction.sale({
-    required this.comment,
-    required this.quantity,
-    required this.transactionDate,
-    required this.productName,
-    required this.unitPrice,
-  })  : isSale = true,
-        totalPrice = quantity * unitPrice;
-
-  Transaction.payment({
-    required this.comment,
-    required this.transactionDate,
-    required this.productName,
-    required this.unitPrice,
-  })  : isSale = false,
-        quantity = 1,
-        totalPrice = unitPrice;
+    required this.isSale,
+    this.quantity = 1,
+  })  : totalPrice = quantity * unitPrice,
+        isSelected = false;
 }

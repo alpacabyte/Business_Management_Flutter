@@ -3,8 +3,8 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
-import 'package:business_management/screens/costumer_add_page.dart';
-import 'package:business_management/screens/costumer_page.dart';
+import 'package:business_management/screens/costumer/costumer_add_page.dart';
+import 'package:business_management/screens/costumer/costumer_page.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +42,7 @@ class CostumersPage extends StatelessWidget {
           ),
           const Spacer(),
           const _CostumerButtons(),
-          const Spacer(),
+          const SizedBox(width: 20),
         ],
       ),
     );

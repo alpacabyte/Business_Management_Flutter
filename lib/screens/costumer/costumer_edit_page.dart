@@ -4,9 +4,9 @@ import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/costumer_page.dart';
+import 'package:business_management/screens/costumer/costumer_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
-import 'package:business_management/widgets/costumer_form.dart';
+import 'package:business_management/screens/costumer/costumer_form.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +81,7 @@ class _CostumerEditPageState extends State<CostumerEditPage> {
               emailController: _emailController),
           const Spacer(),
           _CostumerPageButtons(editCostumer: _editCostumer),
-          const Spacer(),
+          const SizedBox(width: 20),
         ],
       ),
     );
@@ -149,7 +149,7 @@ class _CostumerPageButtons extends StatelessWidget {
           children: [
             CircleIconButton(
               onPressed: _editCostumer,
-              toolTipText: "Save product",
+              toolTipText: "Save costumer",
               icon: Icons.done,
             ),
             Container(

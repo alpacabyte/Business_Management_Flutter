@@ -8,7 +8,10 @@ class CustomTextField extends StatelessWidget {
     required TextEditingController controller,
     this.inputFormatters,
     this.width = 300,
+    this.textFieldWidth = 300,
     this.onChanged,
+    this.hintText,
+    this.trailing,
   })  : _controller = controller,
         super(key: key);
 
@@ -17,6 +20,9 @@ class CustomTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final double width;
   final Function(String)? onChanged;
+  final String? hintText;
+  final Widget? trailing;
+  final double textFieldWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -36,31 +42,48 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          TextField(
-            onChanged: onChanged,
-            controller: _controller,
-            style: const TextStyle(color: Color(0xffdbdbdb), fontSize: 20),
-            cursorColor: const Color(0xffede6d6),
-            decoration: const InputDecoration(
-              errorMaxLines: 3,
-              contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
+          Row(
+            children: [
+              SizedBox(
+                width: textFieldWidth,
+                child: TextField(
+                  onChanged: onChanged,
+                  controller: _controller,
+                  style: const TextStyle(
+                    color: Color(0xffdbdbdb),
+                    fontSize: 20,
+                  ),
+                  cursorColor: const Color(0xffede6d6),
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    errorMaxLines: 3,
+                    contentPadding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  inputFormatters: inputFormatters,
                 ),
               ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            inputFormatters: inputFormatters,
+              if (trailing != null) ...[
+                const Spacer(),
+                trailing!,
+                const Spacer(),
+              ],
+            ],
           ),
         ],
       ),

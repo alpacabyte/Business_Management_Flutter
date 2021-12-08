@@ -71,6 +71,27 @@ class Product extends HiveObject {
     required this.marketPrice,
     required this.productIndex,
     required this.creationDate,
-    this.lastModifiedDate,
+    this.lastModifiedDate = "-",
   });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Name'] = name;
+    data['Image Folder'] = image;
+    data['Product Code'] = productCode;
+    data['Mold Code'] = moldCode;
+    data['Printing Weight'] = printingWeight;
+    data['Unit Weight'] = unitWeight;
+    data['Number Of Compartments'] = numberOfCompartments;
+    data['Production Time'] = productionTime;
+    data['Used Material'] = usedMaterial;
+    data['Used Paint'] = usedPaint;
+    data['Auxiliary Material'] = auxiliaryMaterial;
+    data['Machine Tonnage'] = machineTonnage;
+    data['Market Price'] = marketPrice;
+    data['Product Index'] = productIndex;
+    data['Creation Date'] = creationDate;
+    data['Last Modified Date'] = lastModifiedDate;
+    return data;
+  }
 }

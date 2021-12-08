@@ -34,7 +34,7 @@ class CircleIconButton extends StatelessWidget {
         color: Colors.white,
       ),
       child: IconButton(
-        onPressed: () async => _onPressed(),
+        onPressed: () => _onPressed(),
         icon: Container(
           width: buttonSize ?? 45,
           height: buttonSize ?? 45,

@@ -56,11 +56,18 @@ class CostumersData extends ChangeNotifier {
         phoneNumber: phoneNumber,
         email: email,
         creationDate: DateFormat('yMd').format(DateTime.now()),
+        transactions: [],
       ),
     );
 
     _costumers = _costumerBox.values.toList();
 
+    notifyListeners();
+  }
+
+  Future<void> addTransactionToCurrentCostumer(
+      Transaction newTransaction) async {
+    await currentCostumer!.addTransaction(newTransaction);
     notifyListeners();
   }
 
@@ -98,13 +105,15 @@ class CostumersData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addTransactionToCostumer(Transaction newTransaction) async {
-    if (_currentCostumer != null) {
-      await _currentCostumer!.addTransaction(newTransaction);
-    }
+  Future<void> deleteTransactionFromCurrentCostumer(int index) async {
+    await currentCostumer!.deleteTransaction(index);
+    notifyListeners();
   }
 
-  Future<void> deleteTransactionFromCostumer() async {}
+  Future<void> deleteSelectedTransactionsFromCurrentCostumer() async {
+    await currentCostumer!.deleteSelectedTransactions();
+    notifyListeners();
+  }
 
   Costumer? get currentCostumer => _currentCostumer;
 

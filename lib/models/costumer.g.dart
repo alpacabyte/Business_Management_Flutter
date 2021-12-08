@@ -25,8 +25,8 @@ class CostumerAdapter extends TypeAdapter<Costumer> {
       phoneNumber: fields[7] as String,
       email: fields[8] as String,
       creationDate: fields[9] as String,
-      lastModifiedDate: fields[10] as String?,
       transactions: (fields[1] as List).cast<Transaction>(),
+      lastModifiedDate: fields[10] as String?,
     )..balance = fields[2] as double;
   }
 

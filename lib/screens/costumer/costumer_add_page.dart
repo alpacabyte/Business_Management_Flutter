@@ -2,9 +2,9 @@ import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
-import 'package:business_management/screens/costumers_page.dart';
+import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
-import 'package:business_management/widgets/costumer_form.dart';
+import 'package:business_management/screens/costumer/costumer_form.dart';
 import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class _CostumerAddPageState extends State<CostumerAddPage> {
           ),
           const Spacer(),
           _ProductPageButtons(addCostumer: _addCostumer),
-          const Spacer(),
+          const SizedBox(width: 20),
         ],
       ),
     );

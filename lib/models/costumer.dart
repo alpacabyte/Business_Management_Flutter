@@ -38,6 +38,9 @@ class Costumer extends HiveObject {
   @HiveField(10)
   final String? lastModifiedDate;
 
+  List<Transaction> get reversedTransactions =>
+      List.from(transactions.reversed);
+
   void calculateBalance() {
     balance = 0;
 
@@ -62,6 +65,12 @@ class Costumer extends HiveObject {
     await save();
   }
 
+  Future<void> deleteSelectedTransactions() async {
+    transactions.removeWhere((element) => element.isSelected == true);
+    calculateBalance();
+    await save();
+  }
+
   Costumer({
     required this.costumerIndex,
     required this.corporateTitle,
@@ -71,8 +80,8 @@ class Costumer extends HiveObject {
     required this.phoneNumber,
     required this.email,
     required this.creationDate,
+    required this.transactions,
     this.lastModifiedDate,
-    this.transactions = const [],
   }) {
     calculateBalance();
   }

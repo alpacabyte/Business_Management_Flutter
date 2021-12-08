@@ -3,10 +3,11 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
-import 'package:business_management/screens/product_edit_page.dart';
-import 'package:business_management/screens/products_page.dart';
+import 'package:business_management/screens/product/product_edit_page.dart';
+import 'package:business_management/screens/product/products_page.dart';
 import 'package:business_management/widgets/image_from_file.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
+import 'package:business_management/widgets/property_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,7 @@ class _ProductPageState extends State<ProductPage> {
               _ProductProperties(currentProduct: currentProduct),
               const Spacer(),
               _ProductPageButtons(currentProduct: currentProduct),
-              const Spacer(),
+              const SizedBox(width: 20),
             ],
           );
         },
@@ -64,123 +65,98 @@ class _ProductProperties extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 15),
+              SizedBox(
+                width: 500,
+                child: Text(
+                  currentProduct.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xffdbdbdb),
+                    fontSize: 35,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.visible,
+                ),
+              ),
+              const SizedBox(height: 25),
               ImageFromFile(
                 image: currentProduct.image,
                 width: 650,
                 height: 200,
               ),
-              const SizedBox(height: 40),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 25),
+                height: 5,
+                width: 750,
+                color: backgroundColorHeavy,
+              ),
               Wrap(
                 spacing: 150,
                 runSpacing: 45,
                 children: [
-                  _PropertyText(
-                    title: "Name",
-                    text: currentProduct.name,
-                  ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Product Code",
                     text: currentProduct.productCode,
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Mold Code",
                     text: currentProduct.moldCode,
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Printing Weight",
                     text: currentProduct.printingWeight.toString(),
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Unit Weight",
                     text: currentProduct.unitWeight.toString(),
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Number of Compartments",
                     text: currentProduct.numberOfCompartments.toString(),
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Production Time",
                     text: currentProduct.productionTime.toString(),
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Used Material",
                     text: currentProduct.usedMaterial,
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Used Paint",
                     text: currentProduct.usedPaint,
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Auxiliary Material",
                     text: currentProduct.auxiliaryMaterial,
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Machine Tonnage",
                     text: currentProduct.machineTonnage.toString(),
                   ),
-                  _PropertyText(
+                  PropertyText(
                     title: "Market Price",
                     text: currentProduct.marketPrice.toString(),
                   ),
-                  _PropertyText(
-                      title: "Created", text: currentProduct.creationDate),
-                  _PropertyText(
-                      title: "Last Modified",
-                      text: currentProduct.lastModifiedDate ?? "-"),
+                  PropertyText(
+                    title: "Created",
+                    text: currentProduct.creationDate,
+                  ),
+                  PropertyText(
+                    title: "Last Modified",
+                    text: currentProduct.lastModifiedDate ?? "-",
+                  ),
+                  PropertyText(
+                    title: "Product No.",
+                    text: currentProduct.productIndex.toString(),
+                  ),
                 ],
               ),
               const SizedBox(height: 25),
-              Align(
-                alignment: const Alignment(0.75, 0),
-                child: Text(
-                  "Product No: ${currentProduct.productIndex}",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _PropertyText extends StatelessWidget {
-  const _PropertyText({
-    Key? key,
-    required this.title,
-    required this.text,
-  }) : super(key: key);
-
-  final String title;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 300,
-      child: Column(
-        children: [
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Color(0xffdbdbdb), fontSize: 20),
-          ),
-        ],
       ),
     );
   }
