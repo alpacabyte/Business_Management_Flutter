@@ -54,7 +54,7 @@ class ProductsData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteSelectedCostumers() async {
+  Future<void> deleteSelectedProducts() async {
     for (Product product in _products) {
       if (product.isSelected) {
         _box.delete(product.productIndex);
@@ -258,7 +258,7 @@ class ProductsData extends ChangeNotifier {
 
   void createExcelFromProducts() async {
     final String? directoryPath = await getSavePath(suggestedName: "Product Chart");
-    if (directoryPath == null) return;
+    if (directoryPath == null || _products.isEmpty) return;
 
     final Workbook workbook = Workbook();
     final Worksheet sheet = workbook.worksheets[0];

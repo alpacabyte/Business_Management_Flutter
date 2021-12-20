@@ -3,23 +3,23 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/transaction/choose_transaction_type_page.dart';
-import 'package:business_management/screens/transaction/costumer_transactions_page.dart';
+import 'package:business_management/screens/transaction/costumer_transaction/costumer_choose_transaction_type_page.dart';
+import 'package:business_management/screens/transaction/costumer_transaction/costumer_transactions_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
-import 'package:business_management/screens/transaction/sale_transaction_form.dart';
+import 'package:business_management/widgets/sale_transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class SaleTransactionAddPage extends StatefulWidget {
-  const SaleTransactionAddPage({Key? key}) : super(key: key);
+class CostumerSaleTransactionAddPage extends StatefulWidget {
+  const CostumerSaleTransactionAddPage({Key? key}) : super(key: key);
 
   @override
-  State<SaleTransactionAddPage> createState() => _SaleTransactionAddPageState();
+  State<CostumerSaleTransactionAddPage> createState() => _CostumerSaleTransactionAddPageState();
 }
 
-class _SaleTransactionAddPageState extends State<SaleTransactionAddPage> {
+class _CostumerSaleTransactionAddPageState extends State<CostumerSaleTransactionAddPage> {
   // #region Controllers
   final TextEditingController _commentController = TextEditingController(text: "Sale");
   final TextEditingController _quantityController = TextEditingController(text: "0");
@@ -60,7 +60,7 @@ class _SaleTransactionAddPageState extends State<SaleTransactionAddPage> {
         comment: comment,
         transactionDate: transactionDate,
         unitPrice: unitPrice,
-        isSale: true,
+        isPayment: false,
         quantity: quantity,
       ),
     );
@@ -91,7 +91,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
             CircleIconButton(
               onPressed: () async {
                 await _addTransaction();
-                navigateWithoutAnim(context, const SaleTransactionAddPage());
+                navigateWithoutAnim(context, const CostumerSaleTransactionAddPage());
               },
               toolTipText: "Save the transaction and create another",
               preferBelow: false,
@@ -119,7 +119,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                   color: Colors.black26,
                 ),
                 CircleIconButton(
-                  onPressed: () => navigateWithoutAnim(context, const ChooseTransactionTypePage()),
+                  onPressed: () => navigateWithoutAnim(context, const CostumerChooseTransactionTypePage()),
                   toolTipText: 'Cancel and go back',
                   icon: Icons.close,
                   iconSize: 30,

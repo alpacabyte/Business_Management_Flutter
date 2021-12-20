@@ -5,7 +5,7 @@ import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
 import 'package:business_management/screens/costumer/costumer_page.dart';
-import 'package:business_management/screens/transaction/choose_transaction_type_page.dart';
+import 'package:business_management/screens/transaction/costumer_transaction/costumer_choose_transaction_type_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
@@ -264,7 +264,7 @@ class _TransactionTileState extends State<_TransactionTile> {
   @override
   Widget build(BuildContext context) {
     final bool isSelected = widget._currentTransaction.isSelected;
-    final String toolTipMessage = widget._currentTransaction.isSale == true
+    final String toolTipMessage = !widget._currentTransaction.isPayment
         ? "${widget._currentTransaction.comment}\n-Quantity: ${widget._currentTransaction.quantity}\n-Unit Price: ${widget._currentTransaction.unitPrice} TL\n-Total Price: ${widget._currentTransaction.totalPrice} TL"
         : widget._currentTransaction.comment;
     return GestureDetector(
@@ -331,10 +331,10 @@ class _TransactionTileState extends State<_TransactionTile> {
                 SizedBox(
                   width: 200,
                   child: Text(
-                    "${widget._currentTransaction.isSale ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
+                    "${!widget._currentTransaction.isPayment ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
                     textAlign: TextAlign.center,
                     style: tileTextStyle.copyWith(
-                      color: widget._currentTransaction.isSale ? Colors.green : Colors.red,
+                      color: !widget._currentTransaction.isPayment ? Colors.green : Colors.red,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -392,7 +392,7 @@ class _CostumerButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircleIconButton(
-              onPressed: () => navigateWithoutAnim(context, const ChooseTransactionTypePage()),
+              onPressed: () => navigateWithoutAnim(context, const CostumerChooseTransactionTypePage()),
               toolTipText: 'Add a transaction to list',
               icon: Icons.add,
               preferBelow: false,

@@ -20,7 +20,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       comment: fields[0] as String,
       transactionDate: fields[5] as String,
       unitPrice: fields[3] as double,
-      isSale: fields[4] as bool,
+      isPayment: fields[4] as bool,
       quantity: fields[2] as int,
     );
   }
@@ -36,7 +36,7 @@ class TransactionAdapter extends TypeAdapter<Transaction> {
       ..writeByte(3)
       ..write(obj.unitPrice)
       ..writeByte(4)
-      ..write(obj.isSale)
+      ..write(obj.isPayment)
       ..writeByte(5)
       ..write(obj.transactionDate)
       ..writeByte(6)

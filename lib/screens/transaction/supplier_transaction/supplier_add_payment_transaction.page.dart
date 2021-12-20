@@ -1,26 +1,25 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/costumer_data.dart';
+import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/transaction/choose_transaction_type_page.dart';
-import 'package:business_management/screens/transaction/costumer_transactions_page.dart';
-import 'package:business_management/screens/transaction/payment_transaction_form.dart';
+import 'package:business_management/screens/transaction/supplier_transaction/supplier_choose_transaction_type_page.dart';
+import 'package:business_management/screens/transaction/supplier_transaction/supplier_transactions_page.dart';
+import 'package:business_management/widgets/payment_transaction_form.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class PaymentTransactionAddPage extends StatefulWidget {
-  const PaymentTransactionAddPage({Key? key}) : super(key: key);
+class SupplierPaymentTransactionAddPage extends StatefulWidget {
+  const SupplierPaymentTransactionAddPage({Key? key}) : super(key: key);
 
   @override
-  State<PaymentTransactionAddPage> createState() => _PaymentTransactionAddPageState();
+  State<SupplierPaymentTransactionAddPage> createState() => _SupplierPaymentTransactionAddPageState();
 }
 
-class _PaymentTransactionAddPageState extends State<PaymentTransactionAddPage> {
+class _SupplierPaymentTransactionAddPageState extends State<SupplierPaymentTransactionAddPage> {
   // #region Controllers
   final TextEditingController _commentController = TextEditingController(text: "Payment");
   final TextEditingController _amountController = TextEditingController(text: "0");
@@ -32,7 +31,7 @@ class _PaymentTransactionAddPageState extends State<PaymentTransactionAddPage> {
     SizeConfig().init(context);
     return Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.costumers,
+        page: Pages.suppliers,
         children: [
           const Spacer(),
           PaymentTransactionForm(
@@ -53,12 +52,12 @@ class _PaymentTransactionAddPageState extends State<PaymentTransactionAddPage> {
     final double amount = _amountController.text != "" ? double.parse(_amountController.text) : 0;
     final String transactionDate = _transactionDateController.text != "" ? _transactionDateController.text : "00/00/0000";
 
-    Provider.of<CostumersData>(context, listen: false).addTransactionToCurrentCostumer(
+    Provider.of<SuppliersData>(context, listen: false).addTransactionToCurrentSuppliers(
       Transaction(
         comment: comment,
         transactionDate: transactionDate,
         unitPrice: amount,
-        isSale: false,
+        isPayment: true,
       ),
     );
   }
@@ -88,7 +87,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
             CircleIconButton(
               onPressed: () async {
                 await _addTransaction();
-                navigateWithoutAnim(context, const PaymentTransactionAddPage());
+                navigateWithoutAnim(context, const SupplierPaymentTransactionAddPage());
               },
               toolTipText: "Save the transaction and create another",
               preferBelow: false,
@@ -105,7 +104,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 CircleIconButton(
                   onPressed: () async {
                     await _addTransaction();
-                    navigateWithoutAnim(context, const CostumerTransactionsPage());
+                    navigateWithoutAnim(context, const SupplierTransactionsPage());
                   },
                   toolTipText: "Save the transaction and go to list",
                   icon: Icons.done,
@@ -116,7 +115,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                   color: Colors.black26,
                 ),
                 CircleIconButton(
-                  onPressed: () => navigateWithoutAnim(context, const ChooseTransactionTypePage()),
+                  onPressed: () => navigateWithoutAnim(context, const SupplierChooseTransactionTypePage()),
                   toolTipText: 'Cancel and go back',
                   icon: Icons.close,
                   iconSize: 30,

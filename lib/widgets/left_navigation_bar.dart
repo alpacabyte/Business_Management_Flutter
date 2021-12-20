@@ -3,10 +3,12 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/product_data.dart';
+import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/screens/home/home_page.dart';
 import 'package:business_management/screens/product/products_page.dart';
 import 'package:business_management/screens/settings/settings_page.dart';
+import 'package:business_management/screens/supplier/suppliers_page.dart';
 import 'package:business_management/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -51,10 +53,16 @@ class LeftNavigationBar extends StatelessWidget {
                     buttonNo: 2,
                   ),
                   _NavigationButtons(
+                    icon: Icons.storefront,
+                    text: "Suppliers",
+                    isCurrentPage: page == Pages.suppliers,
+                    buttonNo: 3,
+                  ),
+                  _NavigationButtons(
                     icon: Icons.settings,
                     text: "Settings",
                     isCurrentPage: page == Pages.settings,
-                    buttonNo: 3,
+                    buttonNo: 4,
                   ),
                 ],
               ),
@@ -70,6 +78,7 @@ enum Pages {
   home,
   products,
   costumers,
+  suppliers,
   settings,
 }
 
@@ -93,6 +102,7 @@ class _NavigationButtons extends StatelessWidget {
       HomePage(),
       ProductsPage(),
       CostumersPage(),
+      SuppliersPage(),
       Settings(),
     ];
     return Column(
@@ -107,8 +117,9 @@ class _NavigationButtons extends StatelessWidget {
             if (buttonNo == 1) {
               Provider.of<ProductsData>(context, listen: false).getProducts();
             } else if (buttonNo == 2) {
-              Provider.of<CostumersData>(context, listen: false)
-                  .getCostumersList();
+              Provider.of<CostumersData>(context, listen: false).getCostumersList();
+            } else if (buttonNo == 3) {
+              Provider.of<SuppliersData>(context, listen: false).getSuppliersList();
             }
             navigateWithoutAnim(context, pages[buttonNo]);
           },
@@ -154,8 +165,7 @@ class TitleBarWithLeftNav extends StatelessWidget {
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
-                    borderRadius:
-                        BorderRadius.only(topLeft: Radius.circular(16)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(16)),
                     color: backgroundColorHeavy,
                   ),
                   child: Row(

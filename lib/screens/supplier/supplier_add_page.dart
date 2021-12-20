@@ -1,22 +1,22 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/costumer_data.dart';
-import 'package:business_management/screens/costumer/costumers_page.dart';
+import 'package:business_management/models/supplier_data.dart';
+import 'package:business_management/screens/supplier/supplier_form.dart';
+import 'package:business_management/screens/supplier/suppliers_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
-import 'package:business_management/screens/costumer/costumer_form.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CostumerAddPage extends StatefulWidget {
-  const CostumerAddPage({Key? key}) : super(key: key);
+class SupplierAddPage extends StatefulWidget {
+  const SupplierAddPage({Key? key}) : super(key: key);
 
   @override
-  State<CostumerAddPage> createState() => _CostumerAddPageState();
+  State<SupplierAddPage> createState() => _SupplierAddPageState();
 }
 
-class _CostumerAddPageState extends State<CostumerAddPage> {
+class _SupplierAddPageState extends State<SupplierAddPage> {
   // #region Controllers
   final TextEditingController _corporateTitleController = TextEditingController();
   final TextEditingController _taxNumberController = TextEditingController();
@@ -31,10 +31,10 @@ class _CostumerAddPageState extends State<CostumerAddPage> {
     SizeConfig().init(context);
     return Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.costumers,
+        page: Pages.suppliers,
         children: [
           const Spacer(),
-          CostumerForm(
+          SupplierForm(
             corporateTitleController: _corporateTitleController,
             taxNumberController: _taxNumberController,
             taxAdministrationController: _taxAdministrationController,
@@ -43,14 +43,14 @@ class _CostumerAddPageState extends State<CostumerAddPage> {
             emailController: _emailController,
           ),
           const Spacer(),
-          _ProductPageButtons(addCostumer: _addCostumer),
+          _ProductPageButtons(addSupplier: _addSupplier),
           const SizedBox(width: 20),
         ],
       ),
     );
   }
 
-  Future<void> _addCostumer() async {
+  Future<void> _addSupplier() async {
     String corporateTitle = _corporateTitleController.text != "" ? _corporateTitleController.text : "-";
     String taxNumber = _taxNumberController.text != "" ? _taxNumberController.text : "-";
 
@@ -62,24 +62,25 @@ class _CostumerAddPageState extends State<CostumerAddPage> {
 
     String email = _emailController.text != "" ? _emailController.text : "-";
 
-    await Provider.of<CostumersData>(context, listen: false).addCostumer(
-        corporateTitle: corporateTitle,
-        taxNumber: taxNumber,
-        taxAdministration: taxAdministration,
-        address: address,
-        phoneNumber: phoneNumber,
-        email: email);
+    await Provider.of<SuppliersData>(context, listen: false).addSupplier(
+      corporateTitle: corporateTitle,
+      taxNumber: taxNumber,
+      taxAdministration: taxAdministration,
+      address: address,
+      phoneNumber: phoneNumber,
+      email: email,
+    );
   }
 }
 
 class _ProductPageButtons extends StatelessWidget {
   const _ProductPageButtons({
     Key? key,
-    required Function addCostumer,
-  })  : _addCostumer = addCostumer,
+    required Function addSupplier,
+  })  : _addSupplier = addSupplier,
         super(key: key);
 
-  final Function _addCostumer;
+  final Function _addSupplier;
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +96,10 @@ class _ProductPageButtons extends StatelessWidget {
           children: [
             CircleIconButton(
               onPressed: () async {
-                await _addCostumer();
-                navigateWithoutAnim(context, const CostumerAddPage());
+                await _addSupplier();
+                navigateWithoutAnim(context, const SupplierAddPage());
               },
-              toolTipText: "Save the costumer and create another",
+              toolTipText: "Save the supplier and create another",
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -112,10 +113,10 @@ class _ProductPageButtons extends StatelessWidget {
               children: [
                 CircleIconButton(
                   onPressed: () async {
-                    await _addCostumer();
-                    navigateWithoutAnim(context, const CostumersPage());
+                    await _addSupplier();
+                    navigateWithoutAnim(context, const SuppliersPage());
                   },
-                  toolTipText: "Save the costumer and go to list",
+                  toolTipText: "Save the supplier and go to list",
                   icon: Icons.done,
                 ),
                 Container(
@@ -127,7 +128,7 @@ class _ProductPageButtons extends StatelessWidget {
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, anim1, anim2) => const CostumersPage(),
+                      pageBuilder: (context, anim1, anim2) => const SuppliersPage(),
                       transitionDuration: Duration.zero,
                     ),
                   ),

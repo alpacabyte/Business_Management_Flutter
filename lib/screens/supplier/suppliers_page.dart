@@ -1,24 +1,24 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/costumer.dart';
-import 'package:business_management/models/costumer_data.dart';
-import 'package:business_management/screens/costumer/costumer_add_page.dart';
-import 'package:business_management/screens/costumer/costumer_page.dart';
+import 'package:business_management/models/supplier.dart';
+import 'package:business_management/models/supplier_data.dart';
+import 'package:business_management/screens/supplier/supplier_add_page.dart';
+import 'package:business_management/screens/supplier/supplier_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CostumersPage extends StatefulWidget {
-  const CostumersPage({Key? key}) : super(key: key);
+class SuppliersPage extends StatefulWidget {
+  const SuppliersPage({Key? key}) : super(key: key);
 
   @override
-  State<CostumersPage> createState() => _CostumersPageState();
+  State<SuppliersPage> createState() => _SuppliersPageState();
 }
 
-class _CostumersPageState extends State<CostumersPage> {
+class _SuppliersPageState extends State<SuppliersPage> {
   @override
   Widget build(BuildContext context) {
     const TextStyle tileTextStyle = TextStyle(
@@ -29,7 +29,7 @@ class _CostumersPageState extends State<CostumersPage> {
     SizeConfig().init(context);
     return Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.costumers,
+        page: Pages.suppliers,
         children: [
           const Spacer(),
           Container(
@@ -47,17 +47,17 @@ class _CostumersPageState extends State<CostumersPage> {
                   children: [
                     _HeaderTile(
                       tileTextStyle: tileTextStyle,
-                      onChanged: (value) => setState(() => Provider.of<CostumersData>(context, listen: false).setIsSelectedOfAllCostumers(value)),
+                      onChanged: (value) => setState(() => Provider.of<SuppliersData>(context, listen: false).setIsSelectedOfSuppliers(value)),
                     ),
                     // ignore: prefer_const_constructors
-                    _CostumersListView(tileTextStyle: tileTextStyle),
+                    _SuppliersListView(tileTextStyle: tileTextStyle),
                   ],
                 ),
                 Align(
                   alignment: const Alignment(0.98, -0.98),
                   child: CircleIconButton(
-                    onPressed: () => Provider.of<CostumersData>(context, listen: false).createExcelFromCostumers(),
-                    toolTipText: 'Create excel from selected costumers',
+                    onPressed: () => Provider.of<SuppliersData>(context, listen: false).createExcelFromSuppliers(),
+                    toolTipText: 'Create excel from selected suppliers',
                     icon: Icons.content_copy,
                   ),
                 ),
@@ -65,7 +65,7 @@ class _CostumersPageState extends State<CostumersPage> {
             ),
           ),
           const Spacer(),
-          const _CostumerButtons(),
+          const _SupplierButtons(),
           const SizedBox(width: 20),
         ],
       ),
@@ -73,8 +73,8 @@ class _CostumersPageState extends State<CostumersPage> {
   }
 }
 
-class _CostumersListView extends StatelessWidget {
-  const _CostumersListView({
+class _SuppliersListView extends StatelessWidget {
+  const _SuppliersListView({
     Key? key,
     required this.tileTextStyle,
   }) : super(key: key);
@@ -87,15 +87,15 @@ class _CostumersListView extends StatelessWidget {
     return SizedBox(
       width: 850,
       height: SizeConfig.safeBlockVertical * 70,
-      child: Consumer<CostumersData>(
-        builder: (context, costumersData, child) {
+      child: Consumer<SuppliersData>(
+        builder: (context, suppliersData, child) {
           return ListView.separated(
             padding: const EdgeInsets.only(top: 10),
-            itemBuilder: (context, index) => CostumerTile(
-              currentCostumer: costumersData.getCostumer(index),
+            itemBuilder: (context, index) => SupplierTile(
+              currentSupplier: suppliersData.getSupplier(index),
               tileTextStyle: tileTextStyle,
             ),
-            itemCount: costumersData.costumerCount,
+            itemCount: suppliersData.supplierCount,
             separatorBuilder: (BuildContext context, int index) => const SizedBox(
               height: 10,
             ),
@@ -187,37 +187,37 @@ class _HeaderTileState extends State<_HeaderTile> {
   }
 }
 
-class CostumerTile extends StatefulWidget {
-  const CostumerTile({
+class SupplierTile extends StatefulWidget {
+  const SupplierTile({
     Key? key,
-    required Costumer currentCostumer,
+    required Supplier currentSupplier,
     required this.tileTextStyle,
-  })  : _currentCostumer = currentCostumer,
+  })  : _currentSupplier = currentSupplier,
         super(key: key);
 
-  final Costumer _currentCostumer;
+  final Supplier _currentSupplier;
   final TextStyle tileTextStyle;
 
   @override
-  State<CostumerTile> createState() => _CostumerTileState();
+  State<SupplierTile> createState() => _SupplierTileState();
 }
 
-class _CostumerTileState extends State<CostumerTile> {
+class _SupplierTileState extends State<SupplierTile> {
   final Color normalColor = backgroundColorHeavy;
   final Color mouseOverColor = const Color(0xff3c3c47);
   bool isEnter = false;
 
   @override
   Widget build(BuildContext context) {
-    final bool isSelected = widget._currentCostumer.isSelected;
+    final bool isSelected = widget._currentSupplier.isSelected;
     return GestureDetector(
       onTap: () {
-        Provider.of<CostumersData>(context, listen: false).setCurrentCostumer(
-          widget._currentCostumer.costumerIndex,
+        Provider.of<SuppliersData>(context, listen: false).setCurrentSupplier(
+          widget._currentSupplier.supplierIndex,
         );
         navigateWithoutAnim(
           context,
-          const CostumerPage(),
+          const SupplierPage(),
         );
       },
       child: MouseRegion(
@@ -239,7 +239,7 @@ class _CostumerTileState extends State<CostumerTile> {
                       SizedBox(
                         width: 250,
                         child: Text(
-                          widget._currentCostumer.corporateTitle,
+                          widget._currentSupplier.corporateTitle,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                           maxLines: 1,
@@ -249,7 +249,7 @@ class _CostumerTileState extends State<CostumerTile> {
                       SizedBox(
                         width: 250,
                         child: Text(
-                          widget._currentCostumer.phoneNumber,
+                          widget._currentSupplier.phoneNumber,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                           maxLines: 1,
@@ -270,7 +270,7 @@ class _CostumerTileState extends State<CostumerTile> {
                     Colors.white.withOpacity(0.7),
                   ),
                   checkColor: Colors.transparent,
-                  onChanged: (value) => setState(() => widget._currentCostumer.isSelected = value!),
+                  onChanged: (value) => setState(() => widget._currentSupplier.isSelected = value!),
                   value: isSelected,
                 ),
               ),
@@ -295,8 +295,8 @@ class _CostumerTileState extends State<CostumerTile> {
   }
 }
 
-class _CostumerButtons extends StatelessWidget {
-  const _CostumerButtons({
+class _SupplierButtons extends StatelessWidget {
+  const _SupplierButtons({
     Key? key,
   }) : super(key: key);
 
@@ -316,11 +316,11 @@ class _CostumerButtons extends StatelessWidget {
               onPressed: () => Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(
-                  pageBuilder: (context, anim1, anim2) => const CostumerAddPage(),
+                  pageBuilder: (context, anim1, anim2) => const SupplierAddPage(),
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Add a costumer to list',
+              toolTipText: 'Add a supplier to list',
               icon: Icons.add,
               iconSize: 45,
               preferBelow: true,
@@ -331,9 +331,8 @@ class _CostumerButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () => Provider.of<CostumersData>(context, listen: false)
-                  .deleteTransactionFromCurrentCostumer(0), //Provider.of<CostumersData>(context, listen: false).deleteSelectedCostumers(),
-              toolTipText: 'Delete selected costumers from list',
+              onPressed: () => Provider.of<SuppliersData>(context, listen: false).deleteSelectedSuppliers(),
+              toolTipText: 'Delete selected suppliers from list',
               icon: Icons.delete,
               iconSize: 30,
             ),

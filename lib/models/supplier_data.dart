@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:business_management/models/costumer.dart';
+import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/transaction.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
@@ -8,44 +7,44 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 
-class CostumersData extends ChangeNotifier {
-  final Box<Costumer> _costumerBox = Hive.box<Costumer>("costumersBox");
+class SuppliersData extends ChangeNotifier {
+  final Box<Supplier> _suppliersBox = Hive.box<Supplier>("suppliersBox");
 
-  List<Costumer> _costumers = [];
+  List<Supplier> _suppliers = [];
 
-  Costumer? _currentCostumer;
+  Supplier? _currentSupplier;
 
-  CostumersData() {
-    _costumers = _costumerBox.values.toList();
+  SuppliersData() {
+    _suppliers = _suppliersBox.values.toList();
   }
 
-  void getCostumersList() async {
-    _costumers = _costumerBox.values.toList();
+  void getSuppliersList() async {
+    _suppliers = _suppliersBox.values.toList();
 
     notifyListeners();
   }
 
-  Costumer getCostumer(int key) => _costumers[key];
+  Supplier getSupplier(int key) => _suppliers[key];
 
-  int get costumerCount => _costumers.length;
+  int get supplierCount => _suppliers.length;
 
-  Future<void> deleteCostumer(key) async {
-    await _costumerBox.delete(key);
+  Future<void> deleteSupplier(key) async {
+    await _suppliersBox.delete(key);
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
-  }
-
-  Future<void> deleteAllCostumers() async {
-    await _costumerBox.clear();
-
-    _costumers = _costumerBox.values.toList();
+    _suppliers = _suppliersBox.values.toList();
 
     notifyListeners();
   }
 
-  Future<void> addCostumer({
+  Future<void> deleteAllSuppliers() async {
+    await _suppliersBox.clear();
+
+    _suppliers = _suppliersBox.values.toList();
+
+    notifyListeners();
+  }
+
+  Future<void> addSupplier({
     required String corporateTitle,
     required String taxNumber,
     required String taxAdministration,
@@ -53,20 +52,20 @@ class CostumersData extends ChangeNotifier {
     required String phoneNumber,
     required String email,
   }) async {
-    int costumerIndex = 0;
+    int supplierIndex = 0;
 
-    for (final Costumer costumer in _costumers) {
-      if (costumer.costumerIndex > costumerIndex) {
-        costumerIndex = costumer.costumerIndex;
+    for (final Supplier supplier in _suppliers) {
+      if (supplier.supplierIndex > supplierIndex) {
+        supplierIndex = supplier.supplierIndex;
       }
     }
 
-    costumerIndex++;
+    supplierIndex++;
 
-    await _costumerBox.put(
-      _costumerBox.length,
-      Costumer(
-        costumerIndex: _costumerBox.length,
+    await _suppliersBox.put(
+      _suppliersBox.length,
+      Supplier(
+        supplierIndex: _suppliersBox.length,
         corporateTitle: corporateTitle,
         taxNumber: taxNumber,
         taxAdministration: taxAdministration,
@@ -78,59 +77,59 @@ class CostumersData extends ChangeNotifier {
       ),
     );
 
-    _costumers = _costumerBox.values.toList();
+    _suppliers = _suppliersBox.values.toList();
 
     notifyListeners();
   }
 
-  void setIsSelectedOfAllCostumers(bool? value) {
+  void setIsSelectedOfSuppliers(bool? value) {
     if (value == null) return;
 
-    for (Costumer costumer in _costumers) {
-      costumer.isSelected = value;
+    for (Supplier supplier in _suppliers) {
+      supplier.isSelected = value;
     }
   }
 
   void setIsSelectedOfAllTransactions(bool? value) {
     if (value == null) return;
 
-    for (Transaction transaction in currentCostumer!.transactions) {
+    for (Transaction transaction in currentSupplier!.transactions) {
       transaction.isSelected = value;
     }
   }
 
-  Future<void> deleteSelectedCostumers() async {
-    for (Costumer costumer in _costumers) {
-      if (costumer.isSelected) {
-        _costumerBox.delete(costumer.costumerIndex);
+  Future<void> deleteSelectedSuppliers() async {
+    for (Supplier supplier in _suppliers) {
+      if (supplier.isSelected) {
+        _suppliersBox.delete(supplier.supplierIndex);
       }
     }
 
-    _costumers = _costumerBox.values.toList();
+    _suppliers = _suppliersBox.values.toList();
 
     notifyListeners();
   }
 
-  Future<void> addTransactionToCurrentCostumer(Transaction newTransaction) async {
-    await currentCostumer!.addTransaction(newTransaction);
+  Future<void> addTransactionToCurrentSuppliers(Transaction newTransaction) async {
+    await currentSupplier!.addTransaction(newTransaction);
     notifyListeners();
   }
 
-  Future<void> editCostumer({
+  Future<void> editSupplier({
     required String corporateTitle,
     required String taxNumber,
     required String taxAdministration,
     required String address,
     required String phoneNumber,
     required String email,
-    required int costumerIndex,
+    required int supplierIndex,
     required String creationDate,
     required List<Transaction> transactions,
   }) async {
-    await _costumerBox.put(
-      costumerIndex,
-      Costumer(
-        costumerIndex: costumerIndex,
+    await _suppliersBox.put(
+      supplierIndex,
+      Supplier(
+        supplierIndex: supplierIndex,
         corporateTitle: corporateTitle,
         taxNumber: taxNumber,
         taxAdministration: taxAdministration,
@@ -143,34 +142,33 @@ class CostumersData extends ChangeNotifier {
       ),
     );
 
-    _currentCostumer = _costumerBox.get(costumerIndex);
+    _currentSupplier = _suppliersBox.get(supplierIndex);
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
-  }
-
-  Future<void> deleteTransactionFromCurrentCostumer(int index) async {
-    //await currentCostumer!.deleteTransaction(index);
-    currentCostumer!.deleteTransaction2(index);
-    notifyListeners();
-  }
-
-  Future<void> deleteSelectedTransactionsFromCurrentCostumer() async {
-    await currentCostumer!.deleteSelectedTransactions();
-    notifyListeners();
-  }
-
-  Costumer? get currentCostumer => _currentCostumer;
-
-  void setCurrentCostumer(key) async {
-    _currentCostumer = _costumerBox.get(key);
+    _suppliers = _suppliersBox.values.toList();
 
     notifyListeners();
   }
 
-  List<ExcelDataRow> buildTransactionDataRows(Costumer costumer) {
-    List<ExcelDataRow> excelDataRows = costumer.transactions
+  Future<void> deleteTransactionFromCurrentSupplier(int index) async {
+    await currentSupplier!.deleteTransaction(index);
+    notifyListeners();
+  }
+
+  Future<void> deleteSelectedTransactionsFromCurrentSupplier() async {
+    await currentSupplier!.deleteSelectedTransactions();
+    notifyListeners();
+  }
+
+  Supplier? get currentSupplier => _currentSupplier;
+
+  void setCurrentSupplier(key) async {
+    _currentSupplier = _suppliersBox.get(key);
+
+    notifyListeners();
+  }
+
+  List<ExcelDataRow> buildTransactionDataRows(Supplier supplier) {
+    List<ExcelDataRow> excelDataRows = supplier.transactions
         .map((transaction) => ExcelDataRow(cells: <ExcelDataCell>[
               ExcelDataCell(
                 columnHeader: 'Date',
@@ -181,7 +179,7 @@ class CostumersData extends ChangeNotifier {
                 value: transaction.comment,
               ),
               ExcelDataCell(
-                columnHeader: 'Sale',
+                columnHeader: 'Purchase',
                 value: !transaction.isPayment ? transaction.totalPrice : null,
               ),
               ExcelDataCell(
@@ -198,14 +196,14 @@ class CostumersData extends ChangeNotifier {
     return excelDataRows;
   }
 
-  List<Object> buildCostumerInformationDataRows(Costumer costumer) {
+  List<Object> buildSupplierInformationDataRows(Supplier supplier) {
     final List<Object> list = [
-      costumer.corporateTitle,
-      costumer.taxNumber,
-      costumer.taxAdministration,
-      costumer.address,
-      costumer.phoneNumber,
-      costumer.email,
+      supplier.corporateTitle,
+      supplier.taxNumber,
+      supplier.taxAdministration,
+      supplier.address,
+      supplier.phoneNumber,
+      supplier.email,
     ];
 
     return list;
@@ -215,9 +213,9 @@ class CostumersData extends ChangeNotifier {
     Worksheet sheet,
     Style globalStyle,
     Style headerStyle,
-    Costumer costumer,
+    Supplier supplier,
   ) {
-    final List<ExcelDataRow> transactionsDataRows = buildTransactionDataRows(costumer);
+    final List<ExcelDataRow> transactionsDataRows = buildTransactionDataRows(supplier);
 
     sheet.importData(transactionsDataRows, 1, 1);
 
@@ -232,14 +230,14 @@ class CostumersData extends ChangeNotifier {
     rangeHeaders.cellStyle = headerStyle;
   }
 
-  void createCostumerInformationsTable(
+  void createSupplierInformationsTable(
     Worksheet sheet,
-    Costumer costumer,
+    Supplier supplier,
     Style style,
   ) {
-    final List<Object> costumerInformationDataRows = buildCostumerInformationDataRows(costumer);
+    final List<Object> supplierInformationDataRows = buildSupplierInformationDataRows(supplier);
 
-    final List<Object> costumerInformationDataRowsHeaders = [
+    final List<Object> eupplierInformationDataRowsHeaders = [
       'Corporate Title',
       'Tax Number',
       'Tax Administration',
@@ -249,7 +247,7 @@ class CostumersData extends ChangeNotifier {
     ];
 
     final List<Object> totalBalanceDataRows = [
-      'Total Sales',
+      'Total Purchases',
       'Total Payments',
       'Total Balance',
     ];
@@ -259,16 +257,16 @@ class CostumersData extends ChangeNotifier {
     final Range totalBalanceRange = sheet.getRangeByName("G1:H3");
     totalBalanceRange.cellStyle = style;
 
-    sheet.importList(costumerInformationDataRowsHeaders, 1, 10, true);
-    sheet.importList(costumerInformationDataRows, 1, 11, true);
+    sheet.importList(eupplierInformationDataRowsHeaders, 1, 10, true);
+    sheet.importList(supplierInformationDataRows, 1, 11, true);
 
     final Range range = sheet.getRangeByName("J1:K6");
     range.autoFitColumns();
     range.cellStyle = style;
   }
 
-  void createExcelFromThisCostumer() async {
-    final String? directoryPath = await getSavePath(suggestedName: currentCostumer!.corporateTitle);
+  void createExcelFromThisSupplier() async {
+    final String? directoryPath = await getSavePath(suggestedName: currentSupplier!.corporateTitle);
     if (directoryPath == null) return;
 
     final Workbook workbook = Workbook();
@@ -296,30 +294,30 @@ class CostumersData extends ChangeNotifier {
 
     final Worksheet sheet = workbook.worksheets[0];
 
-    if (currentCostumer!.transactions.isNotEmpty) {
-      createTransactionsTable(sheet, globalStyle, headerStyle, currentCostumer!);
-      sheet.getRangeByName('E2').setFormula('=C2-D2');
+    if (currentSupplier!.transactions.isNotEmpty) {
+      createTransactionsTable(sheet, globalStyle, headerStyle, currentSupplier!);
+      sheet.getRangeByName('E2').setFormula('=D2-C2');
     }
 
-    createCostumerInformationsTable(
+    createSupplierInformationsTable(
       sheet,
-      currentCostumer!,
+      currentSupplier!,
       informationStyle,
     );
 
-    int transactionCount = currentCostumer!.transactions.length;
+    int transactionCount = currentSupplier!.transactions.length;
 
     sheet.getRangeByName("C2:E${transactionCount + 1}").numberFormat = '₺#,##0.0';
 
     for (int i = 3, last = transactionCount + 1; i <= last; i++) {
-      sheet.getRangeByName('E$i').setFormula('=E${i - 1}+C$i-D$i');
+      sheet.getRangeByName('E$i').setFormula('=E${i - 1}+D$i-C$i');
     }
 
     sheet.getRangeByIndex(1, 1, sheet.getLastRow(), 1).rowHeight = 22;
 
     sheet.getRangeByName('H1').setFormula('=SUM(C2:C${transactionCount + 1})');
     sheet.getRangeByName('H2').setFormula('=SUM(D2:D${transactionCount + 1})');
-    sheet.getRangeByName('H3').setFormula('=H1-H2');
+    sheet.getRangeByName('H3').setFormula('=H2-H1');
     sheet.getRangeByName("H1:H3").numberFormat = '₺#,##0.0';
 
     sheet.getRangeByName("A1").columnWidth = 12.14;
@@ -336,8 +334,8 @@ class CostumersData extends ChangeNotifier {
     File('$directoryPath.xlsx').writeAsBytes(bytes);
   }
 
-  void createExcelFromCostumers() async {
-    final String? directoryPath = await getSavePath(suggestedName: "Costumers");
+  void createExcelFromSuppliers() async {
+    final String? directoryPath = await getSavePath(suggestedName: "Suppliers");
     if (directoryPath == null) return;
 
     final Workbook workbook = Workbook();
@@ -364,41 +362,41 @@ class CostumersData extends ChangeNotifier {
     informationStyle.borders.all.lineStyle = LineStyle.thin;
 
     bool isFirst = true;
-    for (final Costumer costumer in _costumers) {
-      if (costumer.isSelected) {
+    for (final Supplier supplier in _suppliers) {
+      if (supplier.isSelected) {
         final Worksheet sheet;
         if (isFirst) {
           sheet = workbook.worksheets[0];
-          sheet.name = costumer.corporateTitle;
+          sheet.name = supplier.corporateTitle;
           isFirst = false;
         } else {
-          sheet = workbook.worksheets.addWithName(costumer.corporateTitle);
+          sheet = workbook.worksheets.addWithName(supplier.corporateTitle);
         }
 
-        if (costumer.transactions.isNotEmpty) {
-          createTransactionsTable(sheet, globalStyle, headerStyle, costumer);
-          sheet.getRangeByName('E2').setFormula('=C2-D2');
+        if (supplier.transactions.isNotEmpty) {
+          createTransactionsTable(sheet, globalStyle, headerStyle, supplier);
+          sheet.getRangeByName('E2').setFormula('=D2-C2');
         }
 
-        createCostumerInformationsTable(
+        createSupplierInformationsTable(
           sheet,
-          costumer,
+          supplier,
           informationStyle,
         );
 
-        int transactionCount = costumer.transactions.length;
+        int transactionCount = supplier.transactions.length;
 
         sheet.getRangeByName("C2:E${transactionCount + 1}").numberFormat = '₺#,##0.0';
 
         for (int i = 3, last = transactionCount + 1; i <= last; i++) {
-          sheet.getRangeByName('E$i').setFormula('=E${i - 1}+C$i-D$i');
+          sheet.getRangeByName('E$i').setFormula('=E${i - 1}+D$i-C$i');
         }
 
         sheet.getRangeByIndex(1, 1, sheet.getLastRow(), 1).rowHeight = 22;
 
         sheet.getRangeByName('H1').setFormula('=SUM(C2:C${transactionCount + 1})');
         sheet.getRangeByName('H2').setFormula('=SUM(D2:D${transactionCount + 1})');
-        sheet.getRangeByName('H3').setFormula('=H1-H2');
+        sheet.getRangeByName('H3').setFormula('=H2-H1');
         sheet.getRangeByName("H1:H3").numberFormat = '₺#,##0.0';
 
         sheet.getRangeByName("A1").columnWidth = 12.14;

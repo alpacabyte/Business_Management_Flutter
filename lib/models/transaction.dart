@@ -14,7 +14,7 @@ class Transaction extends HiveObject {
   final double unitPrice;
 
   @HiveField(4)
-  final bool isSale;
+  final bool isPayment;
 
   @HiveField(5)
   final String transactionDate;
@@ -28,7 +28,7 @@ class Transaction extends HiveObject {
     required this.comment,
     required this.transactionDate,
     required this.unitPrice,
-    required this.isSale,
+    required this.isPayment,
     this.quantity = 1,
   })  : totalPrice = quantity * unitPrice,
         isSelected = false;

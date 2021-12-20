@@ -1,10 +1,10 @@
 import 'package:business_management/models/transaction.dart';
 import 'package:hive/hive.dart';
 
-part 'costumer.g.dart';
+part 'supplier.g.dart';
 
-@HiveType(typeId: 1)
-class Costumer extends HiveObject {
+@HiveType(typeId: 3)
+class Supplier extends HiveObject {
   @HiveField(0)
   final String corporateTitle;
 
@@ -15,7 +15,7 @@ class Costumer extends HiveObject {
   double balance = 0;
 
   @HiveField(3)
-  final int costumerIndex;
+  final int supplierIndex;
 
   @HiveField(4)
   final String taxNumber;
@@ -46,7 +46,7 @@ class Costumer extends HiveObject {
     balance = 0;
 
     for (final Transaction transaction in transactions) {
-      if (!transaction.isPayment) {
+      if (transaction.isPayment) {
         balance += transaction.totalPrice;
       } else {
         balance -= transaction.totalPrice;
@@ -66,19 +66,14 @@ class Costumer extends HiveObject {
     await save();
   }
 
-  Future<void> deleteTransaction2(int index) async {
-    transactions[index].delete();
-    calculateBalance();
-  }
-
   Future<void> deleteSelectedTransactions() async {
     transactions.removeWhere((element) => element.isSelected == true);
     calculateBalance();
     await save();
   }
 
-  Costumer({
-    required this.costumerIndex,
+  Supplier({
+    required this.supplierIndex,
     required this.corporateTitle,
     required this.taxNumber,
     required this.taxAdministration,

@@ -1,12 +1,12 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/costumer.dart';
-import 'package:business_management/models/costumer_data.dart';
+import 'package:business_management/models/supplier.dart';
+import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/costumer/costumer_edit_page.dart';
-import 'package:business_management/screens/costumer/costumers_page.dart';
-import 'package:business_management/screens/transaction/costumer_transaction/costumer_transactions_page.dart';
+import 'package:business_management/screens/supplier/supplier_edit_page.dart';
+import 'package:business_management/screens/supplier/suppliers_page.dart';
+import 'package:business_management/screens/transaction/supplier_transaction/supplier_transactions_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
@@ -14,8 +14,8 @@ import 'package:business_management/widgets/property_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CostumerPage extends StatelessWidget {
-  const CostumerPage({
+class SupplierPage extends StatelessWidget {
+  const SupplierPage({
     Key? key,
   }) : super(key: key);
 
@@ -23,14 +23,14 @@ class CostumerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      body: Consumer<CostumersData>(
-        builder: (context, productsData, child) {
-          Costumer currentCostumer = productsData.currentCostumer!;
+      body: Consumer<SuppliersData>(
+        builder: (context, suppliersData, child) {
+          Supplier currentSupplier = suppliersData.currentSupplier!;
           return TitleBarWithLeftNav(
-            page: Pages.costumers,
+            page: Pages.suppliers,
             children: [
               const Spacer(),
-              _CostumerProperties(currentCostumer: currentCostumer),
+              _SupplierProperties(currentSupplier: currentSupplier),
               const Spacer(),
               const _ProductPageButtons(),
               const SizedBox(width: 20),
@@ -42,13 +42,13 @@ class CostumerPage extends StatelessWidget {
   }
 }
 
-class _CostumerProperties extends StatelessWidget {
-  const _CostumerProperties({
+class _SupplierProperties extends StatelessWidget {
+  const _SupplierProperties({
     Key? key,
-    required this.currentCostumer,
+    required this.currentSupplier,
   }) : super(key: key);
 
-  final Costumer currentCostumer;
+  final Supplier currentSupplier;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _CostumerProperties extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     PropertyText(
-                      text: currentCostumer.corporateTitle,
+                      text: currentSupplier.corporateTitle,
                       textColor: const Color(0xffdbdbdb),
                       mainFontSize: 35,
                       maxLines: 2,
@@ -78,12 +78,12 @@ class _CostumerProperties extends StatelessWidget {
                       thickness: 5,
                       margin: EdgeInsets.symmetric(vertical: 25),
                     ),
-                    _Properties(currentCostumer: currentCostumer),
+                    _Properties(currentSupplier: currentSupplier),
                     const SizedBox(height: 25),
                     Align(
                       alignment: const Alignment(0.75, 0),
                       child: Text(
-                        "Costumer No: ${currentCostumer.costumerIndex}",
+                        "Supplier No: ${currentSupplier.supplierIndex}",
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 15,
@@ -105,7 +105,7 @@ class _CostumerProperties extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 15),
-                    _LastTransactions(currentCostumer: currentCostumer),
+                    _LastTransactions(currentSupplier: currentSupplier),
                   ],
                 ),
               ),
@@ -113,8 +113,8 @@ class _CostumerProperties extends StatelessWidget {
             Align(
               alignment: const Alignment(0.98, -0.98),
               child: CircleIconButton(
-                onPressed: () => Provider.of<CostumersData>(context, listen: false).createExcelFromThisCostumer(),
-                toolTipText: 'Create excel from this costumer',
+                onPressed: () => Provider.of<SuppliersData>(context, listen: false).createExcelFromThisSupplier(),
+                toolTipText: 'Create excel from this supplier',
                 icon: Icons.content_copy,
               ),
             ),
@@ -128,10 +128,10 @@ class _CostumerProperties extends StatelessWidget {
 class _Properties extends StatelessWidget {
   const _Properties({
     Key? key,
-    required this.currentCostumer,
+    required this.currentSupplier,
   }) : super(key: key);
 
-  final Costumer currentCostumer;
+  final Supplier currentSupplier;
 
   @override
   Widget build(BuildContext context) {
@@ -141,38 +141,38 @@ class _Properties extends StatelessWidget {
       children: [
         PropertyText(
           title: "E-Mail",
-          text: currentCostumer.email,
+          text: currentSupplier.email,
         ),
         PropertyText(
           title: "Phone Number",
-          text: currentCostumer.phoneNumber,
+          text: currentSupplier.phoneNumber,
         ),
         PropertyText(
           title: "Tax Administration",
-          text: currentCostumer.taxAdministration,
+          text: currentSupplier.taxAdministration,
         ),
         PropertyText(
           title: "Tax Number",
-          text: currentCostumer.taxNumber,
+          text: currentSupplier.taxNumber,
         ),
         PropertyText(
           title: "Created",
-          text: currentCostumer.creationDate,
+          text: currentSupplier.creationDate,
         ),
         PropertyText(
           title: "Last Modified",
-          text: currentCostumer.lastModifiedDate ?? "-",
+          text: currentSupplier.lastModifiedDate ?? "-",
         ),
         PropertyText(
           title: "Address",
-          text: currentCostumer.address,
+          text: currentSupplier.address,
         ),
         PropertyText(
           title: "Total Balance",
-          text: "${currentCostumer.balance.toString()} TL",
-          textColor: currentCostumer.balance > 0
+          text: "${currentSupplier.balance.toString()} TL",
+          textColor: currentSupplier.balance > 0
               ? Colors.green
-              : currentCostumer.balance < 0
+              : currentSupplier.balance < 0
                   ? Colors.red
                   : const Color(0xffdbdbdb),
         ),
@@ -184,15 +184,15 @@ class _Properties extends StatelessWidget {
 class _LastTransactions extends StatelessWidget {
   const _LastTransactions({
     Key? key,
-    required this.currentCostumer,
+    required this.currentSupplier,
   }) : super(key: key);
-  final Costumer currentCostumer;
+  final Supplier currentSupplier;
 
   List<Widget> getLastTransactions(int itemCount, bool isPayment) {
     final List<Widget> transactions = [];
     int currentCount = 0;
 
-    for (Transaction transaction in currentCostumer.reversedTransactions) {
+    for (Transaction transaction in currentSupplier.reversedTransactions) {
       if (transaction.isPayment == isPayment) {
         transactions.add(_TransactionTile(
           currentTransaction: transaction,
@@ -230,7 +230,7 @@ class _LastTransactions extends StatelessWidget {
             child: Column(
               children: [
                 const Text(
-                  "Sales",
+                  "Purchases",
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 20,
@@ -325,10 +325,10 @@ class _TransactionTile extends StatelessWidget {
           SizedBox(
             width: 100,
             child: Text(
-              "${!isPayment ? "+" : "-"}${_currentTransaction.totalPrice.toString()} TL",
+              "${isPayment ? "+" : "-"}${_currentTransaction.totalPrice.toString()} TL",
               textAlign: TextAlign.center,
               style: tileTextStyle.copyWith(
-                color: !isPayment ? Colors.green : Colors.red,
+                color: isPayment ? Colors.green : Colors.red,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -347,7 +347,7 @@ class _ProductPageButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CostumersData costumersData = Provider.of<CostumersData>(context, listen: false);
+    SuppliersData suppliersData = Provider.of<SuppliersData>(context, listen: false);
     return Material(
       elevation: 10,
       borderRadius: BorderRadius.circular(15),
@@ -361,11 +361,11 @@ class _ProductPageButtons extends StatelessWidget {
             CircleIconButton(
               onPressed: () => navigateWithoutAnim(
                 context,
-                CostumerEditPage(
-                  currentCostumer: costumersData.currentCostumer!,
+                SupplierEditPage(
+                  currentSupplier: suppliersData.currentSupplier!,
                 ),
               ),
-              toolTipText: "Edit costumer",
+              toolTipText: "Edit supplier",
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -377,7 +377,7 @@ class _ProductPageButtons extends StatelessWidget {
             CircleIconButton(
               onPressed: () => navigateWithoutAnim(
                 context,
-                const CostumerTransactionsPage(),
+                const SupplierTransactionsPage(),
               ),
               toolTipText: "Transactions",
               preferBelow: false,
@@ -389,7 +389,7 @@ class _ProductPageButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () async => navigateWithoutAnim(context, const CostumersPage()),
+              onPressed: () async => navigateWithoutAnim(context, const SuppliersPage()),
               toolTipText: "Go back",
               icon: Icons.arrow_back,
               iconSize: 30,

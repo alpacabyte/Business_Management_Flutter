@@ -1,6 +1,7 @@
 import 'package:business_management/functions/init_hive.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/product_data.dart';
+import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/screens/home/db_error_page.dart';
 import 'package:business_management/screens/home/home_page.dart';
 import 'package:flutter/material.dart';
@@ -40,12 +41,12 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ProductsData()),
         ChangeNotifierProvider(create: (context) => CostumersData()),
+        ChangeNotifierProvider(create: (context) => SuppliersData()),
       ],
       child: MaterialApp(
         theme: Theme.of(context).copyWith(
           scaffoldBackgroundColor: appbarColor,
-          scrollbarTheme: const ScrollbarThemeData()
-              .copyWith(thickness: MaterialStateProperty.all(15)),
+          scrollbarTheme: const ScrollbarThemeData().copyWith(thickness: MaterialStateProperty.all(15)),
         ),
         debugShowCheckedModeBanner: false,
         home: !isError ? const HomePage() : const DBErrorWidget(),

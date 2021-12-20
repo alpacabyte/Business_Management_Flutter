@@ -356,7 +356,7 @@ class _ProductButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () => Provider.of<ProductsData>(context, listen: false).deleteSelectedCostumers(),
+              onPressed: () => Provider.of<ProductsData>(context, listen: false).deleteSelectedProducts(),
               toolTipText: 'Delete a product from list',
               icon: Icons.delete,
               iconSize: 30,
