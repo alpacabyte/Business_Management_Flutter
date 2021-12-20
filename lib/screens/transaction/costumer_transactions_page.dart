@@ -4,9 +4,7 @@ import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/costumer/costumer_add_page.dart';
 import 'package:business_management/screens/costumer/costumer_page.dart';
-import 'package:business_management/screens/transaction/add_sale_transaction_page.dart';
 import 'package:business_management/screens/transaction/choose_transaction_type_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/custom_divider.dart';
@@ -35,11 +33,16 @@ class CostumerTransactionsPage extends StatelessWidget {
   }
 }
 
-class _Transactions extends StatelessWidget {
+class _Transactions extends StatefulWidget {
   const _Transactions({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<_Transactions> createState() => _TransactionsState();
+}
+
+class _TransactionsState extends State<_Transactions> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,6 +59,7 @@ class _Transactions extends StatelessWidget {
             const SizedBox(height: 10),
             _HeaderTile(
               currentCostumer: costumersData.currentCostumer!,
+              onChanged: (value) => setState(() => costumersData.setIsSelectedOfAllTransactions(value)),
             ),
             Expanded(
               child: _TransactionsListView(
@@ -80,8 +84,7 @@ class _TransactionsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Transaction> currentCostumersTransactions =
-        currentCostumer.transactions;
+    List<Transaction> currentCostumersTransactions = currentCostumer.transactions;
     return SizedBox(
       width: 850,
       child: ListView.separated(
@@ -98,112 +101,139 @@ class _TransactionsListView extends StatelessWidget {
   }
 }
 
-class _HeaderTile extends StatelessWidget {
+class _HeaderTile extends StatefulWidget {
   const _HeaderTile({
     Key? key,
     required this.currentCostumer,
+    required this.onChanged,
   }) : super(key: key);
 
   final Costumer currentCostumer;
+  final void Function(bool?) onChanged;
 
   @override
+  State<_HeaderTile> createState() => _HeaderTileState();
+}
+
+class _HeaderTileState extends State<_HeaderTile> {
+  bool isSelected = false;
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: SizedBox(
-            child: Text(
-              "${currentCostumer.corporateTitle}'s  Transactions",
-              textAlign: TextAlign.center,
-              style: tileTextStyle,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: RichText(
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              children: [
-                const TextSpan(
-                  text: "Total Balance:   ",
+    return GestureDetector(
+      onTap: () {
+        isSelected = !isSelected;
+        widget.onChanged(isSelected);
+      },
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Column(
+          children: [
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 700),
+              child: SizedBox(
+                child: Text(
+                  "${widget.currentCostumer.corporateTitle}'s  Transactions",
+                  textAlign: TextAlign.center,
                   style: tileTextStyle,
                 ),
-                TextSpan(
-                    text: "${currentCostumer.balance.toString()} TL",
-                    style: tileTextStyle.copyWith(
-                      color: currentCostumer.balance > 0
-                          ? Colors.green
-                          : currentCostumer.balance < 0
-                              ? Colors.red
-                              : const Color(0xffdbdbdb),
-                    )),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 5),
-          child: Material(
-            color: appbarColor,
-            elevation: 5,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              height: 50,
-              width: 850,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 200,
-                    child: Row(
-                      children: const [
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                        ),
-                        Spacer(),
-                        Text(
-                          "Transaction Date",
-                          textAlign: TextAlign.center,
-                          style: tileTextStyle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Spacer(),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 250,
-                    child: Text(
-                      "Comment",
-                      textAlign: TextAlign.center,
-                      style: tileTextStyle,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 200,
-                    child: Text(
-                      "Amount",
-                      textAlign: TextAlign.center,
-                      style: tileTextStyle,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 30,
-                  )
-                ],
               ),
             ),
-          ),
+            const SizedBox(height: 10),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 700),
+              child: RichText(
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: "Total Balance:   ",
+                      style: tileTextStyle,
+                    ),
+                    TextSpan(
+                        text: "${widget.currentCostumer.balance.toString()} TL",
+                        style: tileTextStyle.copyWith(
+                          color: widget.currentCostumer.balance > 0
+                              ? Colors.green
+                              : widget.currentCostumer.balance < 0
+                                  ? Colors.red
+                                  : const Color(0xffdbdbdb),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 5),
+              child: Material(
+                color: appbarColor,
+                elevation: 5,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 50,
+                  width: 850,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 200,
+                        child: Row(
+                          children: const [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                            ),
+                            Spacer(),
+                            Text(
+                              "Transaction Date",
+                              textAlign: TextAlign.center,
+                              style: tileTextStyle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Spacer(),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 250,
+                        child: Text(
+                          "Comment",
+                          textAlign: TextAlign.center,
+                          style: tileTextStyle,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Amount",
+                          textAlign: TextAlign.center,
+                          style: tileTextStyle,
+                        ),
+                      ),
+                      Container(
+                        width: 17.5,
+                        height: 17.5,
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.white.withOpacity(0.7) : null,
+                          border: isSelected
+                              ? null
+                              : Border.all(
+                                  color: Colors.white.withOpacity(0.7),
+                                  width: 2,
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -233,10 +263,12 @@ class _TransactionTileState extends State<_TransactionTile> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isSelected = widget._currentTransaction.isSelected;
     final String toolTipMessage = widget._currentTransaction.isSale == true
         ? "${widget._currentTransaction.comment}\n-Quantity: ${widget._currentTransaction.quantity}\n-Unit Price: ${widget._currentTransaction.unitPrice} TL\n-Total Price: ${widget._currentTransaction.totalPrice} TL"
         : widget._currentTransaction.comment;
     return GestureDetector(
+      onTap: () => setState(() => widget._currentTransaction.isSelected = !isSelected),
       child: MouseRegion(
         onEnter: _mouseEntered,
         onExit: _mouseExited,
@@ -302,31 +334,23 @@ class _TransactionTileState extends State<_TransactionTile> {
                     "${widget._currentTransaction.isSale ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
                     textAlign: TextAlign.center,
                     style: tileTextStyle.copyWith(
-                      color: widget._currentTransaction.isSale
-                          ? Colors.green
-                          : Colors.red,
+                      color: widget._currentTransaction.isSale ? Colors.green : Colors.red,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                SizedBox(
-                  width: 30,
-                  child: FittedBox(
-                    child: Checkbox(
-                        overlayColor: MaterialStateProperty.all(
-                          Colors.transparent,
-                        ),
-                        fillColor: MaterialStateProperty.all(
-                          Colors.white.withOpacity(0.7),
-                        ),
-                        checkColor: Colors.transparent,
-                        value: widget._currentTransaction.isSelected,
-                        onChanged: (value) {
-                          setState(() {
-                            widget._currentTransaction.isSelected = value!;
-                          });
-                        }),
+                Container(
+                  width: 17.5,
+                  height: 17.5,
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.white.withOpacity(0.7) : null,
+                    border: isSelected
+                        ? null
+                        : Border.all(
+                            color: Colors.white.withOpacity(0.7),
+                            width: 2,
+                          ),
                   ),
                 ),
               ],
@@ -368,8 +392,7 @@ class _CostumerButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircleIconButton(
-              onPressed: () => navigateWithoutAnim(
-                  context, const ChooseTransactionTypePage()),
+              onPressed: () => navigateWithoutAnim(context, const ChooseTransactionTypePage()),
               toolTipText: 'Add a transaction to list',
               icon: Icons.add,
               preferBelow: false,
@@ -381,9 +404,7 @@ class _CostumerButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () =>
-                  Provider.of<CostumersData>(context, listen: false)
-                      .deleteSelectedTransactionsFromCurrentCostumer(),
+              onPressed: () => Provider.of<CostumersData>(context, listen: false).deleteSelectedTransactionsFromCurrentCostumer(),
               toolTipText: "Delete selected transactions from list",
               icon: Icons.delete,
               iconSize: 30,
@@ -394,8 +415,7 @@ class _CostumerButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () async =>
-                  navigateWithoutAnim(context, const CostumerPage()),
+              onPressed: () async => navigateWithoutAnim(context, const CostumerPage()),
               toolTipText: "Go back",
               icon: Icons.arrow_back,
               iconSize: 30,

@@ -30,27 +30,25 @@ class _CostumerEditPageState extends State<CostumerEditPage> {
 
     final Costumer currentCostumer = widget.currentCostumer;
 
-    _corporateTitleController.text = currentCostumer.corporateTitle != "null"
+    _corporateTitleController.text = currentCostumer.corporateTitle != "-"
         ? currentCostumer.corporateTitle
         : "";
 
     _taxNumberController.text =
-        currentCostumer.taxNumber != "null" ? currentCostumer.taxNumber : "";
+        currentCostumer.taxNumber != "-" ? currentCostumer.taxNumber : "";
 
-    _taxAdministrationController.text =
-        currentCostumer.taxAdministration != "null"
-            ? currentCostumer.taxAdministration
-            : "";
-
-    _addressController.text =
-        currentCostumer.address != "null" ? currentCostumer.address : "";
-
-    _phoneNumberController.text = currentCostumer.phoneNumber != "null"
-        ? currentCostumer.phoneNumber
+    _taxAdministrationController.text = currentCostumer.taxAdministration != "-"
+        ? currentCostumer.taxAdministration
         : "";
 
+    _addressController.text =
+        currentCostumer.address != "-" ? currentCostumer.address : "";
+
+    _phoneNumberController.text =
+        currentCostumer.phoneNumber != "-" ? currentCostumer.phoneNumber : "";
+
     _emailController.text =
-        currentCostumer.email != "null" ? currentCostumer.email : "";
+        currentCostumer.email != "-" ? currentCostumer.email : "";
   }
 
   // #region Controllers
@@ -93,22 +91,21 @@ class _CostumerEditPageState extends State<CostumerEditPage> {
     String creationDate = widget.currentCostumer.creationDate;
     String corporateTitle = _corporateTitleController.text != ""
         ? _corporateTitleController.text
-        : "null";
+        : "-";
     String taxNumber =
-        _taxNumberController.text != "" ? _taxNumberController.text : "null";
+        _taxNumberController.text != "" ? _taxNumberController.text : "-";
 
     String taxAdministration = _taxAdministrationController.text != ""
         ? _taxAdministrationController.text
-        : "null";
+        : "-";
 
     String address =
-        _addressController.text != "" ? _addressController.text : "null";
+        _addressController.text != "" ? _addressController.text : "-";
 
-    String phoneNumber = _phoneNumberController.text != ""
-        ? _phoneNumberController.text
-        : "null";
+    String phoneNumber =
+        _phoneNumberController.text != "" ? _phoneNumberController.text : "-";
 
-    String email = _emailController.text != "" ? _emailController.text : "null";
+    String email = _emailController.text != "" ? _emailController.text : "-";
 
     await Provider.of<CostumersData>(context, listen: false).editCostumer(
       costumerIndex: costumerIndex,

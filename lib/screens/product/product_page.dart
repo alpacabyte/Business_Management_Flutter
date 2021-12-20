@@ -5,6 +5,8 @@ import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/product/product_edit_page.dart';
 import 'package:business_management/screens/product/products_page.dart';
+import 'package:business_management/widgets/circle_icon_button.dart';
+import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/image_from_file.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:business_management/widgets/property_text.dart';
@@ -182,75 +184,33 @@ class _ProductPageButtons extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              verticalOffset: 30,
+            CircleIconButton(
+              onPressed: () => navigateWithoutAnim(
+                context,
+                ProductEditPage(
+                  currentProduct: currentProduct,
+                ),
+              ),
+              toolTipText: 'Edit product',
+              icon: Icons.edit,
               preferBelow: false,
-              height: 30,
-              message: 'Edit product',
-              textStyle: const TextStyle(
-                fontSize: 13,
-                color: Colors.white,
-              ),
-              child: IconButton(
-                onPressed: () => navigateWithoutAnim(
-                  context,
-                  ProductEditPage(
-                    currentProduct: currentProduct,
-                  ),
-                ),
-                icon: Container(
-                  width: 45,
-                  height: 45,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xffa81633))),
-                  child: const Icon(
-                    Icons.edit,
-                    color: Color(0xffa81633),
-                    size: 25,
-                  ),
-                ),
-                iconSize: 45,
-              ),
             ),
-            Container(
-              height: 2,
-              width: 150,
+            const CustomDivider(
+              thickness: 2,
+              lenght: 150,
               color: Colors.black26,
             ),
-            Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              verticalOffset: 30,
-              height: 30,
-              message: 'Go back',
-              textStyle: const TextStyle(
-                fontSize: 13,
-                color: Colors.white,
-              ),
-              child: IconButton(
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, anim1, anim2) =>
-                        const ProductsPage(),
-                    transitionDuration: Duration.zero,
-                  ),
+            CircleIconButton(
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, anim1, anim2) => const ProductsPage(),
+                  transitionDuration: Duration.zero,
                 ),
-                icon: Container(
-                  width: 45,
-                  height: 45,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xffa81633))),
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: Color(0xffa81633),
-                    size: 30,
-                  ),
-                ),
-                iconSize: 45,
               ),
+              toolTipText: 'Go back',
+              icon: Icons.arrow_back,
+              iconSize: 30,
             ),
           ],
         ),

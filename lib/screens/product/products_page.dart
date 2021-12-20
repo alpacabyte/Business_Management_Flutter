@@ -5,14 +5,21 @@ import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/product/product_add_page.dart';
 import 'package:business_management/screens/product/product_page.dart';
+import 'package:business_management/widgets/circle_icon_button.dart';
+import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/image_from_file.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductsPage extends StatelessWidget {
+class ProductsPage extends StatefulWidget {
   const ProductsPage({Key? key}) : super(key: key);
 
+  @override
+  State<ProductsPage> createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     const TextStyle tileTextStyle = TextStyle(
@@ -33,11 +40,28 @@ class ProductsPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               color: backgroundColorLight,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                _HeaderTile(tileTextStyle: tileTextStyle),
-                _ProductsListView(tileTextStyle: tileTextStyle),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _HeaderTile(
+                      tileTextStyle: tileTextStyle,
+                      onChanged: (value) => setState(() => Provider.of<ProductsData>(context, listen: false).setIsSelectedOfAllProducts(value)),
+                    ),
+                    // ignore: prefer_const_constructors
+                    _ProductsListView(tileTextStyle: tileTextStyle),
+                  ],
+                ),
+                Align(
+                  alignment: const Alignment(0.98, -0.98),
+                  child: CircleIconButton(
+                    onPressed: () => Provider.of<ProductsData>(context, listen: false).createExcelFromProducts(),
+                    toolTipText: 'Create excel from products',
+                    icon: Icons.content_copy,
+                  ),
+                ),
               ],
             ),
           ),
@@ -84,14 +108,22 @@ class _ProductsListView extends StatelessWidget {
   }
 }
 
-class _HeaderTile extends StatelessWidget {
+class _HeaderTile extends StatefulWidget {
   const _HeaderTile({
     Key? key,
     required this.tileTextStyle,
+    required this.onChanged,
   }) : super(key: key);
 
   final TextStyle tileTextStyle;
+  final void Function(bool?) onChanged;
 
+  @override
+  State<_HeaderTile> createState() => _HeaderTileState();
+}
+
+class _HeaderTileState extends State<_HeaderTile> {
+  bool isSelected = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -100,37 +132,64 @@ class _HeaderTile extends StatelessWidget {
         color: appbarColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         elevation: 5,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          height: 50,
+        child: SizedBox(
           width: 850,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: 200,
-                child: Text(
-                  "Image",
-                  textAlign: TextAlign.center,
-                  style: tileTextStyle,
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  height: 50,
+                  width: 850,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Image",
+                          textAlign: TextAlign.center,
+                          style: widget.tileTextStyle,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Name",
+                          textAlign: TextAlign.center,
+                          style: widget.tileTextStyle,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: Text(
+                          "Price",
+                          textAlign: TextAlign.center,
+                          style: widget.tileTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
-                width: 200,
-                child: Text(
-                  "Name",
-                  textAlign: TextAlign.center,
-                  style: tileTextStyle,
+                width: 17.5,
+                child: Checkbox(
+                  overlayColor: MaterialStateProperty.all(
+                    Colors.transparent,
+                  ),
+                  fillColor: MaterialStateProperty.all(
+                    Colors.white.withOpacity(0.7),
+                  ),
+                  checkColor: Colors.transparent,
+                  onChanged: (value) {
+                    isSelected = value!;
+                    widget.onChanged(value);
+                  },
+                  value: isSelected,
                 ),
               ),
-              SizedBox(
-                width: 200,
-                child: Text(
-                  "Price",
-                  textAlign: TextAlign.center,
-                  style: tileTextStyle,
-                ),
-              ),
+              const SizedBox(width: 50),
             ],
           ),
         ),
@@ -161,6 +220,7 @@ class _ProductTileState extends State<ProductTile> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isSelected = widget._currentProduct.isSelected;
     return GestureDetector(
       onTap: () {
         Provider.of<ProductsData>(context, listen: false).setActiveProduct(
@@ -178,48 +238,69 @@ class _ProductTileState extends State<ProductTile> {
         child: Material(
           color: !isEnter ? normalColor : mouseOverColor,
           elevation: 2,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            height: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: ImageFromFile(
-                    image: widget._currentProduct.image,
-                    width: 150,
-                    height: 40,
-                    fontSize: 14,
-                    errorWidth: 150,
-                    errorColor: backgroundColorLight,
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 200,
+                        alignment: Alignment.center,
+                        child: ImageFromFile(
+                          image: widget._currentProduct.image,
+                          width: 150,
+                          height: 40,
+                          fontSize: 14,
+                          errorWidth: 150,
+                          errorColor: backgroundColorLight,
+                        ),
+                      ),
+                      Container(
+                        width: 200,
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget._currentProduct.name,
+                          textAlign: TextAlign.center,
+                          style: widget.tileTextStyle,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      Container(
+                        width: 200,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${widget._currentProduct.marketPrice.toString()} TL",
+                          textAlign: TextAlign.center,
+                          style: widget.tileTextStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: Text(
-                    widget._currentProduct.name,
-                    textAlign: TextAlign.center,
-                    style: widget.tileTextStyle,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+              ),
+              SizedBox(
+                width: 17.5,
+                child: Checkbox(
+                  overlayColor: MaterialStateProperty.all(
+                    Colors.transparent,
                   ),
-                ),
-                Container(
-                  width: 200,
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${widget._currentProduct.marketPrice.toString()} TL",
-                    textAlign: TextAlign.center,
-                    style: widget.tileTextStyle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  fillColor: MaterialStateProperty.all(
+                    Colors.white.withOpacity(0.7),
                   ),
+                  checkColor: Colors.transparent,
+                  onChanged: (value) => setState(() => widget._currentProduct.isSelected = value!),
+                  value: isSelected,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 50),
+            ],
           ),
         ),
       ),
@@ -252,76 +333,33 @@ class _ProductButtons extends StatelessWidget {
       color: backgroundColorLight,
       child: SizedBox(
         width: 200,
-        height: 300,
+        height: 450,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              verticalOffset: 30,
+            CircleIconButton(
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, anim1, anim2) => const ProductAddPage(),
+                  transitionDuration: Duration.zero,
+                ),
+              ),
+              toolTipText: 'Add a product to list',
+              icon: Icons.add,
               preferBelow: false,
-              height: 30,
-              message: 'Add a product to list',
-              textStyle: const TextStyle(
-                fontSize: 13,
-                color: Colors.white,
-              ),
-              child: IconButton(
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, anim1, anim2) =>
-                        const ProductAddPage(),
-                    transitionDuration: Duration.zero,
-                  ),
-                ),
-                icon: Container(
-                  width: 45,
-                  height: 45,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xffa81633))),
-                  child: const Icon(
-                    Icons.add,
-                    color: Color(0xffa81633),
-                    size: 40,
-                  ),
-                ),
-                iconSize: 45,
-              ),
+              iconSize: 40,
             ),
-            Container(
-              height: 2,
-              width: 150,
+            const CustomDivider(
+              thickness: 2,
+              lenght: 150,
               color: Colors.black26,
             ),
-            Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              verticalOffset: 30,
-              height: 30,
-              message: 'Delete a product from list',
-              textStyle: const TextStyle(
-                fontSize: 13,
-                color: Colors.white,
-              ),
-              child: IconButton(
-                onPressed: () =>
-                    Provider.of<ProductsData>(context, listen: false)
-                        .deleteAllProducts(),
-                icon: Container(
-                  width: 45,
-                  height: 45,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xffa81633))),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Color(0xffa81633),
-                    size: 30,
-                  ),
-                ),
-                iconSize: 45,
-              ),
+            CircleIconButton(
+              onPressed: () => Provider.of<ProductsData>(context, listen: false).deleteSelectedCostumers(),
+              toolTipText: 'Delete a product from list',
+              icon: Icons.delete,
+              iconSize: 30,
             ),
           ],
         ),

@@ -1,7 +1,6 @@
 import 'package:business_management/main.dart';
 import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:business_management/widgets/property_text.dart';
-import 'package:business_management/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
@@ -134,12 +133,8 @@ class _PropertiesState extends State<_Properties> {
 
   double calculateTotalPrice() {
     try {
-      double quantity = widget._quantityController.text != ""
-          ? double.parse(widget._quantityController.text)
-          : 0;
-      double unitPrice = widget._unitPriceController.text != ""
-          ? double.parse(widget._unitPriceController.text)
-          : 0;
+      double quantity = widget._quantityController.text != "" ? double.parse(widget._quantityController.text) : 0;
+      double unitPrice = widget._unitPriceController.text != "" ? double.parse(widget._unitPriceController.text) : 0;
       return quantity * unitPrice;
     } catch (error) {
       return 0;

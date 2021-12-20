@@ -38,8 +38,9 @@ class Costumer extends HiveObject {
   @HiveField(10)
   final String? lastModifiedDate;
 
-  List<Transaction> get reversedTransactions =>
-      List.from(transactions.reversed);
+  bool isSelected;
+
+  List<Transaction> get reversedTransactions => List.from(transactions.reversed);
 
   void calculateBalance() {
     balance = 0;
@@ -82,7 +83,7 @@ class Costumer extends HiveObject {
     required this.creationDate,
     required this.transactions,
     this.lastModifiedDate,
-  }) {
+  }) : isSelected = false {
     calculateBalance();
   }
 }

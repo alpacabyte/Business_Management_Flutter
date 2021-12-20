@@ -97,12 +97,11 @@ class _ProductAddPageState extends State<ProductAddPage> {
   }
 
   void _addProduct() async {
-    String? name = _nameController.text != "" ? _nameController.text : "null";
-    String? productCode = _productCodeController.text != ""
-        ? _productCodeController.text
-        : "null";
+    String? name = _nameController.text != "" ? _nameController.text : "-";
+    String? productCode =
+        _productCodeController.text != "" ? _productCodeController.text : "-";
     String? moldCode =
-        _moldCodeController.text != "" ? _moldCodeController.text : "null";
+        _moldCodeController.text != "" ? _moldCodeController.text : "-";
     double? printingWeight = _printingWeightController.text != ""
         ? double.parse(_printingWeightController.text)
         : 0;
@@ -112,14 +111,13 @@ class _ProductAddPageState extends State<ProductAddPage> {
     double? productionTime = _productionTimeController.text != ""
         ? double.parse(_productionTimeController.text)
         : 0;
-    String? usedMaterial = _usedMaterialController.text != ""
-        ? _usedMaterialController.text
-        : "null";
+    String? usedMaterial =
+        _usedMaterialController.text != "" ? _usedMaterialController.text : "-";
     String? usedPaint =
-        _usedPaintController.text != "" ? _usedPaintController.text : "null";
+        _usedPaintController.text != "" ? _usedPaintController.text : "-";
     String? auxiliaryMaterial = _auxiliaryMaterialController.text != ""
         ? _auxiliaryMaterialController.text
-        : "null";
+        : "-";
     double? machineTonnage = _machineTonnageController.text != ""
         ? double.parse(_machineTonnageController.text)
         : 0;

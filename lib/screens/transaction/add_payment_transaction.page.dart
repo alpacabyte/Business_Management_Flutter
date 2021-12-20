@@ -3,7 +3,6 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/screens/transaction/choose_transaction_type_page.dart';
 import 'package:business_management/screens/transaction/costumer_transactions_page.dart';
 import 'package:business_management/screens/transaction/payment_transaction_form.dart';
@@ -18,19 +17,14 @@ class PaymentTransactionAddPage extends StatefulWidget {
   const PaymentTransactionAddPage({Key? key}) : super(key: key);
 
   @override
-  State<PaymentTransactionAddPage> createState() =>
-      _PaymentTransactionAddPageState();
+  State<PaymentTransactionAddPage> createState() => _PaymentTransactionAddPageState();
 }
 
 class _PaymentTransactionAddPageState extends State<PaymentTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController =
-      TextEditingController(text: "Payment");
-  final TextEditingController _amountController =
-      TextEditingController(text: "0");
-  final TextEditingController _transactionDateController =
-      TextEditingController(
-          text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+  final TextEditingController _commentController = TextEditingController(text: "Payment");
+  final TextEditingController _amountController = TextEditingController(text: "0");
+  final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
 // #endregion
 
   @override
@@ -55,16 +49,11 @@ class _PaymentTransactionAddPageState extends State<PaymentTransactionAddPage> {
   }
 
   void addTransaction() {
-    final String comment =
-        _commentController.text != "" ? _commentController.text : "null";
-    final double amount =
-        _amountController.text != "" ? double.parse(_amountController.text) : 0;
-    final String transactionDate = _transactionDateController.text != ""
-        ? _transactionDateController.text
-        : "00/00/0000";
+    final String comment = _commentController.text != "" ? _commentController.text : "-";
+    final double amount = _amountController.text != "" ? double.parse(_amountController.text) : 0;
+    final String transactionDate = _transactionDateController.text != "" ? _transactionDateController.text : "00/00/0000";
 
-    Provider.of<CostumersData>(context, listen: false)
-        .addTransactionToCurrentCostumer(
+    Provider.of<CostumersData>(context, listen: false).addTransactionToCurrentCostumer(
       Transaction(
         comment: comment,
         transactionDate: transactionDate,
@@ -116,8 +105,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 CircleIconButton(
                   onPressed: () async {
                     await _addTransaction();
-                    navigateWithoutAnim(
-                        context, const CostumerTransactionsPage());
+                    navigateWithoutAnim(context, const CostumerTransactionsPage());
                   },
                   toolTipText: "Save the transaction and go to list",
                   icon: Icons.done,
@@ -128,8 +116,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                   color: Colors.black26,
                 ),
                 CircleIconButton(
-                  onPressed: () => navigateWithoutAnim(
-                      context, const ChooseTransactionTypePage()),
+                  onPressed: () => navigateWithoutAnim(context, const ChooseTransactionTypePage()),
                   toolTipText: 'Cancel and go back',
                   icon: Icons.close,
                   iconSize: 30,

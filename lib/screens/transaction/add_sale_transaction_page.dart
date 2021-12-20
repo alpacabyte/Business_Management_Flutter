@@ -3,7 +3,6 @@ import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
-import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/screens/transaction/choose_transaction_type_page.dart';
 import 'package:business_management/screens/transaction/costumer_transactions_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
@@ -22,15 +21,10 @@ class SaleTransactionAddPage extends StatefulWidget {
 
 class _SaleTransactionAddPageState extends State<SaleTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController =
-      TextEditingController(text: "Sale");
-  final TextEditingController _quantityController =
-      TextEditingController(text: "0");
-  final TextEditingController _unitPriceController =
-      TextEditingController(text: "0");
-  final TextEditingController _transactionDateController =
-      TextEditingController(
-          text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+  final TextEditingController _commentController = TextEditingController(text: "Sale");
+  final TextEditingController _quantityController = TextEditingController(text: "0");
+  final TextEditingController _unitPriceController = TextEditingController(text: "0");
+  final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
 // #endregion
 
   @override
@@ -56,20 +50,12 @@ class _SaleTransactionAddPageState extends State<SaleTransactionAddPage> {
   }
 
   void addTransaction() {
-    final String comment =
-        _commentController.text != "" ? _commentController.text : "null";
-    final int quantity = _quantityController.text != ""
-        ? int.parse(_quantityController.text)
-        : 0;
-    final double unitPrice = _unitPriceController.text != ""
-        ? double.parse(_unitPriceController.text)
-        : 0;
-    final String transactionDate = _transactionDateController.text != ""
-        ? _transactionDateController.text
-        : "00/00/0000";
+    final String comment = _commentController.text != "" ? _commentController.text : "-";
+    final int quantity = _quantityController.text != "" ? int.parse(_quantityController.text) : 0;
+    final double unitPrice = _unitPriceController.text != "" ? double.parse(_unitPriceController.text) : 0;
+    final String transactionDate = _transactionDateController.text != "" ? _transactionDateController.text : "00/00/0000";
 
-    Provider.of<CostumersData>(context, listen: false)
-        .addTransactionToCurrentCostumer(
+    Provider.of<CostumersData>(context, listen: false).addTransactionToCurrentCostumer(
       Transaction(
         comment: comment,
         transactionDate: transactionDate,
@@ -122,8 +108,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 CircleIconButton(
                   onPressed: () async {
                     await _addTransaction();
-                    navigateWithoutAnim(
-                        context, const CostumerTransactionsPage());
+                    navigateWithoutAnim(context, const CostumerTransactionsPage());
                   },
                   toolTipText: "Save the transaction and go to list",
                   icon: Icons.done,
@@ -134,8 +119,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                   color: Colors.black26,
                 ),
                 CircleIconButton(
-                  onPressed: () => navigateWithoutAnim(
-                      context, const ChooseTransactionTypePage()),
+                  onPressed: () => navigateWithoutAnim(context, const ChooseTransactionTypePage()),
                   toolTipText: 'Cancel and go back',
                   icon: Icons.close,
                   iconSize: 30,

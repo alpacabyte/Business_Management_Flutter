@@ -1,22 +1,18 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/screens/transaction/add_payment_transaction.page.dart';
 import 'package:business_management/screens/transaction/add_sale_transaction_page.dart';
 import 'package:business_management/screens/transaction/costumer_transactions_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
-import 'package:business_management/screens/transaction/sale_transaction_form.dart';
-import 'package:business_management/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class ChooseTransactionTypePage extends StatefulWidget {
   const ChooseTransactionTypePage({Key? key}) : super(key: key);
 
   @override
-  State<ChooseTransactionTypePage> createState() =>
-      _ChooseTransactionTypePageState();
+  State<ChooseTransactionTypePage> createState() => _ChooseTransactionTypePageState();
 }
 
 class _ChooseTransactionTypePageState extends State<ChooseTransactionTypePage> {
@@ -58,14 +54,12 @@ class _TypeButtons extends StatelessWidget {
         children: [
           _TypeButton(
             title: "Sale Transaction",
-            onTap: () =>
-                navigateWithoutAnim(context, const SaleTransactionAddPage()),
+            onTap: () => navigateWithoutAnim(context, const SaleTransactionAddPage()),
           ),
           const SizedBox(height: 100),
           _TypeButton(
             title: "Payment Transaction",
-            onTap: () =>
-                navigateWithoutAnim(context, const PaymentTransactionAddPage()),
+            onTap: () => navigateWithoutAnim(context, const PaymentTransactionAddPage()),
           ),
         ],
       ),

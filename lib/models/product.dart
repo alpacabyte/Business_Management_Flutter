@@ -54,6 +54,8 @@ class Product extends HiveObject {
   @HiveField(15)
   final String? lastModifiedDate;
 
+  bool isSelected = false;
+
   // Constructor
   Product({
     required this.name,

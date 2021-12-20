@@ -5,11 +5,8 @@ import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/screens/costumer/costumer_form.dart';
-import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:provider/provider.dart';
 
 class CostumerAddPage extends StatefulWidget {
@@ -21,11 +18,9 @@ class CostumerAddPage extends StatefulWidget {
 
 class _CostumerAddPageState extends State<CostumerAddPage> {
   // #region Controllers
-  final TextEditingController _corporateTitleController =
-      TextEditingController();
+  final TextEditingController _corporateTitleController = TextEditingController();
   final TextEditingController _taxNumberController = TextEditingController();
-  final TextEditingController _taxAdministrationController =
-      TextEditingController();
+  final TextEditingController _taxAdministrationController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -56,24 +51,16 @@ class _CostumerAddPageState extends State<CostumerAddPage> {
   }
 
   Future<void> _addCostumer() async {
-    String corporateTitle = _corporateTitleController.text != ""
-        ? _corporateTitleController.text
-        : "null";
-    String taxNumber =
-        _taxNumberController.text != "" ? _taxNumberController.text : "null";
+    String corporateTitle = _corporateTitleController.text != "" ? _corporateTitleController.text : "-";
+    String taxNumber = _taxNumberController.text != "" ? _taxNumberController.text : "-";
 
-    String taxAdministration = _taxAdministrationController.text != ""
-        ? _taxAdministrationController.text
-        : "null";
+    String taxAdministration = _taxAdministrationController.text != "" ? _taxAdministrationController.text : "-";
 
-    String address =
-        _addressController.text != "" ? _addressController.text : "null";
+    String address = _addressController.text != "" ? _addressController.text : "-";
 
-    String phoneNumber = _phoneNumberController.text != ""
-        ? _phoneNumberController.text
-        : "null";
+    String phoneNumber = _phoneNumberController.text != "" ? _phoneNumberController.text : "-";
 
-    String email = _emailController.text != "" ? _emailController.text : "null";
+    String email = _emailController.text != "" ? _emailController.text : "-";
 
     await Provider.of<CostumersData>(context, listen: false).addCostumer(
         corporateTitle: corporateTitle,
@@ -140,8 +127,7 @@ class _ProductPageButtons extends StatelessWidget {
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, anim1, anim2) =>
-                          const CostumersPage(),
+                      pageBuilder: (context, anim1, anim2) => const CostumersPage(),
                       transitionDuration: Duration.zero,
                     ),
                   ),

@@ -12,7 +12,6 @@ import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:business_management/widgets/property_text.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CostumerPage extends StatelessWidget {
@@ -56,56 +55,70 @@ class _CostumerProperties extends StatelessWidget {
     return Material(
       color: backgroundColorLight,
       borderRadius: BorderRadius.circular(16),
-      child: Container(
+      child: SizedBox(
         width: 1000,
         height: SizeConfig.safeBlockVertical * 85,
-        padding: const EdgeInsets.only(top: 25, bottom: 25),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PropertyText(
-                text: currentCostumer.corporateTitle,
-                textColor: const Color(0xffdbdbdb),
-                mainFontSize: 35,
-                maxLines: 2,
-                width: 500,
-              ),
-              const CustomDivider(
-                lenght: 750,
-                thickness: 5,
-                margin: EdgeInsets.symmetric(vertical: 25),
-              ),
-              _Properties(currentCostumer: currentCostumer),
-              const SizedBox(height: 25),
-              Align(
-                alignment: const Alignment(0.75, 0),
-                child: Text(
-                  "Costumer No: ${currentCostumer.costumerIndex}",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 25, bottom: 25),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PropertyText(
+                      text: currentCostumer.corporateTitle,
+                      textColor: const Color(0xffdbdbdb),
+                      mainFontSize: 35,
+                      maxLines: 2,
+                      width: 500,
+                    ),
+                    const CustomDivider(
+                      lenght: 750,
+                      thickness: 5,
+                      margin: EdgeInsets.symmetric(vertical: 25),
+                    ),
+                    _Properties(currentCostumer: currentCostumer),
+                    const SizedBox(height: 25),
+                    Align(
+                      alignment: const Alignment(0.75, 0),
+                      child: Text(
+                        "Costumer No: ${currentCostumer.costumerIndex}",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const CustomDivider(
+                      lenght: 750,
+                      thickness: 5,
+                      margin: EdgeInsets.symmetric(vertical: 25),
+                    ),
+                    const Text(
+                      "Last Transactions",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    _LastTransactions(currentCostumer: currentCostumer),
+                  ],
                 ),
               ),
-              const CustomDivider(
-                lenght: 750,
-                thickness: 5,
-                margin: EdgeInsets.symmetric(vertical: 25),
+            ),
+            Align(
+              alignment: const Alignment(0.98, -0.98),
+              child: CircleIconButton(
+                onPressed: () => Provider.of<CostumersData>(context, listen: false).createExcelFromThisCostumer(),
+                toolTipText: 'Create excel from this costumer',
+                icon: Icons.content_copy,
               ),
-              const Text(
-                "Last Transactions",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 15),
-              _LastTransactions(currentCostumer: currentCostumer),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -334,8 +347,7 @@ class _ProductPageButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CostumersData costumersData =
-        Provider.of<CostumersData>(context, listen: false);
+    CostumersData costumersData = Provider.of<CostumersData>(context, listen: false);
     return Material(
       elevation: 10,
       borderRadius: BorderRadius.circular(15),
@@ -377,8 +389,7 @@ class _ProductPageButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () async =>
-                  navigateWithoutAnim(context, const CostumersPage()),
+              onPressed: () async => navigateWithoutAnim(context, const CostumersPage()),
               toolTipText: "Go back",
               icon: Icons.arrow_back,
               iconSize: 30,

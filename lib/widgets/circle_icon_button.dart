@@ -7,9 +7,9 @@ class CircleIconButton extends StatelessWidget {
     required this.toolTipText,
     this.preferBelow,
     required this.icon,
-    this.iconSize,
-    this.iconColor,
-    this.buttonSize,
+    this.iconSize = 25,
+    this.iconColor = const Color(0xffa81633),
+    this.buttonSize = 45,
   })  : _onPressed = onPressed,
         super(key: key);
 
@@ -17,9 +17,9 @@ class CircleIconButton extends StatelessWidget {
   final String toolTipText;
   final bool? preferBelow;
   final IconData icon;
-  final double? iconSize;
-  final double? buttonSize;
-  final Color? iconColor;
+  final double iconSize;
+  final double buttonSize;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +36,16 @@ class CircleIconButton extends StatelessWidget {
       child: IconButton(
         onPressed: () => _onPressed(),
         icon: Container(
-          width: buttonSize ?? 45,
-          height: buttonSize ?? 45,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: iconColor ?? const Color(0xffa81633))),
+          width: buttonSize,
+          height: buttonSize,
+          decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: iconColor)),
           child: Icon(
             icon,
-            color: iconColor ?? const Color(0xffa81633),
-            size: iconSize ?? 25,
+            color: iconColor,
+            size: iconSize,
           ),
         ),
-        iconSize: buttonSize ?? 45,
+        iconSize: buttonSize,
       ),
     );
   }

@@ -6,10 +6,22 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: TitleBarWithLeftNav(
         page: Pages.settings,
-        children: [],
+        children: [
+          Expanded(
+            child: Center(
+              child: SizedBox(
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [],
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
