@@ -1,6 +1,7 @@
 import 'package:business_management/functions/get_app_documents_dir.dart';
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/screens/product/products_page.dart';
@@ -28,18 +29,13 @@ class _ProductAddPageState extends State<ProductAddPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _productCodeController = TextEditingController();
   final TextEditingController _moldCodeController = TextEditingController();
-  final TextEditingController _printingWeightController =
-      TextEditingController();
-  final TextEditingController _numberOfCompartmentsController =
-      TextEditingController();
-  final TextEditingController _productionTimeController =
-      TextEditingController();
+  final TextEditingController _printingWeightController = TextEditingController();
+  final TextEditingController _numberOfCompartmentsController = TextEditingController();
+  final TextEditingController _productionTimeController = TextEditingController();
   final TextEditingController _usedMaterialController = TextEditingController();
   final TextEditingController _usedPaintController = TextEditingController();
-  final TextEditingController _auxiliaryMaterialController =
-      TextEditingController();
-  final TextEditingController _machineTonnageController =
-      TextEditingController();
+  final TextEditingController _auxiliaryMaterialController = TextEditingController();
+  final TextEditingController _machineTonnageController = TextEditingController();
   final TextEditingController _marketPriceController = TextEditingController();
 // #endregion
 
@@ -88,8 +84,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
       label: 'images',
       extensions: ['jpg', 'png', 'jpeg'],
     );
-    final XFile? imageFile = await FileSelectorPlatform.instance
-        .openFile(acceptedTypeGroups: [typeGroup]);
+    final XFile? imageFile = await FileSelectorPlatform.instance.openFile(acceptedTypeGroups: [typeGroup]);
 
     if (imageFile == null) return null;
 
@@ -98,32 +93,16 @@ class _ProductAddPageState extends State<ProductAddPage> {
 
   void _addProduct() async {
     String? name = _nameController.text != "" ? _nameController.text : "-";
-    String? productCode =
-        _productCodeController.text != "" ? _productCodeController.text : "-";
-    String? moldCode =
-        _moldCodeController.text != "" ? _moldCodeController.text : "-";
-    double? printingWeight = _printingWeightController.text != ""
-        ? double.parse(_printingWeightController.text)
-        : 0;
-    int? numberOfCompartments = _numberOfCompartmentsController.text != ""
-        ? int.parse(_numberOfCompartmentsController.text)
-        : 0;
-    double? productionTime = _productionTimeController.text != ""
-        ? double.parse(_productionTimeController.text)
-        : 0;
-    String? usedMaterial =
-        _usedMaterialController.text != "" ? _usedMaterialController.text : "-";
-    String? usedPaint =
-        _usedPaintController.text != "" ? _usedPaintController.text : "-";
-    String? auxiliaryMaterial = _auxiliaryMaterialController.text != ""
-        ? _auxiliaryMaterialController.text
-        : "-";
-    double? machineTonnage = _machineTonnageController.text != ""
-        ? double.parse(_machineTonnageController.text)
-        : 0;
-    double? marketPrice = _marketPriceController.text != ""
-        ? double.parse(_marketPriceController.text)
-        : 0;
+    String? productCode = _productCodeController.text != "" ? _productCodeController.text : "-";
+    String? moldCode = _moldCodeController.text != "" ? _moldCodeController.text : "-";
+    double? printingWeight = _printingWeightController.text != "" ? double.parse(_printingWeightController.text) : 0;
+    int? numberOfCompartments = _numberOfCompartmentsController.text != "" ? int.parse(_numberOfCompartmentsController.text) : 0;
+    double? productionTime = _productionTimeController.text != "" ? double.parse(_productionTimeController.text) : 0;
+    String? usedMaterial = _usedMaterialController.text != "" ? _usedMaterialController.text : "-";
+    String? usedPaint = _usedPaintController.text != "" ? _usedPaintController.text : "-";
+    String? auxiliaryMaterial = _auxiliaryMaterialController.text != "" ? _auxiliaryMaterialController.text : "-";
+    double? machineTonnage = _machineTonnageController.text != "" ? double.parse(_machineTonnageController.text) : 0;
+    double? marketPrice = _marketPriceController.text != "" ? double.parse(_marketPriceController.text) : 0;
 
     if (imageFile != null) {
       final String fileExtension = p.extension(imageFile!.path);
@@ -178,7 +157,7 @@ class _ProductPageButtons extends StatelessWidget {
                 await _saveProduct();
                 navigateWithoutAnim(context, const ProductAddPage());
               },
-              toolTipText: "Save the product and create another",
+              toolTipText: appLocalization(context).saveTheProductAndCreateAnother,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -195,7 +174,7 @@ class _ProductPageButtons extends StatelessWidget {
                     await _saveProduct();
                     navigateWithoutAnim(context, const ProductsPage());
                   },
-                  toolTipText: "Save the product and go to list",
+                  toolTipText: appLocalization(context).saveTheProductAndGoToList,
                   icon: Icons.done,
                 ),
                 Container(
@@ -207,12 +186,11 @@ class _ProductPageButtons extends StatelessWidget {
                   onPressed: () => Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (context, anim1, anim2) =>
-                          const ProductsPage(),
+                      pageBuilder: (context, anim1, anim2) => const ProductsPage(),
                       transitionDuration: Duration.zero,
                     ),
                   ),
-                  toolTipText: 'Cancel and go back',
+                  toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,
                 ),

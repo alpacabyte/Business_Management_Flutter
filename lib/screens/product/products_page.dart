@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
@@ -28,6 +29,7 @@ class _ProductsPageState extends State<ProductsPage> {
       fontWeight: FontWeight.w500,
     );
     SizeConfig().init(context);
+
     return Scaffold(
       body: TitleBarWithLeftNav(
         page: Pages.products,
@@ -57,8 +59,8 @@ class _ProductsPageState extends State<ProductsPage> {
                 Align(
                   alignment: const Alignment(0.98, -0.98),
                   child: CircleIconButton(
-                    onPressed: () => Provider.of<ProductsData>(context, listen: false).createExcelFromProducts(),
-                    toolTipText: 'Create excel from products',
+                    onPressed: () => Provider.of<ProductsData>(context, listen: false).createExcelFromProducts(context),
+                    toolTipText: appLocalization(context).createExcelFromSelectedProducts,
                     icon: Icons.content_copy,
                   ),
                 ),
@@ -147,7 +149,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 200,
                         child: Text(
-                          "Image",
+                          appLocalization(context).image,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -155,7 +157,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 200,
                         child: Text(
-                          "Name",
+                          appLocalization(context).productName,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -163,7 +165,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 200,
                         child: Text(
-                          "Price",
+                          appLocalization(context).marketPrice,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -345,7 +347,7 @@ class _ProductButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Add a product to list',
+              toolTipText: appLocalization(context).addAProductToList,
               icon: Icons.add,
               preferBelow: false,
               iconSize: 40,
@@ -357,7 +359,7 @@ class _ProductButtons extends StatelessWidget {
             ),
             CircleIconButton(
               onPressed: () => Provider.of<ProductsData>(context, listen: false).deleteSelectedProducts(),
-              toolTipText: 'Delete a product from list',
+              toolTipText: appLocalization(context).deleteSelectedProductsFromList,
               icon: Icons.delete,
               iconSize: 30,
             ),

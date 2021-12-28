@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/screens/costumer/costumers_page.dart';
@@ -98,7 +99,7 @@ class _ProductPageButtons extends StatelessWidget {
                 await _addCostumer();
                 navigateWithoutAnim(context, const CostumerAddPage());
               },
-              toolTipText: "Save the costumer and create another",
+              toolTipText: appLocalization(context).saveTheCostumerAndCreateAnother,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -115,7 +116,7 @@ class _ProductPageButtons extends StatelessWidget {
                     await _addCostumer();
                     navigateWithoutAnim(context, const CostumersPage());
                   },
-                  toolTipText: "Save the costumer and go to list",
+                  toolTipText: appLocalization(context).saveTheCostumerAndGoToList,
                   icon: Icons.done,
                 ),
                 Container(
@@ -131,7 +132,7 @@ class _ProductPageButtons extends StatelessWidget {
                       transitionDuration: Duration.zero,
                     ),
                   ),
-                  toolTipText: 'Cancel and go back',
+                  toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,
                 ),

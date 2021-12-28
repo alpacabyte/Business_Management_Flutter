@@ -1,3 +1,4 @@
+import 'package:business_management/main.dart';
 import 'package:business_management/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -11,17 +12,17 @@ class DBErrorWidget extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          children: const [
-            TitleBar(),
-            Spacer(),
+          children: [
+            const TitleBar(),
+            const Spacer(),
             Text(
-              "Data Base Error!",
-              style: TextStyle(
+              appLocalization(context).dataBaseError,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 25,
               ),
             ),
-            Spacer()
+            const Spacer()
           ],
         ),
       ),

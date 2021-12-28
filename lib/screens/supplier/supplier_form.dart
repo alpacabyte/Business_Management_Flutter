@@ -1,3 +1,4 @@
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -45,30 +46,30 @@ class SupplierForm extends StatelessWidget {
               runSpacing: 55,
               children: [
                 CustomTextField(
-                  title: "Corporate Title",
+                  title: appLocalization(context).corporateTitle,
                   controller: _corporateTitleController,
                 ),
                 CustomTextField(
-                  title: "Address",
+                  title: appLocalization(context).address,
                   controller: _addressController,
                 ),
                 CustomTextField(
-                  title: "E-Mail",
+                  title: appLocalization(context).eMail,
                   controller: _emailController,
                 ),
                 CustomTextField(
-                  title: "Phone Number",
+                  title: appLocalization(context).phoneNumber,
                   controller: _phoneNumberController,
                   inputFormatters: [
                     MaskedInputFormatter("0000-000-0000"),
                   ],
                 ),
                 CustomTextField(
-                  title: "Tax Administration",
+                  title: appLocalization(context).taxAdministration,
                   controller: _taxAdministrationController,
                 ),
                 CustomTextField(
-                  title: "Tax Number",
+                  title: appLocalization(context).taxNumber,
                   controller: _taxNumberController,
                 ),
               ],

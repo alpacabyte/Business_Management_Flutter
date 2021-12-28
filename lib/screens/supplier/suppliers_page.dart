@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/supplier_data.dart';
@@ -56,8 +57,8 @@ class _SuppliersPageState extends State<SuppliersPage> {
                 Align(
                   alignment: const Alignment(0.98, -0.98),
                   child: CircleIconButton(
-                    onPressed: () => Provider.of<SuppliersData>(context, listen: false).createExcelFromSuppliers(),
-                    toolTipText: 'Create excel from selected suppliers',
+                    onPressed: () => Provider.of<SuppliersData>(context, listen: false).createExcelFromSuppliers(context),
+                    toolTipText: appLocalization(context).createExcelFromSelectedSuppliers,
                     icon: Icons.content_copy,
                   ),
                 ),
@@ -144,7 +145,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 250,
                         child: Text(
-                          "Corporate Title",
+                          appLocalization(context).corporateTitle,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -152,7 +153,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 250,
                         child: Text(
-                          "Phone",
+                          appLocalization(context).phoneNumber,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -206,6 +207,12 @@ class _SupplierTileState extends State<SupplierTile> {
   final Color normalColor = backgroundColorHeavy;
   final Color mouseOverColor = const Color(0xff3c3c47);
   bool isEnter = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget._currentSupplier.isSelected = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +327,7 @@ class _SupplierButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Add a supplier to list',
+              toolTipText: appLocalization(context).addASupplierToList,
               icon: Icons.add,
               iconSize: 45,
               preferBelow: true,
@@ -332,7 +339,7 @@ class _SupplierButtons extends StatelessWidget {
             ),
             CircleIconButton(
               onPressed: () => Provider.of<SuppliersData>(context, listen: false).deleteSelectedSuppliers(),
-              toolTipText: 'Delete selected suppliers from list',
+              toolTipText: appLocalization(context).deleteSelectedSuppliersFromList,
               icon: Icons.delete,
               iconSize: 30,
             ),

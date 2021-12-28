@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:business_management/functions/get_app_documents_dir.dart';
+import 'package:business_management/main.dart';
 import 'package:business_management/models/product.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
@@ -195,7 +196,7 @@ class ProductsData extends ChangeNotifier {
     file.writeAsString(productsJSON);
   }
 
-  List<ExcelDataRow> buildProductDataRows() {
+  List<ExcelDataRow> buildProductDataRows(BuildContext context) {
     final List<ExcelDataRow> excelDataRows = _products
         .map((product) => ExcelDataRow(cells: <ExcelDataCell>[
               ExcelDataCell(
@@ -203,51 +204,51 @@ class ProductsData extends ChangeNotifier {
                 value: product.productIndex,
               ),
               ExcelDataCell(
-                columnHeader: 'Name',
+                columnHeader: appLocalization(context).productName,
                 value: product.name,
               ),
               ExcelDataCell(
-                columnHeader: 'Product Code',
+                columnHeader: appLocalization(context).productCode,
                 value: product.productCode,
               ),
               ExcelDataCell(
-                columnHeader: 'Mold Code',
+                columnHeader: appLocalization(context).moldCode,
                 value: product.moldCode,
               ),
               ExcelDataCell(
-                columnHeader: 'Printing Weight',
+                columnHeader: appLocalization(context).printingWeight,
                 value: product.printingWeight,
               ),
-              const ExcelDataCell(
-                columnHeader: 'Unit Weight',
+              ExcelDataCell(
+                columnHeader: appLocalization(context).unitWeight,
                 value: null,
               ),
               ExcelDataCell(
-                columnHeader: 'Number Of Compartments',
+                columnHeader: appLocalization(context).numberOfCompartments,
                 value: product.numberOfCompartments,
               ),
               ExcelDataCell(
-                columnHeader: 'Production Time',
+                columnHeader: appLocalization(context).productionTime,
                 value: product.productionTime,
               ),
               ExcelDataCell(
-                columnHeader: 'Used Material',
+                columnHeader: appLocalization(context).usedMaterial,
                 value: product.usedMaterial,
               ),
               ExcelDataCell(
-                columnHeader: 'Used Paint',
+                columnHeader: appLocalization(context).usedPaint,
                 value: product.usedPaint,
               ),
               ExcelDataCell(
-                columnHeader: 'Auxiliary Material',
+                columnHeader: appLocalization(context).auxiliaryMaterial,
                 value: product.auxiliaryMaterial,
               ),
               ExcelDataCell(
-                columnHeader: 'Machine Tonnage',
+                columnHeader: appLocalization(context).machineTonnage,
                 value: product.machineTonnage,
               ),
               ExcelDataCell(
-                columnHeader: 'Market Price (TL)',
+                columnHeader: '${appLocalization(context).marketPrice} (TL)',
                 value: product.marketPrice,
               ),
             ]))
@@ -256,14 +257,14 @@ class ProductsData extends ChangeNotifier {
     return excelDataRows;
   }
 
-  void createExcelFromProducts() async {
+  void createExcelFromProducts(BuildContext context) async {
     final String? directoryPath = await getSavePath(suggestedName: "Product Chart");
     if (directoryPath == null || _products.isEmpty) return;
 
     final Workbook workbook = Workbook();
     final Worksheet sheet = workbook.worksheets[0];
 
-    final List<ExcelDataRow> dataRows = buildProductDataRows();
+    final List<ExcelDataRow> dataRows = buildProductDataRows(context);
 
     sheet.importData(dataRows, 1, 1);
 

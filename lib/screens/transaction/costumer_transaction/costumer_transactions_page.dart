@@ -1,9 +1,11 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:business_management/screens/costumer/costumer_page.dart';
 import 'package:business_management/screens/transaction/costumer_transaction/costumer_choose_transaction_type_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
@@ -132,7 +134,7 @@ class _HeaderTileState extends State<_HeaderTile> {
               constraints: const BoxConstraints(maxWidth: 700),
               child: SizedBox(
                 child: Text(
-                  "${widget.currentCostumer.corporateTitle}'s  Transactions",
+                  "${widget.currentCostumer.corporateTitle}'${appLocalization(context).sTransaction}",
                   textAlign: TextAlign.center,
                   style: tileTextStyle,
                 ),
@@ -147,8 +149,8 @@ class _HeaderTileState extends State<_HeaderTile> {
                 overflow: TextOverflow.ellipsis,
                 text: TextSpan(
                   children: [
-                    const TextSpan(
-                      text: "Total Balance:   ",
+                    TextSpan(
+                      text: "${appLocalization(context).totalBalance}:   ",
                       style: tileTextStyle,
                     ),
                     TextSpan(
@@ -180,35 +182,35 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 200,
                         child: Row(
-                          children: const [
-                            SizedBox(
+                          children: [
+                            const SizedBox(
                               width: 20,
                               height: 20,
                             ),
                             Spacer(),
                             Text(
-                              "Transaction Date",
+                              appLocalization(context).transactionDate,
                               textAlign: TextAlign.center,
                               style: tileTextStyle,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Spacer(),
+                            const Spacer(),
                           ],
                         ),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 250,
                         child: Text(
-                          "Comment",
+                          appLocalization(context).comment,
                           textAlign: TextAlign.center,
                           style: tileTextStyle,
                         ),
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 200,
                         child: Text(
-                          "Amount",
+                          appLocalization(context).amount,
                           textAlign: TextAlign.center,
                           style: tileTextStyle,
                         ),
@@ -264,8 +266,8 @@ class _TransactionTileState extends State<_TransactionTile> {
   @override
   Widget build(BuildContext context) {
     final bool isSelected = widget._currentTransaction.isSelected;
-    final String toolTipMessage = !widget._currentTransaction.isPayment
-        ? "${widget._currentTransaction.comment}\n-Quantity: ${widget._currentTransaction.quantity}\n-Unit Price: ${widget._currentTransaction.unitPrice} TL\n-Total Price: ${widget._currentTransaction.totalPrice} TL"
+    final String toolTipMessage = widget._currentTransaction.transactionType == TransactionType.costumersSale
+        ? "${widget._currentTransaction.comment}\n-${appLocalization(context).quantity}: ${widget._currentTransaction.quantity}\n-${appLocalization(context).unitPrice}: ${widget._currentTransaction.unitPrice} TL\n-${appLocalization(context).totalPrice}: ${widget._currentTransaction.totalPrice} TL"
         : widget._currentTransaction.comment;
     return GestureDetector(
       onTap: () => setState(() => widget._currentTransaction.isSelected = !isSelected),
@@ -331,10 +333,10 @@ class _TransactionTileState extends State<_TransactionTile> {
                 SizedBox(
                   width: 200,
                   child: Text(
-                    "${!widget._currentTransaction.isPayment ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
+                    "${widget._currentTransaction.transactionType == TransactionType.costumersSale ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
                     textAlign: TextAlign.center,
                     style: tileTextStyle.copyWith(
-                      color: !widget._currentTransaction.isPayment ? Colors.green : Colors.red,
+                      color: widget._currentTransaction.transactionType == TransactionType.costumersSale ? Colors.green : Colors.red,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -393,7 +395,7 @@ class _CostumerButtons extends StatelessWidget {
           children: [
             CircleIconButton(
               onPressed: () => navigateWithoutAnim(context, const CostumerChooseTransactionTypePage()),
-              toolTipText: 'Add a transaction to list',
+              toolTipText: appLocalization(context).addATransactionToList,
               icon: Icons.add,
               preferBelow: false,
               iconSize: 40,
@@ -405,7 +407,7 @@ class _CostumerButtons extends StatelessWidget {
             ),
             CircleIconButton(
               onPressed: () => Provider.of<CostumersData>(context, listen: false).deleteSelectedTransactionsFromCurrentCostumer(),
-              toolTipText: "Delete selected transactions from list",
+              toolTipText: appLocalization(context).deleteSelectedTransactionsFromList,
               icon: Icons.delete,
               iconSize: 30,
             ),
@@ -416,7 +418,7 @@ class _CostumerButtons extends StatelessWidget {
             ),
             CircleIconButton(
               onPressed: () async => navigateWithoutAnim(context, const CostumerPage()),
-              toolTipText: "Go back",
+              toolTipText: appLocalization(context).goBack,
               icon: Icons.arrow_back,
               iconSize: 30,
             ),

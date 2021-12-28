@@ -1,12 +1,17 @@
 import 'package:business_management/functions/init_hive.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/models/costumer_data.dart';
+import 'package:business_management/models/localization_model.dart';
 import 'package:business_management/models/product_data.dart';
 import 'package:business_management/models/supplier_data.dart';
+import 'package:business_management/models/transaction_data.dart';
 import 'package:business_management/screens/home/db_error_page.dart';
 import 'package:business_management/screens/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +32,6 @@ void main() async {
   });
 }
 
-const appbarColor = Color(0xff27272e);
-const backgroundColorHeavy = Color(0xff2d2d36);
-const backgroundColorLight = Color(0xff35353F);
-
 class App extends StatelessWidget {
   const App({Key? key, required this.isError}) : super(key: key);
 
@@ -39,11 +40,23 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ProductsData()),
-        ChangeNotifierProvider(create: (context) => CostumersData()),
-        ChangeNotifierProvider(create: (context) => SuppliersData()),
+        ChangeNotifierProvider(create: (context) => LocalizationData(), lazy: false),
+        ChangeNotifierProvider(create: (context) => TransactionsData(), lazy: false),
+        ChangeNotifierProvider(create: (context) => ProductsData(), lazy: false),
+        ChangeNotifierProvider(create: (context) => CostumersData(), lazy: false),
+        ChangeNotifierProvider(create: (context) => SuppliersData(), lazy: false),
       ],
-      child: MaterialApp(
+      builder: (context, child) => MaterialApp(
+        locale: Provider.of<LocalizationData>(context).locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('tr', ''),
+        ],
         theme: Theme.of(context).copyWith(
           scaffoldBackgroundColor: appbarColor,
           scrollbarTheme: const ScrollbarThemeData().copyWith(thickness: MaterialStateProperty.all(15)),
@@ -54,3 +67,5 @@ class App extends StatelessWidget {
     );
   }
 }
+
+AppLocalizations appLocalization(BuildContext context) => AppLocalizations.of(context)!;

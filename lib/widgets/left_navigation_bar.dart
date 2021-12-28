@@ -1,17 +1,16 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/costumer_data.dart';
-import 'package:business_management/models/product_data.dart';
-import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/screens/costumer/costumers_page.dart';
 import 'package:business_management/screens/home/home_page.dart';
 import 'package:business_management/screens/product/products_page.dart';
 import 'package:business_management/screens/settings/settings_page.dart';
 import 'package:business_management/screens/supplier/suppliers_page.dart';
+import 'package:business_management/screens/vault/all_transactions.page.dart';
+import 'package:business_management/screens/vault/vault_choose_page.dart';
 import 'package:business_management/widgets/title_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LeftNavigationBar extends StatelessWidget {
   const LeftNavigationBar({
@@ -36,31 +35,37 @@ class LeftNavigationBar extends StatelessWidget {
                 children: [
                   _NavigationButtons(
                     icon: Icons.home,
-                    text: "Home",
+                    text: appLocalization(context).home,
                     isCurrentPage: page == Pages.home,
                     buttonNo: 0,
                   ),
                   _NavigationButtons(
                     icon: Icons.inventory_2_outlined,
-                    text: "Products",
+                    text: appLocalization(context).products,
                     isCurrentPage: page == Pages.products,
                     buttonNo: 1,
                   ),
                   _NavigationButtons(
                     icon: Icons.person,
-                    text: "Costumers",
+                    text: appLocalization(context).costumers,
                     isCurrentPage: page == Pages.costumers,
                     buttonNo: 2,
                   ),
                   _NavigationButtons(
                     icon: Icons.storefront,
-                    text: "Suppliers",
+                    text: appLocalization(context).suppliers,
                     isCurrentPage: page == Pages.suppliers,
                     buttonNo: 3,
                   ),
                   _NavigationButtons(
+                    icon: Icons.point_of_sale,
+                    text: appLocalization(context).vault,
+                    isCurrentPage: page == Pages.vault,
+                    buttonNo: 5,
+                  ),
+                  _NavigationButtons(
                     icon: Icons.settings,
-                    text: "Settings",
+                    text: appLocalization(context).settings,
                     isCurrentPage: page == Pages.settings,
                     buttonNo: 4,
                   ),
@@ -80,6 +85,7 @@ enum Pages {
   costumers,
   suppliers,
   settings,
+  vault,
 }
 
 class _NavigationButtons extends StatelessWidget {
@@ -104,6 +110,7 @@ class _NavigationButtons extends StatelessWidget {
       CostumersPage(),
       SuppliersPage(),
       Settings(),
+      VaultChoosePage(),
     ];
     return Column(
       children: [
@@ -113,16 +120,7 @@ class _NavigationButtons extends StatelessWidget {
             color: isCurrentPage ? Colors.white : Colors.grey,
           ),
           iconSize: 35,
-          onPressed: () {
-            if (buttonNo == 1) {
-              Provider.of<ProductsData>(context, listen: false).getProducts();
-            } else if (buttonNo == 2) {
-              Provider.of<CostumersData>(context, listen: false).getCostumersList();
-            } else if (buttonNo == 3) {
-              Provider.of<SuppliersData>(context, listen: false).getSuppliersList();
-            }
-            navigateWithoutAnim(context, pages[buttonNo]);
-          },
+          onPressed: () => navigateWithoutAnim(context, pages[buttonNo]),
         ),
         if (isCurrentPage)
           Text(

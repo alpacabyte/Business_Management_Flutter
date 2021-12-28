@@ -1,3 +1,5 @@
+import 'package:business_management/helpers/colors.dart';
+import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -9,18 +11,7 @@ class HomePage extends StatelessWidget {
     return const Scaffold(
       body: TitleBarWithLeftNav(
         page: Pages.home,
-        children: [
-          /* Expanded(
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  Provider.of<ProductsData>(context, listen: false).saveJson();
-                },
-                child: const Text("Create Back-up"),
-              ),
-            ),
-          ), */
-        ],
+        children: [],
       ),
     );
   }

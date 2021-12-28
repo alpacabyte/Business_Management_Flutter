@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/supplier_data.dart';
@@ -9,6 +10,7 @@ import 'package:business_management/screens/supplier/supplier_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class SupplierEditPage extends StatefulWidget {
@@ -76,7 +78,7 @@ class _SupplierEditPageState extends State<SupplierEditPage> {
   }
 
   void _editSupplier() async {
-    List<Transaction> transactions = widget.currentSupplier.transactions;
+    HiveList<Transaction> transactionsBoxList = widget.currentSupplier.transactionsHiveList;
     int supplierIndex = widget.currentSupplier.supplierIndex;
     String creationDate = widget.currentSupplier.creationDate;
     String corporateTitle = _corporateTitleController.text != "" ? _corporateTitleController.text : "-";
@@ -99,7 +101,7 @@ class _SupplierEditPageState extends State<SupplierEditPage> {
       phoneNumber: phoneNumber,
       taxAdministration: taxAdministration,
       taxNumber: taxNumber,
-      transactions: transactions,
+      transactionsBoxList: transactionsBoxList,
     );
 
     navigateWithoutAnim(context, const SupplierPage());
@@ -129,7 +131,7 @@ class _SupplierPageButtons extends StatelessWidget {
           children: [
             CircleIconButton(
               onPressed: _editSupplier,
-              toolTipText: "Save supplier",
+              toolTipText: appLocalization(context).saveSupplier,
               icon: Icons.done,
             ),
             Container(
@@ -145,7 +147,7 @@ class _SupplierPageButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Cancel and go back',
+              toolTipText: appLocalization(context).cancelAndGoBack,
               icon: Icons.close,
               iconSize: 30,
             ),

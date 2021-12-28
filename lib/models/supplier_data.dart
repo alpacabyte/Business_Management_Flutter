@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
@@ -73,7 +76,7 @@ class SuppliersData extends ChangeNotifier {
         phoneNumber: phoneNumber,
         email: email,
         creationDate: DateFormat('yMd').format(DateTime.now()),
-        transactions: [],
+        transactionsHiveList: HiveList(Hive.box<Transaction>("transactionsBox")),
       ),
     );
 
@@ -124,7 +127,7 @@ class SuppliersData extends ChangeNotifier {
     required String email,
     required int supplierIndex,
     required String creationDate,
-    required List<Transaction> transactions,
+    required HiveList<Transaction> transactionsBoxList,
   }) async {
     await _suppliersBox.put(
       supplierIndex,
@@ -138,7 +141,7 @@ class SuppliersData extends ChangeNotifier {
         email: email,
         lastModifiedDate: DateFormat('yMd').format(DateTime.now()),
         creationDate: creationDate,
-        transactions: transactions,
+        transactionsHiveList: transactionsBoxList,
       ),
     );
 
@@ -167,27 +170,27 @@ class SuppliersData extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ExcelDataRow> buildTransactionDataRows(Supplier supplier) {
+  List<ExcelDataRow> buildTransactionDataRows(Supplier supplier, BuildContext context) {
     List<ExcelDataRow> excelDataRows = supplier.transactions
         .map((transaction) => ExcelDataRow(cells: <ExcelDataCell>[
               ExcelDataCell(
-                columnHeader: 'Date',
+                columnHeader: appLocalization(context).date,
                 value: transaction.transactionDate,
               ),
               ExcelDataCell(
-                columnHeader: 'Comment',
+                columnHeader: appLocalization(context).comment,
                 value: transaction.comment,
               ),
               ExcelDataCell(
-                columnHeader: 'Purchase',
-                value: !transaction.isPayment ? transaction.totalPrice : null,
+                columnHeader: appLocalization(context).purchases,
+                value: transaction.transactionType == TransactionType.suppliersPurchase ? transaction.totalPrice : null,
               ),
               ExcelDataCell(
-                columnHeader: 'Payment',
-                value: transaction.isPayment ? transaction.totalPrice : null,
+                columnHeader: appLocalization(context).payments,
+                value: transaction.transactionType == TransactionType.suppliersPayment ? transaction.totalPrice : null,
               ),
-              const ExcelDataCell(
-                columnHeader: 'Balance',
+              ExcelDataCell(
+                columnHeader: appLocalization(context).balance,
                 value: null,
               ),
             ]))
@@ -214,8 +217,9 @@ class SuppliersData extends ChangeNotifier {
     Style globalStyle,
     Style headerStyle,
     Supplier supplier,
+    BuildContext context,
   ) {
-    final List<ExcelDataRow> transactionsDataRows = buildTransactionDataRows(supplier);
+    final List<ExcelDataRow> transactionsDataRows = buildTransactionDataRows(supplier, context);
 
     sheet.importData(transactionsDataRows, 1, 1);
 
@@ -234,22 +238,24 @@ class SuppliersData extends ChangeNotifier {
     Worksheet sheet,
     Supplier supplier,
     Style style,
+    BuildContext context,
   ) {
     final List<Object> supplierInformationDataRows = buildSupplierInformationDataRows(supplier);
 
     final List<Object> eupplierInformationDataRowsHeaders = [
-      'Corporate Title',
-      'Tax Number',
-      'Tax Administration',
-      'Address',
-      'Phone Number',
-      'E-mail',
+      appLocalization(context).corporateTitle,
+      appLocalization(context).corporateTitle,
+      appLocalization(context).taxNumber,
+      appLocalization(context).taxAdministration,
+      appLocalization(context).address,
+      appLocalization(context).phoneNumber,
+      appLocalization(context).eMail,
     ];
 
     final List<Object> totalBalanceDataRows = [
-      'Total Purchases',
-      'Total Payments',
-      'Total Balance',
+      appLocalization(context).totalPurchases,
+      appLocalization(context).totalPayments,
+      appLocalization(context).totalBalance,
     ];
 
     sheet.importList(totalBalanceDataRows, 1, 7, true);
@@ -265,7 +271,7 @@ class SuppliersData extends ChangeNotifier {
     range.cellStyle = style;
   }
 
-  void createExcelFromThisSupplier() async {
+  void createExcelFromThisSupplier(BuildContext context) async {
     final String? directoryPath = await getSavePath(suggestedName: currentSupplier!.corporateTitle);
     if (directoryPath == null) return;
 
@@ -295,15 +301,11 @@ class SuppliersData extends ChangeNotifier {
     final Worksheet sheet = workbook.worksheets[0];
 
     if (currentSupplier!.transactions.isNotEmpty) {
-      createTransactionsTable(sheet, globalStyle, headerStyle, currentSupplier!);
+      createTransactionsTable(sheet, globalStyle, headerStyle, currentSupplier!, context);
       sheet.getRangeByName('E2').setFormula('=D2-C2');
     }
 
-    createSupplierInformationsTable(
-      sheet,
-      currentSupplier!,
-      informationStyle,
-    );
+    createSupplierInformationsTable(sheet, currentSupplier!, informationStyle, context);
 
     int transactionCount = currentSupplier!.transactions.length;
 
@@ -334,7 +336,7 @@ class SuppliersData extends ChangeNotifier {
     File('$directoryPath.xlsx').writeAsBytes(bytes);
   }
 
-  void createExcelFromSuppliers() async {
+  void createExcelFromSuppliers(BuildContext context) async {
     final String? directoryPath = await getSavePath(suggestedName: "Suppliers");
     if (directoryPath == null) return;
 
@@ -361,28 +363,23 @@ class SuppliersData extends ChangeNotifier {
     informationStyle.indent = 0;
     informationStyle.borders.all.lineStyle = LineStyle.thin;
 
-    bool isFirst = true;
+    final List<String> titles = [];
     for (final Supplier supplier in _suppliers) {
       if (supplier.isSelected) {
         final Worksheet sheet;
-        if (isFirst) {
+        if (titles.isEmpty) {
           sheet = workbook.worksheets[0];
-          sheet.name = supplier.corporateTitle;
-          isFirst = false;
+          sheet.name = _checkName(supplier.corporateTitle, titles);
         } else {
-          sheet = workbook.worksheets.addWithName(supplier.corporateTitle);
+          sheet = workbook.worksheets.addWithName(_checkName(supplier.corporateTitle, titles));
         }
 
         if (supplier.transactions.isNotEmpty) {
-          createTransactionsTable(sheet, globalStyle, headerStyle, supplier);
+          createTransactionsTable(sheet, globalStyle, headerStyle, supplier, context);
           sheet.getRangeByName('E2').setFormula('=D2-C2');
         }
 
-        createSupplierInformationsTable(
-          sheet,
-          supplier,
-          informationStyle,
-        );
+        createSupplierInformationsTable(sheet, supplier, informationStyle, context);
 
         int transactionCount = supplier.transactions.length;
 
@@ -412,5 +409,15 @@ class SuppliersData extends ChangeNotifier {
     workbook.dispose();
 
     File('$directoryPath.xlsx').writeAsBytes(bytes);
+  }
+
+  String _checkName(String _title, List<String> titles) {
+    for (final String title in titles) {
+      if (_title == title) {
+        _title += "_";
+      }
+    }
+    titles.add(_title);
+    return _title;
   }
 }

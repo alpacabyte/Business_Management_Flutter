@@ -1,4 +1,5 @@
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:hive/hive.dart';
 
 part 'supplier.g.dart';
@@ -9,7 +10,11 @@ class Supplier extends HiveObject {
   final String corporateTitle;
 
   @HiveField(1)
-  final List<Transaction> transactions;
+  final HiveList<Transaction> transactionsHiveList;
+
+  List<Transaction> transactions = [];
+
+  final transactionsBox = Hive.box<Transaction>("transactionsBox");
 
   @HiveField(2)
   double balance = 0;
@@ -46,7 +51,7 @@ class Supplier extends HiveObject {
     balance = 0;
 
     for (final Transaction transaction in transactions) {
-      if (transaction.isPayment) {
+      if (transaction.transactionType == TransactionType.suppliersPayment) {
         balance += transaction.totalPrice;
       } else {
         balance -= transaction.totalPrice;
@@ -55,13 +60,20 @@ class Supplier extends HiveObject {
   }
 
   Future<void> addTransaction(Transaction newTransaction) async {
-    transactions.add(newTransaction);
+    transactionsBox.add(newTransaction);
+    transactionsHiveList.add(newTransaction);
+    transactions = transactionsHiveList.toList();
     calculateBalance();
     await save();
   }
 
   Future<void> deleteTransaction(int index) async {
-    transactions.removeAt(index);
+    for (final Transaction transaction in transactions) {
+      if (transaction.isSelected) {
+        transaction.delete();
+      }
+    }
+    transactions = transactionsHiveList.toList();
     calculateBalance();
     await save();
   }
@@ -81,9 +93,10 @@ class Supplier extends HiveObject {
     required this.phoneNumber,
     required this.email,
     required this.creationDate,
-    required this.transactions,
     this.lastModifiedDate,
+    required this.transactionsHiveList,
   }) : isSelected = false {
+    transactions = transactionsHiveList.toList();
     calculateBalance();
   }
 }

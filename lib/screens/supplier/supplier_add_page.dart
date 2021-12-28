@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/screens/supplier/supplier_form.dart';
@@ -99,7 +100,7 @@ class _ProductPageButtons extends StatelessWidget {
                 await _addSupplier();
                 navigateWithoutAnim(context, const SupplierAddPage());
               },
-              toolTipText: "Save the supplier and create another",
+              toolTipText: appLocalization(context).saveTheSupplierAndCreateAnother,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -116,7 +117,7 @@ class _ProductPageButtons extends StatelessWidget {
                     await _addSupplier();
                     navigateWithoutAnim(context, const SuppliersPage());
                   },
-                  toolTipText: "Save the supplier and go to list",
+                  toolTipText: appLocalization(context).saveTheSupplierAndGoToList,
                   icon: Icons.done,
                 ),
                 Container(
@@ -132,7 +133,7 @@ class _ProductPageButtons extends StatelessWidget {
                       transitionDuration: Duration.zero,
                     ),
                   ),
-                  toolTipText: 'Cancel and go back',
+                  toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,
                 ),

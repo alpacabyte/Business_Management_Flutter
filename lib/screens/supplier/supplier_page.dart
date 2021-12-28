@@ -1,9 +1,11 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:business_management/screens/supplier/supplier_edit_page.dart';
 import 'package:business_management/screens/supplier/suppliers_page.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_transactions_page.dart';
@@ -83,7 +85,7 @@ class _SupplierProperties extends StatelessWidget {
                     Align(
                       alignment: const Alignment(0.75, 0),
                       child: Text(
-                        "Supplier No: ${currentSupplier.supplierIndex}",
+                        "${appLocalization(context).supplierNo}: ${currentSupplier.supplierIndex}",
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 15,
@@ -96,9 +98,9 @@ class _SupplierProperties extends StatelessWidget {
                       thickness: 5,
                       margin: EdgeInsets.symmetric(vertical: 25),
                     ),
-                    const Text(
-                      "Last Transactions",
-                      style: TextStyle(
+                    Text(
+                      appLocalization(context).lastTransactions,
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -113,8 +115,8 @@ class _SupplierProperties extends StatelessWidget {
             Align(
               alignment: const Alignment(0.98, -0.98),
               child: CircleIconButton(
-                onPressed: () => Provider.of<SuppliersData>(context, listen: false).createExcelFromThisSupplier(),
-                toolTipText: 'Create excel from this supplier',
+                onPressed: () => Provider.of<SuppliersData>(context, listen: false).createExcelFromThisSupplier(context),
+                toolTipText: appLocalization(context).createExcelFromThisSupplier,
                 icon: Icons.content_copy,
               ),
             ),
@@ -140,35 +142,35 @@ class _Properties extends StatelessWidget {
       runSpacing: 45,
       children: [
         PropertyText(
-          title: "E-Mail",
+          title: appLocalization(context).eMail,
           text: currentSupplier.email,
         ),
         PropertyText(
-          title: "Phone Number",
+          title: appLocalization(context).phoneNumber,
           text: currentSupplier.phoneNumber,
         ),
         PropertyText(
-          title: "Tax Administration",
+          title: appLocalization(context).taxAdministration,
           text: currentSupplier.taxAdministration,
         ),
         PropertyText(
-          title: "Tax Number",
+          title: appLocalization(context).taxNumber,
           text: currentSupplier.taxNumber,
         ),
         PropertyText(
-          title: "Created",
+          title: appLocalization(context).created,
           text: currentSupplier.creationDate,
         ),
         PropertyText(
-          title: "Last Modified",
+          title: appLocalization(context).lastModified,
           text: currentSupplier.lastModifiedDate ?? "-",
         ),
         PropertyText(
-          title: "Address",
+          title: appLocalization(context).address,
           text: currentSupplier.address,
         ),
         PropertyText(
-          title: "Total Balance",
+          title: appLocalization(context).totalBalance,
           text: "${currentSupplier.balance.toString()} TL",
           textColor: currentSupplier.balance > 0
               ? Colors.green
@@ -188,16 +190,18 @@ class _LastTransactions extends StatelessWidget {
   }) : super(key: key);
   final Supplier currentSupplier;
 
-  List<Widget> getLastTransactions(int itemCount, bool isPayment) {
+  List<Widget> getLastTransactions(int itemCount, TransactionType transactionType) {
     final List<Widget> transactions = [];
     int currentCount = 0;
 
     for (Transaction transaction in currentSupplier.reversedTransactions) {
-      if (transaction.isPayment == isPayment) {
-        transactions.add(_TransactionTile(
-          currentTransaction: transaction,
-          isPayment: isPayment,
-        ));
+      if (transaction.transactionType == transactionType) {
+        transactions.add(
+          _TransactionTile(
+            currentTransaction: transaction,
+            transactionType: transactionType,
+          ),
+        );
         currentCount++;
 
         if (currentCount == itemCount) break;
@@ -229,16 +233,16 @@ class _LastTransactions extends StatelessWidget {
             width: 400,
             child: Column(
               children: [
-                const Text(
-                  "Purchases",
-                  style: TextStyle(
+                Text(
+                  appLocalization(context).purchases,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 10),
-                ...getLastTransactions(5, false),
+                ...getLastTransactions(5, TransactionType.suppliersPurchase),
               ],
             ),
           ),
@@ -256,16 +260,16 @@ class _LastTransactions extends StatelessWidget {
             width: 400,
             child: Column(
               children: [
-                const Text(
-                  "Payments",
-                  style: TextStyle(
+                Text(
+                  appLocalization(context).payments,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 10),
-                ...getLastTransactions(5, true),
+                ...getLastTransactions(5, TransactionType.suppliersPayment),
               ],
             ),
           ),
@@ -279,11 +283,11 @@ class _TransactionTile extends StatelessWidget {
   const _TransactionTile({
     Key? key,
     required Transaction currentTransaction,
-    required this.isPayment,
+    required this.transactionType,
   })  : _currentTransaction = currentTransaction,
         super(key: key);
 
-  final bool isPayment;
+  final TransactionType transactionType;
   final Transaction _currentTransaction;
   final TextStyle tileTextStyle = const TextStyle(
     fontSize: 17,
@@ -325,10 +329,10 @@ class _TransactionTile extends StatelessWidget {
           SizedBox(
             width: 100,
             child: Text(
-              "${isPayment ? "+" : "-"}${_currentTransaction.totalPrice.toString()} TL",
+              "${transactionType == TransactionType.suppliersPayment ? "+" : "-"}${_currentTransaction.totalPrice.toString()} TL",
               textAlign: TextAlign.center,
               style: tileTextStyle.copyWith(
-                color: isPayment ? Colors.green : Colors.red,
+                color: transactionType == TransactionType.suppliersPayment ? Colors.green : Colors.red,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -365,7 +369,7 @@ class _ProductPageButtons extends StatelessWidget {
                   currentSupplier: suppliersData.currentSupplier!,
                 ),
               ),
-              toolTipText: "Edit supplier",
+              toolTipText: appLocalization(context).editSupplier,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -379,7 +383,7 @@ class _ProductPageButtons extends StatelessWidget {
                 context,
                 const SupplierTransactionsPage(),
               ),
-              toolTipText: "Transactions",
+              toolTipText: appLocalization(context).transactions,
               preferBelow: false,
               icon: Icons.description,
             ),
@@ -390,7 +394,7 @@ class _ProductPageButtons extends StatelessWidget {
             ),
             CircleIconButton(
               onPressed: () async => navigateWithoutAnim(context, const SuppliersPage()),
-              toolTipText: "Go back",
+              toolTipText: appLocalization(context).goBack,
               icon: Icons.arrow_back,
               iconSize: 30,
             ),

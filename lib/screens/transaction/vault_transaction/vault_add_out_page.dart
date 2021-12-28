@@ -2,30 +2,29 @@ import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_data.dart';
 import 'package:business_management/models/transaction_type.dart';
-import 'package:business_management/screens/transaction/costumer_transaction/costumer_choose_transaction_type_page.dart';
-import 'package:business_management/screens/transaction/costumer_transaction/costumer_transactions_page.dart';
+import 'package:business_management/screens/transaction/vault_transaction/vault_choose_transaction_type.dart';
+import 'package:business_management/screens/vault/vault_choose_page.dart';
+import 'package:business_management/widgets/payment_transaction_form.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
-import 'package:business_management/widgets/sale_transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class CostumerSaleTransactionAddPage extends StatefulWidget {
-  const CostumerSaleTransactionAddPage({Key? key}) : super(key: key);
+class VaultOutTransactionAddPage extends StatefulWidget {
+  const VaultOutTransactionAddPage({Key? key}) : super(key: key);
 
   @override
-  State<CostumerSaleTransactionAddPage> createState() => _CostumerSaleTransactionAddPageState();
+  State<VaultOutTransactionAddPage> createState() => _VaultOutTransactionAddPageState();
 }
 
-class _CostumerSaleTransactionAddPageState extends State<CostumerSaleTransactionAddPage> {
+class _VaultOutTransactionAddPageState extends State<VaultOutTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController = TextEditingController(text: "Satış");
-  final TextEditingController _quantityController = TextEditingController(text: "0");
-  final TextEditingController _unitPriceController = TextEditingController(text: "0");
+  final TextEditingController _commentController = TextEditingController(text: "Ödeme");
+  final TextEditingController _amountController = TextEditingController(text: "0");
   final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
 // #endregion
 
@@ -34,13 +33,12 @@ class _CostumerSaleTransactionAddPageState extends State<CostumerSaleTransaction
     SizeConfig().init(context);
     return Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.costumers,
+        page: Pages.vault,
         children: [
           const Spacer(),
-          SaleTransactionForm(
+          PaymentTransactionForm(
             commentController: _commentController,
-            quantityController: _quantityController,
-            unitPriceController: _unitPriceController,
+            amountController: _amountController,
             transactionDateController: _transactionDateController,
           ),
           const Spacer(),
@@ -53,17 +51,15 @@ class _CostumerSaleTransactionAddPageState extends State<CostumerSaleTransaction
 
   void addTransaction() {
     final String comment = _commentController.text != "" ? _commentController.text : "-";
-    final int quantity = _quantityController.text != "" ? int.parse(_quantityController.text) : 0;
-    final double unitPrice = _unitPriceController.text != "" ? double.parse(_unitPriceController.text) : 0;
+    final double amount = _amountController.text != "" ? double.parse(_amountController.text) : 0;
     final String transactionDate = _transactionDateController.text != "" ? _transactionDateController.text : "00/00/0000";
 
-    Provider.of<CostumersData>(context, listen: false).addTransactionToCurrentCostumer(
+    Provider.of<TransactionsData>(context, listen: false).addTransactionToList(
       Transaction(
         comment: comment,
         transactionDate: transactionDate,
-        unitPrice: unitPrice,
-        transactionType: TransactionType.costumersSale,
-        quantity: quantity,
+        unitPrice: amount,
+        transactionType: TransactionType.suppliersPayment,
       ),
     );
   }
@@ -93,7 +89,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
             CircleIconButton(
               onPressed: () async {
                 await _addTransaction();
-                navigateWithoutAnim(context, const CostumerSaleTransactionAddPage());
+                navigateWithoutAnim(context, const VaultOutTransactionAddPage());
               },
               toolTipText: appLocalization(context).saveTheTransactionAndCreateAnother,
               preferBelow: false,
@@ -110,7 +106,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 CircleIconButton(
                   onPressed: () async {
                     await _addTransaction();
-                    navigateWithoutAnim(context, const CostumerTransactionsPage());
+                    navigateWithoutAnim(context, const VaultChoosePage());
                   },
                   toolTipText: appLocalization(context).saveTheTransactionAndGoToList,
                   icon: Icons.done,
@@ -121,7 +117,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                   color: Colors.black26,
                 ),
                 CircleIconButton(
-                  onPressed: () => navigateWithoutAnim(context, const CostumerChooseTransactionTypePage()),
+                  onPressed: () => navigateWithoutAnim(context, const VaultChooseTransactionTypePage()),
                   toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,

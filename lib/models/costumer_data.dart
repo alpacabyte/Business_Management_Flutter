@@ -1,8 +1,10 @@
 import 'dart:io';
-
+import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -74,7 +76,7 @@ class CostumersData extends ChangeNotifier {
         phoneNumber: phoneNumber,
         email: email,
         creationDate: DateFormat('yMd').format(DateTime.now()),
-        transactions: [],
+        transactionsHiveList: HiveList(Hive.box<Transaction>("transactionsBox")),
       ),
     );
 
@@ -125,7 +127,7 @@ class CostumersData extends ChangeNotifier {
     required String email,
     required int costumerIndex,
     required String creationDate,
-    required List<Transaction> transactions,
+    required HiveList<Transaction> transactionsBoxList,
   }) async {
     await _costumerBox.put(
       costumerIndex,
@@ -139,7 +141,7 @@ class CostumersData extends ChangeNotifier {
         email: email,
         lastModifiedDate: DateFormat('yMd').format(DateTime.now()),
         creationDate: creationDate,
-        transactions: transactions,
+        transactionsHiveList: transactionsBoxList,
       ),
     );
 
@@ -151,8 +153,7 @@ class CostumersData extends ChangeNotifier {
   }
 
   Future<void> deleteTransactionFromCurrentCostumer(int index) async {
-    //await currentCostumer!.deleteTransaction(index);
-    currentCostumer!.deleteTransaction2(index);
+    await currentCostumer!.deleteTransaction(index);
     notifyListeners();
   }
 
@@ -169,27 +170,27 @@ class CostumersData extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ExcelDataRow> buildTransactionDataRows(Costumer costumer) {
+  List<ExcelDataRow> buildTransactionDataRows(Costumer costumer, BuildContext context) {
     List<ExcelDataRow> excelDataRows = costumer.transactions
         .map((transaction) => ExcelDataRow(cells: <ExcelDataCell>[
               ExcelDataCell(
-                columnHeader: 'Date',
+                columnHeader: appLocalization(context).date,
                 value: transaction.transactionDate,
               ),
               ExcelDataCell(
-                columnHeader: 'Comment',
+                columnHeader: appLocalization(context).comment,
                 value: transaction.comment,
               ),
               ExcelDataCell(
-                columnHeader: 'Sale',
-                value: !transaction.isPayment ? transaction.totalPrice : null,
+                columnHeader: appLocalization(context).sales,
+                value: transaction.transactionType == TransactionType.costumersSale ? transaction.totalPrice : null,
               ),
               ExcelDataCell(
-                columnHeader: 'Payment',
-                value: transaction.isPayment ? transaction.totalPrice : null,
+                columnHeader: appLocalization(context).payments,
+                value: transaction.transactionType == TransactionType.costumersPayment ? transaction.totalPrice : null,
               ),
-              const ExcelDataCell(
-                columnHeader: 'Balance',
+              ExcelDataCell(
+                columnHeader: appLocalization(context).balance,
                 value: null,
               ),
             ]))
@@ -216,8 +217,9 @@ class CostumersData extends ChangeNotifier {
     Style globalStyle,
     Style headerStyle,
     Costumer costumer,
+    BuildContext context,
   ) {
-    final List<ExcelDataRow> transactionsDataRows = buildTransactionDataRows(costumer);
+    final List<ExcelDataRow> transactionsDataRows = buildTransactionDataRows(costumer, context);
 
     sheet.importData(transactionsDataRows, 1, 1);
 
@@ -236,22 +238,23 @@ class CostumersData extends ChangeNotifier {
     Worksheet sheet,
     Costumer costumer,
     Style style,
+    BuildContext context,
   ) {
     final List<Object> costumerInformationDataRows = buildCostumerInformationDataRows(costumer);
 
     final List<Object> costumerInformationDataRowsHeaders = [
-      'Corporate Title',
-      'Tax Number',
-      'Tax Administration',
-      'Address',
-      'Phone Number',
-      'E-mail',
+      appLocalization(context).corporateTitle,
+      appLocalization(context).taxNumber,
+      appLocalization(context).taxAdministration,
+      appLocalization(context).address,
+      appLocalization(context).phoneNumber,
+      appLocalization(context).eMail,
     ];
 
     final List<Object> totalBalanceDataRows = [
-      'Total Sales',
-      'Total Payments',
-      'Total Balance',
+      appLocalization(context).totalSales,
+      appLocalization(context).totalPayments,
+      appLocalization(context).totalBalance,
     ];
 
     sheet.importList(totalBalanceDataRows, 1, 7, true);
@@ -267,7 +270,7 @@ class CostumersData extends ChangeNotifier {
     range.cellStyle = style;
   }
 
-  void createExcelFromThisCostumer() async {
+  void createExcelFromThisCostumer(BuildContext context) async {
     final String? directoryPath = await getSavePath(suggestedName: currentCostumer!.corporateTitle);
     if (directoryPath == null) return;
 
@@ -297,7 +300,7 @@ class CostumersData extends ChangeNotifier {
     final Worksheet sheet = workbook.worksheets[0];
 
     if (currentCostumer!.transactions.isNotEmpty) {
-      createTransactionsTable(sheet, globalStyle, headerStyle, currentCostumer!);
+      createTransactionsTable(sheet, globalStyle, headerStyle, currentCostumer!, context);
       sheet.getRangeByName('E2').setFormula('=C2-D2');
     }
 
@@ -305,6 +308,7 @@ class CostumersData extends ChangeNotifier {
       sheet,
       currentCostumer!,
       informationStyle,
+      context,
     );
 
     int transactionCount = currentCostumer!.transactions.length;
@@ -336,8 +340,8 @@ class CostumersData extends ChangeNotifier {
     File('$directoryPath.xlsx').writeAsBytes(bytes);
   }
 
-  void createExcelFromCostumers() async {
-    final String? directoryPath = await getSavePath(suggestedName: "Costumers");
+  void createExcelFromCostumers(BuildContext context) async {
+    final String? directoryPath = await getSavePath(suggestedName: appLocalization(context).costumers);
     if (directoryPath == null) return;
 
     final Workbook workbook = Workbook();
@@ -362,21 +366,19 @@ class CostumersData extends ChangeNotifier {
     informationStyle.vAlign = VAlignType.center;
     informationStyle.indent = 0;
     informationStyle.borders.all.lineStyle = LineStyle.thin;
-
-    bool isFirst = true;
+    final List<String> titles = [];
     for (final Costumer costumer in _costumers) {
       if (costumer.isSelected) {
         final Worksheet sheet;
-        if (isFirst) {
+        if (titles.isEmpty) {
           sheet = workbook.worksheets[0];
-          sheet.name = costumer.corporateTitle;
-          isFirst = false;
+          sheet.name = _checkName(costumer.corporateTitle, titles);
         } else {
-          sheet = workbook.worksheets.addWithName(costumer.corporateTitle);
+          sheet = workbook.worksheets.addWithName(_checkName(costumer.corporateTitle, titles));
         }
 
         if (costumer.transactions.isNotEmpty) {
-          createTransactionsTable(sheet, globalStyle, headerStyle, costumer);
+          createTransactionsTable(sheet, globalStyle, headerStyle, costumer, context);
           sheet.getRangeByName('E2').setFormula('=C2-D2');
         }
 
@@ -384,6 +386,7 @@ class CostumersData extends ChangeNotifier {
           sheet,
           costumer,
           informationStyle,
+          context,
         );
 
         int transactionCount = costumer.transactions.length;
@@ -414,5 +417,15 @@ class CostumersData extends ChangeNotifier {
     workbook.dispose();
 
     File('$directoryPath.xlsx').writeAsBytes(bytes);
+  }
+
+  String _checkName(String _title, List<String> titles) {
+    for (final String title in titles) {
+      if (_title == title) {
+        _title += "_";
+      }
+    }
+    titles.add(_title);
+    return _title;
   }
 }

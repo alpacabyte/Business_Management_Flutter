@@ -1,4 +1,5 @@
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:business_management/widgets/image_from_file.dart';
@@ -93,19 +94,19 @@ class ProductForm extends StatelessWidget {
                 runSpacing: 24,
                 children: [
                   CustomTextField(
-                    title: "Name",
+                    title: appLocalization(context).productName,
                     controller: _nameController,
                   ),
                   CustomTextField(
-                    title: "Product Code",
+                    title: appLocalization(context).productCode,
                     controller: _productCodeController,
                   ),
                   CustomTextField(
-                    title: "Mold Code",
+                    title: appLocalization(context).moldCode,
                     controller: _moldCodeController,
                   ),
                   CustomTextField(
-                    title: "Printing Weight",
+                    title: appLocalization(context).printingWeight,
                     controller: _printingWeightController,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
@@ -114,14 +115,14 @@ class ProductForm extends StatelessWidget {
                     ],
                   ),
                   CustomTextField(
-                    title: "Number of Compartments",
+                    title: appLocalization(context).numberOfCompartments,
                     controller: _numberOfCompartmentsController,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
                   ),
                   CustomTextField(
-                    title: "Production Time",
+                    title: appLocalization(context).productionTime,
                     controller: _productionTimeController,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
@@ -130,19 +131,19 @@ class ProductForm extends StatelessWidget {
                     ],
                   ),
                   CustomTextField(
-                    title: "Used Material",
+                    title: appLocalization(context).usedMaterial,
                     controller: _usedMaterialController,
                   ),
                   CustomTextField(
-                    title: "Used Paint",
+                    title: appLocalization(context).usedPaint,
                     controller: _usedPaintController,
                   ),
                   CustomTextField(
-                    title: "Auxiliary Material",
+                    title: appLocalization(context).auxiliaryMaterial,
                     controller: _auxiliaryMaterialController,
                   ),
                   CustomTextField(
-                    title: "Machine Tonnage",
+                    title: appLocalization(context).machineTonnage,
                     controller: _machineTonnageController,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
@@ -151,7 +152,7 @@ class ProductForm extends StatelessWidget {
                     ],
                   ),
                   CustomTextField(
-                    title: "Market Price",
+                    title: appLocalization(context).marketPrice,
                     controller: _marketPriceController,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(

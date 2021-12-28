@@ -1,3 +1,4 @@
+import 'package:business_management/models/transaction_type.dart';
 import 'package:hive/hive.dart';
 
 part 'transaction.g.dart';
@@ -14,7 +15,7 @@ class Transaction extends HiveObject {
   final double unitPrice;
 
   @HiveField(4)
-  final bool isPayment;
+  final TransactionType transactionType;
 
   @HiveField(5)
   final String transactionDate;
@@ -28,7 +29,7 @@ class Transaction extends HiveObject {
     required this.comment,
     required this.transactionDate,
     required this.unitPrice,
-    required this.isPayment,
+    required this.transactionType,
     this.quantity = 1,
   })  : totalPrice = quantity * unitPrice,
         isSelected = false;

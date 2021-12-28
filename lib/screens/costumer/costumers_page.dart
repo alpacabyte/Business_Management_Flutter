@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
@@ -56,8 +57,8 @@ class _CostumersPageState extends State<CostumersPage> {
                 Align(
                   alignment: const Alignment(0.98, -0.98),
                   child: CircleIconButton(
-                    onPressed: () => Provider.of<CostumersData>(context, listen: false).createExcelFromCostumers(),
-                    toolTipText: 'Create excel from selected costumers',
+                    onPressed: () => Provider.of<CostumersData>(context, listen: false).createExcelFromCostumers(context),
+                    toolTipText: appLocalization(context).createExcelFromSelectedCostumers,
                     icon: Icons.content_copy,
                   ),
                 ),
@@ -144,7 +145,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 250,
                         child: Text(
-                          "Corporate Title",
+                          appLocalization(context).corporateTitle,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -152,7 +153,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                       SizedBox(
                         width: 250,
                         child: Text(
-                          "Phone",
+                          appLocalization(context).phoneNumber,
                           textAlign: TextAlign.center,
                           style: widget.tileTextStyle,
                         ),
@@ -206,6 +207,11 @@ class _CostumerTileState extends State<CostumerTile> {
   final Color normalColor = backgroundColorHeavy;
   final Color mouseOverColor = const Color(0xff3c3c47);
   bool isEnter = false;
+  @override
+  void initState() {
+    super.initState();
+    widget._currentCostumer.isSelected = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +326,7 @@ class _CostumerButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Add a costumer to list',
+              toolTipText: appLocalization(context).addACostumerToList,
               icon: Icons.add,
               iconSize: 45,
               preferBelow: true,
@@ -331,9 +337,8 @@ class _CostumerButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () => Provider.of<CostumersData>(context, listen: false)
-                  .deleteTransactionFromCurrentCostumer(0), //Provider.of<CostumersData>(context, listen: false).deleteSelectedCostumers(),
-              toolTipText: 'Delete selected costumers from list',
+              onPressed: () => Provider.of<CostumersData>(context, listen: false).deleteSelectedCostumers(),
+              toolTipText: appLocalization(context).deleteSelectedCostumersFromList,
               icon: Icons.delete,
               iconSize: 30,
             ),

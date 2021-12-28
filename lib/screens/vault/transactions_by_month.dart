@@ -1,13 +1,17 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
 import 'package:business_management/helpers/colors.dart';
+import 'package:business_management/helpers/months.dart';
 import 'package:business_management/main.dart';
-import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_data.dart';
 import 'package:business_management/models/transaction_type.dart';
 import 'package:business_management/screens/supplier/supplier_page.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_choose_transaction_type_page.dart';
+import 'package:business_management/screens/transaction/vault_transaction/vault_add_in_page.dart';
+import 'package:business_management/screens/transaction/vault_transaction/vault_choose_transaction_type.dart';
+import 'package:business_management/screens/vault/vault_choose_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/custom_divider.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
@@ -15,20 +19,22 @@ import 'package:business_management/widgets/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SupplierTransactionsPage extends StatelessWidget {
-  const SupplierTransactionsPage({Key? key}) : super(key: key);
+class TransactionsByMonthPage extends StatelessWidget {
+  const TransactionsByMonthPage({Key? key, required this.month}) : super(key: key);
+
+  final int month;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return const Scaffold(
+    return Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.suppliers,
+        page: Pages.vault,
         children: [
-          Spacer(),
-          _Transactions(),
-          Spacer(),
-          _SupplierButtons(),
-          SizedBox(width: 20),
+          const Spacer(),
+          _Transactions(month: month),
+          const Spacer(),
+          _TransactionsButtons(month: month),
+          const SizedBox(width: 20),
         ],
       ),
     );
@@ -38,7 +44,10 @@ class SupplierTransactionsPage extends StatelessWidget {
 class _Transactions extends StatefulWidget {
   const _Transactions({
     Key? key,
+    required this.month,
   }) : super(key: key);
+
+  final int month;
 
   @override
   State<_Transactions> createState() => _TransactionsState();
@@ -54,18 +63,20 @@ class _TransactionsState extends State<_Transactions> {
         borderRadius: BorderRadius.circular(16),
         color: backgroundColorLight,
       ),
-      child: Consumer<SuppliersData>(builder: (context, suppliersData, child) {
+      child: Consumer<TransactionsData>(builder: (context, transactionsData, child) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 10),
             _HeaderTile(
-              currentSupplier: suppliersData.currentSupplier!,
-              onChanged: (value) => setState(() => suppliersData.setIsSelectedOfAllTransactions(value)),
+              onChanged: (value) => setState(() => transactionsData.setIsSelectedOfAllMonth(value, widget.month)),
+              transactionsData: transactionsData,
+              month: widget.month,
             ),
             Expanded(
               child: _TransactionsListView(
-                currentSupplier: suppliersData.currentSupplier!,
+                transactionsData: transactionsData,
+                month: widget.month,
               ),
             ),
             const SizedBox(height: 20),
@@ -79,22 +90,24 @@ class _TransactionsState extends State<_Transactions> {
 class _TransactionsListView extends StatelessWidget {
   const _TransactionsListView({
     Key? key,
-    required this.currentSupplier,
+    required this.transactionsData,
+    required this.month,
   }) : super(key: key);
 
-  final Supplier currentSupplier;
+  final TransactionsData transactionsData;
+  final int month;
 
   @override
   Widget build(BuildContext context) {
-    List<Transaction> currentSuppliersTransactions = currentSupplier.transactions;
+    List<Transaction> transactions = transactionsData.transactionsByMonths[month]!;
     return SizedBox(
       width: 850,
       child: ListView.separated(
         padding: const EdgeInsets.only(top: 10),
         itemBuilder: (context, index) => _TransactionTile(
-          currentTransaction: currentSuppliersTransactions[index],
+          currentTransaction: transactions[index],
         ),
-        itemCount: currentSuppliersTransactions.length,
+        itemCount: transactions.length,
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
           height: 10,
         ),
@@ -106,12 +119,14 @@ class _TransactionsListView extends StatelessWidget {
 class _HeaderTile extends StatefulWidget {
   const _HeaderTile({
     Key? key,
-    required this.currentSupplier,
     required this.onChanged,
+    required this.transactionsData,
+    required this.month,
   }) : super(key: key);
 
-  final Supplier currentSupplier;
   final void Function(bool?) onChanged;
+  final TransactionsData transactionsData;
+  final int month;
 
   @override
   State<_HeaderTile> createState() => _HeaderTileState();
@@ -134,7 +149,7 @@ class _HeaderTileState extends State<_HeaderTile> {
               constraints: const BoxConstraints(maxWidth: 700),
               child: SizedBox(
                 child: Text(
-                  "${widget.currentSupplier.corporateTitle}'${appLocalization(context).sTransaction}",
+                  "${months(context)[widget.month]} ${appLocalization(context).transactions}",
                   textAlign: TextAlign.center,
                   style: tileTextStyle,
                 ),
@@ -150,15 +165,15 @@ class _HeaderTileState extends State<_HeaderTile> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "${appLocalization(context).totalBalance}:   ",
+                      text: "${months(context)[widget.month]} ${appLocalization(context).balance}:   ",
                       style: tileTextStyle,
                     ),
                     TextSpan(
-                        text: "${widget.currentSupplier.balance.toString()} TL",
+                        text: "${widget.transactionsData.getMonthBalance(widget.month)} TL",
                         style: tileTextStyle.copyWith(
-                          color: widget.currentSupplier.balance > 0
+                          color: widget.transactionsData.getMonthBalance(widget.month) > 0
                               ? Colors.green
-                              : widget.currentSupplier.balance < 0
+                              : widget.transactionsData.getMonthBalance(widget.month) < 0
                                   ? Colors.red
                                   : const Color(0xffdbdbdb),
                         )),
@@ -187,7 +202,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                               width: 20,
                               height: 20,
                             ),
-                            const Spacer(),
+                            Spacer(),
                             Text(
                               appLocalization(context).transactionDate,
                               textAlign: TextAlign.center,
@@ -195,7 +210,7 @@ class _HeaderTileState extends State<_HeaderTile> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const Spacer(),
+                            Spacer(),
                           ],
                         ),
                       ),
@@ -265,10 +280,11 @@ class _TransactionTileState extends State<_TransactionTile> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isIn = widget._currentTransaction.transactionType == TransactionType.costumersPayment;
     final bool isSelected = widget._currentTransaction.isSelected;
-    final String toolTipMessage = widget._currentTransaction.transactionType == TransactionType.suppliersPurchase
-        ? "${widget._currentTransaction.comment}\n-${appLocalization(context).quantity}: ${widget._currentTransaction.quantity}\n-${appLocalization(context).unitPrice}: ${widget._currentTransaction.unitPrice} TL\n-${appLocalization(context).totalPrice}: ${widget._currentTransaction.totalPrice} TL"
-        : widget._currentTransaction.comment;
+    final String toolTipMessage = widget._currentTransaction.transactionType == TransactionType.costumersPayment
+        ? appLocalization(context).collection
+        : appLocalization(context).payment;
     return GestureDetector(
       onTap: () => setState(() => widget._currentTransaction.isSelected = !isSelected),
       child: MouseRegion(
@@ -333,10 +349,10 @@ class _TransactionTileState extends State<_TransactionTile> {
                 SizedBox(
                   width: 200,
                   child: Text(
-                    "${widget._currentTransaction.transactionType == TransactionType.suppliersPayment ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
+                    "${isIn ? "+" : "-"}${widget._currentTransaction.totalPrice.toString()} TL",
                     textAlign: TextAlign.center,
                     style: tileTextStyle.copyWith(
-                      color: widget._currentTransaction.transactionType == TransactionType.suppliersPayment ? Colors.green : Colors.red,
+                      color: isIn ? Colors.green : Colors.red,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -376,10 +392,13 @@ class _TransactionTileState extends State<_TransactionTile> {
   }
 }
 
-class _SupplierButtons extends StatelessWidget {
-  const _SupplierButtons({
+class _TransactionsButtons extends StatelessWidget {
+  const _TransactionsButtons({
     Key? key,
+    required this.month,
   }) : super(key: key);
+
+  final int month;
 
   @override
   Widget build(BuildContext context) {
@@ -394,7 +413,7 @@ class _SupplierButtons extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CircleIconButton(
-              onPressed: () => navigateWithoutAnim(context, const SupplierChooseTransactionTypePage()),
+              onPressed: () => navigateWithoutAnim(context, const VaultChooseTransactionTypePage()),
               toolTipText: appLocalization(context).addATransactionToList,
               icon: Icons.add,
               preferBelow: false,
@@ -406,7 +425,7 @@ class _SupplierButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () => Provider.of<SuppliersData>(context, listen: false).deleteSelectedTransactionsFromCurrentSupplier(),
+              onPressed: () => Provider.of<TransactionsData>(context, listen: false).deleteMonthSelectedTransactions(month),
               toolTipText: appLocalization(context).deleteSelectedTransactionsFromList,
               icon: Icons.delete,
               iconSize: 30,
@@ -417,7 +436,7 @@ class _SupplierButtons extends StatelessWidget {
               color: Colors.black26,
             ),
             CircleIconButton(
-              onPressed: () async => navigateWithoutAnim(context, const SupplierPage()),
+              onPressed: () async => navigateWithoutAnim(context, const VaultChoosePage()),
               toolTipText: appLocalization(context).goBack,
               icon: Icons.arrow_back,
               iconSize: 30,

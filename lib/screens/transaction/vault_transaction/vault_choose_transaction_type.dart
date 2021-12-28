@@ -5,24 +5,27 @@ import 'package:business_management/main.dart';
 import 'package:business_management/screens/transaction/costumer_transaction/costumer_add_payment_transaction.page.dart';
 import 'package:business_management/screens/transaction/costumer_transaction/costumer_add_sale_transaction_page.dart';
 import 'package:business_management/screens/transaction/costumer_transaction/costumer_transactions_page.dart';
+import 'package:business_management/screens/transaction/vault_transaction/vault_add_in_page.dart';
+import 'package:business_management/screens/transaction/vault_transaction/vault_add_out_page.dart';
+import 'package:business_management/screens/vault/vault_choose_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-class CostumerChooseTransactionTypePage extends StatefulWidget {
-  const CostumerChooseTransactionTypePage({Key? key}) : super(key: key);
+class VaultChooseTransactionTypePage extends StatefulWidget {
+  const VaultChooseTransactionTypePage({Key? key}) : super(key: key);
 
   @override
-  State<CostumerChooseTransactionTypePage> createState() => _CostumerChooseTransactionTypePageState();
+  State<VaultChooseTransactionTypePage> createState() => _VaultChooseTransactionTypePageState();
 }
 
-class _CostumerChooseTransactionTypePageState extends State<CostumerChooseTransactionTypePage> {
+class _VaultChooseTransactionTypePageState extends State<VaultChooseTransactionTypePage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return const Scaffold(
       body: TitleBarWithLeftNav(
-        page: Pages.costumers,
+        page: Pages.vault,
         children: [
           Spacer(),
           _TypeButtons(),
@@ -54,13 +57,13 @@ class _TypeButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _TypeButton(
-            title: appLocalization(context).saleTransaction,
-            onTap: () => navigateWithoutAnim(context, const CostumerSaleTransactionAddPage()),
+            title: appLocalization(context).collectionTransaction,
+            onTap: () => navigateWithoutAnim(context, const VaultInTransactionAddPage()),
           ),
           const SizedBox(height: 100),
           _TypeButton(
-            title: appLocalization(context).collectionTransaction,
-            onTap: () => navigateWithoutAnim(context, const CostumerPaymentTransactionAddPage()),
+            title: appLocalization(context).paymentTransaction,
+            onTap: () => navigateWithoutAnim(context, const VaultOutTransactionAddPage()),
           ),
         ],
       ),
@@ -145,8 +148,8 @@ class _ChooseTransactionTypePageButtons extends StatelessWidget {
         width: 200,
         height: 300,
         child: CircleIconButton(
-          onPressed: () {
-            navigateWithoutAnim(context, const CostumerTransactionsPage());
+          onPressed: () async {
+            navigateWithoutAnim(context, const VaultChoosePage());
           },
           toolTipText: appLocalization(context).goBack,
           preferBelow: false,

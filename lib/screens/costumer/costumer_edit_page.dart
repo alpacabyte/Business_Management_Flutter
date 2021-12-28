@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/costumer_data.dart';
@@ -9,6 +10,7 @@ import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/screens/costumer/costumer_form.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class CostumerEditPage extends StatefulWidget {
@@ -30,33 +32,23 @@ class _CostumerEditPageState extends State<CostumerEditPage> {
 
     final Costumer currentCostumer = widget.currentCostumer;
 
-    _corporateTitleController.text = currentCostumer.corporateTitle != "-"
-        ? currentCostumer.corporateTitle
-        : "";
+    _corporateTitleController.text = currentCostumer.corporateTitle != "-" ? currentCostumer.corporateTitle : "";
 
-    _taxNumberController.text =
-        currentCostumer.taxNumber != "-" ? currentCostumer.taxNumber : "";
+    _taxNumberController.text = currentCostumer.taxNumber != "-" ? currentCostumer.taxNumber : "";
 
-    _taxAdministrationController.text = currentCostumer.taxAdministration != "-"
-        ? currentCostumer.taxAdministration
-        : "";
+    _taxAdministrationController.text = currentCostumer.taxAdministration != "-" ? currentCostumer.taxAdministration : "";
 
-    _addressController.text =
-        currentCostumer.address != "-" ? currentCostumer.address : "";
+    _addressController.text = currentCostumer.address != "-" ? currentCostumer.address : "";
 
-    _phoneNumberController.text =
-        currentCostumer.phoneNumber != "-" ? currentCostumer.phoneNumber : "";
+    _phoneNumberController.text = currentCostumer.phoneNumber != "-" ? currentCostumer.phoneNumber : "";
 
-    _emailController.text =
-        currentCostumer.email != "-" ? currentCostumer.email : "";
+    _emailController.text = currentCostumer.email != "-" ? currentCostumer.email : "";
   }
 
   // #region Controllers
-  final TextEditingController _corporateTitleController =
-      TextEditingController();
+  final TextEditingController _corporateTitleController = TextEditingController();
   final TextEditingController _taxNumberController = TextEditingController();
-  final TextEditingController _taxAdministrationController =
-      TextEditingController();
+  final TextEditingController _taxAdministrationController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -86,24 +78,17 @@ class _CostumerEditPageState extends State<CostumerEditPage> {
   }
 
   void _editCostumer() async {
-    List<Transaction> transactions = widget.currentCostumer.transactions;
+    HiveList<Transaction> transactionsBoxList = widget.currentCostumer.transactionsHiveList;
     int costumerIndex = widget.currentCostumer.costumerIndex;
     String creationDate = widget.currentCostumer.creationDate;
-    String corporateTitle = _corporateTitleController.text != ""
-        ? _corporateTitleController.text
-        : "-";
-    String taxNumber =
-        _taxNumberController.text != "" ? _taxNumberController.text : "-";
+    String corporateTitle = _corporateTitleController.text != "" ? _corporateTitleController.text : "-";
+    String taxNumber = _taxNumberController.text != "" ? _taxNumberController.text : "-";
 
-    String taxAdministration = _taxAdministrationController.text != ""
-        ? _taxAdministrationController.text
-        : "-";
+    String taxAdministration = _taxAdministrationController.text != "" ? _taxAdministrationController.text : "-";
 
-    String address =
-        _addressController.text != "" ? _addressController.text : "-";
+    String address = _addressController.text != "" ? _addressController.text : "-";
 
-    String phoneNumber =
-        _phoneNumberController.text != "" ? _phoneNumberController.text : "-";
+    String phoneNumber = _phoneNumberController.text != "" ? _phoneNumberController.text : "-";
 
     String email = _emailController.text != "" ? _emailController.text : "-";
 
@@ -116,7 +101,7 @@ class _CostumerEditPageState extends State<CostumerEditPage> {
       phoneNumber: phoneNumber,
       taxAdministration: taxAdministration,
       taxNumber: taxNumber,
-      transactions: transactions,
+      transactionsBoxList: transactionsBoxList,
     );
 
     navigateWithoutAnim(context, const CostumerPage());
@@ -146,7 +131,7 @@ class _CostumerPageButtons extends StatelessWidget {
           children: [
             CircleIconButton(
               onPressed: _editCostumer,
-              toolTipText: "Save costumer",
+              toolTipText: appLocalization(context).saveCostumer,
               icon: Icons.done,
             ),
             Container(
@@ -162,7 +147,7 @@ class _CostumerPageButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Cancel and go back',
+              toolTipText: appLocalization(context).cancelAndGoBack,
               icon: Icons.close,
               iconSize: 30,
             ),

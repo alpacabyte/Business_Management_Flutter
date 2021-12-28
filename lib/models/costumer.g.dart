@@ -25,8 +25,8 @@ class CostumerAdapter extends TypeAdapter<Costumer> {
       phoneNumber: fields[7] as String,
       email: fields[8] as String,
       creationDate: fields[9] as String,
-      transactions: (fields[1] as List).cast<Transaction>(),
       lastModifiedDate: fields[10] as String?,
+      transactionsHiveList: (fields[1] as HiveList).castHiveList(),
     )..balance = fields[2] as double;
   }
 
@@ -37,7 +37,7 @@ class CostumerAdapter extends TypeAdapter<Costumer> {
       ..writeByte(0)
       ..write(obj.corporateTitle)
       ..writeByte(1)
-      ..write(obj.transactions)
+      ..write(obj.transactionsHiveList)
       ..writeByte(2)
       ..write(obj.balance)
       ..writeByte(3)

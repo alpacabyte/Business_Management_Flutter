@@ -1,8 +1,10 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/costumer_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:business_management/screens/transaction/costumer_transaction/costumer_choose_transaction_type_page.dart';
 import 'package:business_management/screens/transaction/costumer_transaction/costumer_transactions_page.dart';
 import 'package:business_management/widgets/payment_transaction_form.dart';
@@ -21,7 +23,7 @@ class CostumerPaymentTransactionAddPage extends StatefulWidget {
 
 class _CostumerPaymentTransactionAddPageState extends State<CostumerPaymentTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController = TextEditingController(text: "Payment");
+  final TextEditingController _commentController = TextEditingController(text: "Tahsilat");
   final TextEditingController _amountController = TextEditingController(text: "0");
   final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
 // #endregion
@@ -57,7 +59,7 @@ class _CostumerPaymentTransactionAddPageState extends State<CostumerPaymentTrans
         comment: comment,
         transactionDate: transactionDate,
         unitPrice: amount,
-        isPayment: true,
+        transactionType: TransactionType.costumersPayment,
       ),
     );
   }
@@ -89,7 +91,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 await _addTransaction();
                 navigateWithoutAnim(context, const CostumerPaymentTransactionAddPage());
               },
-              toolTipText: "Save the transaction and create another",
+              toolTipText: appLocalization(context).saveTheTransactionAndCreateAnother,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -106,7 +108,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                     await _addTransaction();
                     navigateWithoutAnim(context, const CostumerTransactionsPage());
                   },
-                  toolTipText: "Save the transaction and go to list",
+                  toolTipText: appLocalization(context).saveTheTransactionAndGoToList,
                   icon: Icons.done,
                 ),
                 Container(
@@ -116,7 +118,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 ),
                 CircleIconButton(
                   onPressed: () => navigateWithoutAnim(context, const CostumerChooseTransactionTypePage()),
-                  toolTipText: 'Cancel and go back',
+                  toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,
                 ),

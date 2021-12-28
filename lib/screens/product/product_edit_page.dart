@@ -1,6 +1,7 @@
 import 'package:business_management/functions/get_app_documents_dir.dart';
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
@@ -39,23 +40,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
     creationDate = currentProduct.creationDate;
     imagePath = currentProduct.image;
-    _nameController.text =
-        currentProduct.name != "-" ? currentProduct.name : "";
-    _productCodeController.text =
-        currentProduct.productCode != "-" ? currentProduct.productCode : "";
-    _moldCodeController.text =
-        currentProduct.moldCode != "-" ? currentProduct.moldCode : "";
+    _nameController.text = currentProduct.name != "-" ? currentProduct.name : "";
+    _productCodeController.text = currentProduct.productCode != "-" ? currentProduct.productCode : "";
+    _moldCodeController.text = currentProduct.moldCode != "-" ? currentProduct.moldCode : "";
     _printingWeightController.text = currentProduct.printingWeight.toString();
-    _numberOfCompartmentsController.text =
-        currentProduct.numberOfCompartments.toString();
+    _numberOfCompartmentsController.text = currentProduct.numberOfCompartments.toString();
     _productionTimeController.text = currentProduct.productionTime.toString();
-    _usedMaterialController.text =
-        currentProduct.usedMaterial != "-" ? currentProduct.usedMaterial : "";
-    _usedPaintController.text =
-        currentProduct.usedPaint != "-" ? currentProduct.usedPaint : "";
-    _auxiliaryMaterialController.text = currentProduct.auxiliaryMaterial != "-"
-        ? currentProduct.auxiliaryMaterial
-        : "";
+    _usedMaterialController.text = currentProduct.usedMaterial != "-" ? currentProduct.usedMaterial : "";
+    _usedPaintController.text = currentProduct.usedPaint != "-" ? currentProduct.usedPaint : "";
+    _auxiliaryMaterialController.text = currentProduct.auxiliaryMaterial != "-" ? currentProduct.auxiliaryMaterial : "";
     _machineTonnageController.text = currentProduct.machineTonnage.toString();
     _marketPriceController.text = currentProduct.marketPrice.toString();
   }
@@ -64,18 +57,13 @@ class _ProductEditPageState extends State<ProductEditPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _productCodeController = TextEditingController();
   final TextEditingController _moldCodeController = TextEditingController();
-  final TextEditingController _printingWeightController =
-      TextEditingController();
-  final TextEditingController _numberOfCompartmentsController =
-      TextEditingController();
-  final TextEditingController _productionTimeController =
-      TextEditingController();
+  final TextEditingController _printingWeightController = TextEditingController();
+  final TextEditingController _numberOfCompartmentsController = TextEditingController();
+  final TextEditingController _productionTimeController = TextEditingController();
   final TextEditingController _usedMaterialController = TextEditingController();
   final TextEditingController _usedPaintController = TextEditingController();
-  final TextEditingController _auxiliaryMaterialController =
-      TextEditingController();
-  final TextEditingController _machineTonnageController =
-      TextEditingController();
+  final TextEditingController _auxiliaryMaterialController = TextEditingController();
+  final TextEditingController _machineTonnageController = TextEditingController();
   final TextEditingController _marketPriceController = TextEditingController();
 // #endregion
 
@@ -124,8 +112,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
       label: 'images',
       extensions: ['jpg', 'png', 'jpeg'],
     );
-    final XFile? imageFile = await FileSelectorPlatform.instance
-        .openFile(acceptedTypeGroups: [typeGroup]);
+    final XFile? imageFile = await FileSelectorPlatform.instance.openFile(acceptedTypeGroups: [typeGroup]);
 
     if (imageFile == null) return null;
 
@@ -134,32 +121,16 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   void _editProduct() async {
     String? name = _nameController.text != "" ? _nameController.text : "-";
-    String? productCode =
-        _productCodeController.text != "" ? _productCodeController.text : "-";
-    String? moldCode =
-        _moldCodeController.text != "" ? _moldCodeController.text : "-";
-    double? printingWeight = _printingWeightController.text != ""
-        ? double.parse(_printingWeightController.text)
-        : 0;
-    int? numberOfCompartments = _numberOfCompartmentsController.text != ""
-        ? int.parse(_numberOfCompartmentsController.text)
-        : 0;
-    double? productionTime = _productionTimeController.text != ""
-        ? double.parse(_productionTimeController.text)
-        : 0;
-    String? usedMaterial =
-        _usedMaterialController.text != "" ? _usedMaterialController.text : "-";
-    String? usedPaint =
-        _usedPaintController.text != "" ? _usedPaintController.text : "-";
-    String? auxiliaryMaterial = _auxiliaryMaterialController.text != ""
-        ? _auxiliaryMaterialController.text
-        : "-";
-    double? machineTonnage = _machineTonnageController.text != ""
-        ? double.parse(_machineTonnageController.text)
-        : 0;
-    double? marketPrice = _marketPriceController.text != ""
-        ? double.parse(_marketPriceController.text)
-        : 0;
+    String? productCode = _productCodeController.text != "" ? _productCodeController.text : "-";
+    String? moldCode = _moldCodeController.text != "" ? _moldCodeController.text : "-";
+    double? printingWeight = _printingWeightController.text != "" ? double.parse(_printingWeightController.text) : 0;
+    int? numberOfCompartments = _numberOfCompartmentsController.text != "" ? int.parse(_numberOfCompartmentsController.text) : 0;
+    double? productionTime = _productionTimeController.text != "" ? double.parse(_productionTimeController.text) : 0;
+    String? usedMaterial = _usedMaterialController.text != "" ? _usedMaterialController.text : "-";
+    String? usedPaint = _usedPaintController.text != "" ? _usedPaintController.text : "-";
+    String? auxiliaryMaterial = _auxiliaryMaterialController.text != "" ? _auxiliaryMaterialController.text : "-";
+    double? machineTonnage = _machineTonnageController.text != "" ? double.parse(_machineTonnageController.text) : 0;
+    double? marketPrice = _marketPriceController.text != "" ? double.parse(_marketPriceController.text) : 0;
 
     if (imageFile != null) {
       final String fileExtension = p.extension(imageFile!.path);
@@ -215,7 +186,7 @@ class _ProductPageButtons extends StatelessWidget {
           children: [
             CircleIconButton(
               onPressed: _saveProduct,
-              toolTipText: "Save product",
+              toolTipText: appLocalization(context).saveProduct,
               icon: Icons.done,
             ),
             Container(
@@ -231,7 +202,7 @@ class _ProductPageButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Cancel and go back',
+              toolTipText: appLocalization(context).cancelAndGoBack,
               icon: Icons.close,
               iconSize: 30,
             ),

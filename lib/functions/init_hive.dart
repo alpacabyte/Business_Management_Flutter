@@ -3,6 +3,7 @@ import 'package:business_management/models/costumer.dart';
 import 'package:business_management/models/product.dart';
 import 'package:business_management/models/supplier.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:hive/hive.dart';
 
 Future<void> initHive() async {
@@ -14,7 +15,10 @@ Future<void> initHive() async {
     ..registerAdapter(ProductAdapter())
     ..registerAdapter(CostumerAdapter())
     ..registerAdapter(TransactionAdapter())
-    ..registerAdapter(SupplierAdapter());
+    ..registerAdapter(SupplierAdapter())
+    ..registerAdapter(TransactionTypeAdapter());
+
+  await Hive.openBox<Transaction>("transactionsBox");
 
   await Hive.openBox<Product>("productsBox");
 

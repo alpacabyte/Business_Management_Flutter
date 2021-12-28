@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/product.dart';
 import 'package:business_management/models/product_data.dart';
@@ -98,59 +99,59 @@ class _ProductProperties extends StatelessWidget {
                 runSpacing: 45,
                 children: [
                   PropertyText(
-                    title: "Product Code",
+                    title: appLocalization(context).productCode,
                     text: currentProduct.productCode,
                   ),
                   PropertyText(
-                    title: "Mold Code",
+                    title: appLocalization(context).moldCode,
                     text: currentProduct.moldCode,
                   ),
                   PropertyText(
-                    title: "Printing Weight",
+                    title: appLocalization(context).printingWeight,
                     text: currentProduct.printingWeight.toString(),
                   ),
                   PropertyText(
-                    title: "Unit Weight",
+                    title: appLocalization(context).unitWeight,
                     text: currentProduct.unitWeight.toString(),
                   ),
                   PropertyText(
-                    title: "Number of Compartments",
+                    title: appLocalization(context).numberOfCompartments,
                     text: currentProduct.numberOfCompartments.toString(),
                   ),
                   PropertyText(
-                    title: "Production Time",
+                    title: appLocalization(context).productionTime,
                     text: currentProduct.productionTime.toString(),
                   ),
                   PropertyText(
-                    title: "Used Material",
+                    title: appLocalization(context).usedMaterial,
                     text: currentProduct.usedMaterial,
                   ),
                   PropertyText(
-                    title: "Used Paint",
+                    title: appLocalization(context).usedPaint,
                     text: currentProduct.usedPaint,
                   ),
                   PropertyText(
-                    title: "Auxiliary Material",
+                    title: appLocalization(context).auxiliaryMaterial,
                     text: currentProduct.auxiliaryMaterial,
                   ),
                   PropertyText(
-                    title: "Machine Tonnage",
+                    title: appLocalization(context).machineTonnage,
                     text: currentProduct.machineTonnage.toString(),
                   ),
                   PropertyText(
-                    title: "Market Price",
+                    title: appLocalization(context).marketPrice,
                     text: currentProduct.marketPrice.toString(),
                   ),
                   PropertyText(
-                    title: "Created",
+                    title: appLocalization(context).created,
                     text: currentProduct.creationDate,
                   ),
                   PropertyText(
-                    title: "Last Modified",
+                    title: appLocalization(context).lastModified,
                     text: currentProduct.lastModifiedDate ?? "-",
                   ),
                   PropertyText(
-                    title: "Product No.",
+                    title: appLocalization(context).productNo,
                     text: currentProduct.productIndex.toString(),
                   ),
                 ],
@@ -191,7 +192,7 @@ class _ProductPageButtons extends StatelessWidget {
                   currentProduct: currentProduct,
                 ),
               ),
-              toolTipText: 'Edit product',
+              toolTipText: appLocalization(context).editProduct,
               icon: Icons.edit,
               preferBelow: false,
             ),
@@ -208,7 +209,7 @@ class _ProductPageButtons extends StatelessWidget {
                   transitionDuration: Duration.zero,
                 ),
               ),
-              toolTipText: 'Go back',
+              toolTipText: appLocalization(context).goBack,
               icon: Icons.arrow_back,
               iconSize: 30,
             ),

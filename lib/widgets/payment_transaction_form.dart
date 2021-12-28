@@ -1,3 +1,4 @@
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +32,9 @@ class PaymentTransactionForm extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "New Payment Transaction",
-              style: TextStyle(
+            Text(
+              appLocalization(context).newCollectionTransaction,
+              style: const TextStyle(
                 color: Color(0xffdbdbdb),
                 fontSize: 30,
               ),
@@ -79,11 +80,11 @@ class _PropertiesState extends State<_Properties> {
       runSpacing: 55,
       children: [
         CustomTextField(
-          title: "Comment",
+          title: appLocalization(context).comment,
           controller: widget._commentController,
         ),
         CustomTextField(
-          title: "Transaction Date",
+          title: appLocalization(context).transactionDate,
           controller: widget._transactionDateController,
           inputFormatters: [
             MaskedInputFormatter("00/00/0000"),
@@ -91,7 +92,7 @@ class _PropertiesState extends State<_Properties> {
           hintText: "dd/mm/yyyy",
         ),
         CustomTextField(
-          title: "Amount",
+          title: appLocalization(context).amount,
           controller: widget._amountController,
           trailing: const Text(
             "TL",

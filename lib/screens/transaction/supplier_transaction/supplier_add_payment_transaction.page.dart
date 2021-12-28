@@ -1,8 +1,10 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_choose_transaction_type_page.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_transactions_page.dart';
 import 'package:business_management/widgets/payment_transaction_form.dart';
@@ -57,7 +59,7 @@ class _SupplierPaymentTransactionAddPageState extends State<SupplierPaymentTrans
         comment: comment,
         transactionDate: transactionDate,
         unitPrice: amount,
-        isPayment: true,
+        transactionType: TransactionType.suppliersPayment,
       ),
     );
   }
@@ -89,7 +91,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 await _addTransaction();
                 navigateWithoutAnim(context, const SupplierPaymentTransactionAddPage());
               },
-              toolTipText: "Save the transaction and create another",
+              toolTipText: appLocalization(context).saveTheTransactionAndCreateAnother,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -106,7 +108,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                     await _addTransaction();
                     navigateWithoutAnim(context, const SupplierTransactionsPage());
                   },
-                  toolTipText: "Save the transaction and go to list",
+                  toolTipText: appLocalization(context).saveTheTransactionAndGoToList,
                   icon: Icons.done,
                 ),
                 Container(
@@ -116,7 +118,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 ),
                 CircleIconButton(
                   onPressed: () => navigateWithoutAnim(context, const SupplierChooseTransactionTypePage()),
-                  toolTipText: 'Cancel and go back',
+                  toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,
                 ),

@@ -1,3 +1,4 @@
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/widgets/custom_text_field.dart';
 import 'package:business_management/widgets/property_text.dart';
@@ -35,19 +36,20 @@ class SaleTransactionForm extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "New Sale Transaction",
-              style: TextStyle(
+            Text(
+              appLocalization(context).newSaleTransaction,
+              style: const TextStyle(
                 color: Color(0xffdbdbdb),
                 fontSize: 30,
               ),
             ),
             const SizedBox(height: 50),
             _Properties(
-                commentController: _commentController,
-                transactionDateController: _transactionDateController,
-                unitPriceController: _unitPriceController,
-                quantityController: _quantityController),
+              commentController: _commentController,
+              transactionDateController: _transactionDateController,
+              unitPriceController: _unitPriceController,
+              quantityController: _quantityController,
+            ),
           ],
         ),
       ),
@@ -86,11 +88,11 @@ class _PropertiesState extends State<_Properties> {
       runSpacing: 55,
       children: [
         CustomTextField(
-          title: "Comment",
+          title: appLocalization(context).comment,
           controller: widget._commentController,
         ),
         CustomTextField(
-          title: "Transaction Date",
+          title: appLocalization(context).transactionDate,
           controller: widget._transactionDateController,
           inputFormatters: [
             MaskedInputFormatter("00/00/0000"),
@@ -98,7 +100,7 @@ class _PropertiesState extends State<_Properties> {
           hintText: "dd/mm/yyyy",
         ),
         CustomTextField(
-          title: "Unit Price",
+          title: appLocalization(context).unitPrice,
           controller: widget._unitPriceController,
           trailing: const Text(
             "TL",
@@ -116,7 +118,7 @@ class _PropertiesState extends State<_Properties> {
           ],
         ),
         CustomTextField(
-          title: "Quantity",
+          title: appLocalization(context).quantity,
           controller: widget._quantityController,
           onChanged: (value) => setState(() {}),
           inputFormatters: [
@@ -124,7 +126,7 @@ class _PropertiesState extends State<_Properties> {
           ],
         ),
         PropertyText(
-          title: "Total Price",
+          title: appLocalization(context).totalPrice,
           text: "${calculateTotalPrice()} TL",
         ),
       ],

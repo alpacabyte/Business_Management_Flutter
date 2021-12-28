@@ -1,14 +1,15 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/models/supplier_data.dart';
 import 'package:business_management/models/transaction.dart';
+import 'package:business_management/models/transaction_type.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_choose_transaction_type_page.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_transactions_page.dart';
 import 'package:business_management/widgets/circle_icon_button.dart';
 import 'package:business_management/widgets/left_navigation_bar.dart';
 import 'package:business_management/widgets/purchase_transaction_form.dart';
-import 'package:business_management/widgets/sale_transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -22,11 +23,20 @@ class SupplierPurchaseTransactionAddPage extends StatefulWidget {
 
 class _SupplierPurchaseTransactionAddPageState extends State<SupplierPurchaseTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController = TextEditingController(text: "Purchase");
+  final TextEditingController _commentController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController(text: "0");
   final TextEditingController _unitPriceController = TextEditingController(text: "0");
   final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
 // #endregion
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timestamp) {
+      _commentController.text = appLocalization(context).purchase;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +71,7 @@ class _SupplierPurchaseTransactionAddPageState extends State<SupplierPurchaseTra
         comment: comment,
         transactionDate: transactionDate,
         unitPrice: unitPrice,
-        isPayment: false,
+        transactionType: TransactionType.suppliersPurchase,
         quantity: quantity,
       ),
     );
@@ -94,7 +104,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 await _addTransaction();
                 navigateWithoutAnim(context, const SupplierPurchaseTransactionAddPage());
               },
-              toolTipText: "Save the transaction and create another",
+              toolTipText: appLocalization(context).saveTheTransactionAndCreateAnother,
               preferBelow: false,
               icon: Icons.edit,
             ),
@@ -111,7 +121,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                     await _addTransaction();
                     navigateWithoutAnim(context, const SupplierTransactionsPage());
                   },
-                  toolTipText: "Save the transaction and go to list",
+                  toolTipText: appLocalization(context).saveTheTransactionAndGoToList,
                   icon: Icons.done,
                 ),
                 Container(
@@ -121,7 +131,7 @@ class _AddTransactionPageButtons extends StatelessWidget {
                 ),
                 CircleIconButton(
                   onPressed: () => navigateWithoutAnim(context, const SupplierChooseTransactionTypePage()),
-                  toolTipText: 'Cancel and go back',
+                  toolTipText: appLocalization(context).cancelAndGoBack,
                   icon: Icons.close,
                   iconSize: 30,
                 ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:flutter/material.dart';
 
@@ -27,13 +28,12 @@ class ImageFromFile extends StatelessWidget {
         fit: BoxFit.contain,
         width: width,
         height: height,
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace? stackTrace) {
-          return errorContainer("Photo not found");
+        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+          return errorContainer(appLocalization(context).photoNotFound);
         },
       );
     } else {
-      return errorContainer("No Photo");
+      return errorContainer(appLocalization(context).noPhoto);
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:business_management/functions/navigate_without_anim.dart';
 import 'package:business_management/functions/size_config.dart';
+import 'package:business_management/helpers/colors.dart';
 import 'package:business_management/main.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_add_payment_transaction.page.dart';
 import 'package:business_management/screens/transaction/supplier_transaction/supplier_add_purchase_transaction_page.dart';
@@ -53,12 +54,12 @@ class _TypeButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _TypeButton(
-            title: "Purchase Transaction",
+            title: appLocalization(context).purchaseTransaction,
             onTap: () => navigateWithoutAnim(context, const SupplierPurchaseTransactionAddPage()),
           ),
           const SizedBox(height: 100),
           _TypeButton(
-            title: "Payment Transaction",
+            title: appLocalization(context).paymentTransaction,
             onTap: () => navigateWithoutAnim(context, const SupplierPaymentTransactionAddPage()),
           ),
         ],
@@ -147,7 +148,7 @@ class _ChooseTransactionTypePageButtons extends StatelessWidget {
           onPressed: () {
             navigateWithoutAnim(context, const SupplierTransactionsPage());
           },
-          toolTipText: "Go Back",
+          toolTipText: appLocalization(context).goBack,
           preferBelow: false,
           icon: Icons.arrow_back,
         ),
