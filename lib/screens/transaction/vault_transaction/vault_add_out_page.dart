@@ -40,6 +40,7 @@ class _VaultOutTransactionAddPageState extends State<VaultOutTransactionAddPage>
             commentController: _commentController,
             amountController: _amountController,
             transactionDateController: _transactionDateController,
+            isCollection: false,
           ),
           const Spacer(),
           _AddTransactionPageButtons(addTransaction: addTransaction),

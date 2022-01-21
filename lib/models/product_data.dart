@@ -50,9 +50,7 @@ class ProductsData extends ChangeNotifier {
   void deleteProduct(key) async {
     await _box.delete(key);
 
-    _products = _box.values.toList();
-
-    notifyListeners();
+    getProducts();
   }
 
   Future<void> deleteSelectedProducts() async {
@@ -62,17 +60,13 @@ class ProductsData extends ChangeNotifier {
       }
     }
 
-    _products = _box.values.toList();
-
-    notifyListeners();
+    getProducts();
   }
 
   void deleteAllProducts() async {
     await _box.clear();
 
-    _products = _box.values.toList();
-
-    notifyListeners();
+    getProducts();
   }
 
   Future<void> addProduct({
@@ -120,9 +114,7 @@ class ProductsData extends ChangeNotifier {
       ),
     );
 
-    _products = _box.values.toList();
-
-    notifyListeners();
+    getProducts();
   }
 
   Future<void> editProduct({
@@ -165,9 +157,7 @@ class ProductsData extends ChangeNotifier {
 
     _activeProduct = _box.get(productIndex);
 
-    _products = _box.values.toList();
-
-    notifyListeners();
+    getProducts();
   }
 
   void setActiveProduct(key) async {
@@ -180,6 +170,7 @@ class ProductsData extends ChangeNotifier {
 
   List<Map<String, dynamic>> productsAsMap() {
     _products = _box.values.toList();
+    _products.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     final List<Map<String, dynamic>> list = _products.map((e) => e.toJson()).toList();
     return list;
   }

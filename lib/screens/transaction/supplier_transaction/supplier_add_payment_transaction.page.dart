@@ -23,10 +23,19 @@ class SupplierPaymentTransactionAddPage extends StatefulWidget {
 
 class _SupplierPaymentTransactionAddPageState extends State<SupplierPaymentTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController = TextEditingController(text: "Payment");
+  final TextEditingController _commentController = TextEditingController();
   final TextEditingController _amountController = TextEditingController(text: "0");
   final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
 // #endregion
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timestamp) {
+      _commentController.text = "${Provider.of<SuppliersData>(context, listen: false).currentSupplier!.corporateTitle} Ödeme";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +49,7 @@ class _SupplierPaymentTransactionAddPageState extends State<SupplierPaymentTrans
             commentController: _commentController,
             amountController: _amountController,
             transactionDateController: _transactionDateController,
+            isCollection: false,
           ),
           const Spacer(),
           _AddTransactionPageButtons(addTransaction: addTransaction),

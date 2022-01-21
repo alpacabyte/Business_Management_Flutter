@@ -23,10 +23,19 @@ class CostumerSaleTransactionAddPage extends StatefulWidget {
 
 class _CostumerSaleTransactionAddPageState extends State<CostumerSaleTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController = TextEditingController(text: "Satış");
+  final TextEditingController _commentController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController(text: "0");
   final TextEditingController _unitPriceController = TextEditingController(text: "0");
   final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timestamp) {
+      _commentController.text = "${Provider.of<CostumersData>(context, listen: false).currentCostumer!.corporateTitle} Satış";
+    });
+  }
 // #endregion
 
   @override

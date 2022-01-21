@@ -58,20 +58,33 @@ class _TransactionsState extends State<_Transactions> {
         color: backgroundColorLight,
       ),
       child: Consumer<TransactionsData>(builder: (context, transactionsData, child) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        return Stack(
+          alignment: Alignment.center,
           children: [
-            const SizedBox(height: 10),
-            _HeaderTile(
-              onChanged: (value) => setState(() => transactionsData.setIsSelectedOfAllTransactions(value)),
-              transactionsData: transactionsData,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                _HeaderTile(
+                  onChanged: (value) => setState(() => transactionsData.setIsSelectedOfAllTransactions(value)),
+                  transactionsData: transactionsData,
+                ),
+                Expanded(
+                  child: _TransactionsListView(
+                    transactionsData: transactionsData,
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            Expanded(
-              child: _TransactionsListView(
-                transactionsData: transactionsData,
+            Align(
+              alignment: const Alignment(0.98, -0.98),
+              child: CircleIconButton(
+                onPressed: () => transactionsData.createExcelFromTransactions(context),
+                toolTipText: appLocalization(context).createExcelFromAllTransactions,
+                icon: Icons.content_copy,
               ),
             ),
-            const SizedBox(height: 20),
           ],
         );
       }),

@@ -168,7 +168,7 @@ class _VaultButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TransactionsData transactionsData = Provider.of<TransactionsData>(context, listen: false);
+    final TransactionsData transactionsData = Provider.of<TransactionsData>(context);
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.horizontal(right: Radius.circular(16)),

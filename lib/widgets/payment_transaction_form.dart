@@ -11,6 +11,7 @@ class PaymentTransactionForm extends StatelessWidget {
     required TextEditingController commentController,
     required TextEditingController amountController,
     required TextEditingController transactionDateController,
+    required this.isCollection,
   })  : _commentController = commentController,
         _amountController = amountController,
         _transactionDateController = transactionDateController,
@@ -19,6 +20,7 @@ class PaymentTransactionForm extends StatelessWidget {
   final TextEditingController _commentController;
   final TextEditingController _amountController;
   final TextEditingController _transactionDateController;
+  final bool isCollection;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class PaymentTransactionForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              appLocalization(context).newCollectionTransaction,
+              isCollection ? appLocalization(context).newCollectionTransaction : appLocalization(context).newPaymentTransaction,
               style: const TextStyle(
                 color: Color(0xffdbdbdb),
                 fontSize: 30,

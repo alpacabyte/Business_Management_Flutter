@@ -64,22 +64,35 @@ class _TransactionsState extends State<_Transactions> {
         color: backgroundColorLight,
       ),
       child: Consumer<TransactionsData>(builder: (context, transactionsData, child) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        return Stack(
+          alignment: Alignment.center,
           children: [
-            const SizedBox(height: 10),
-            _HeaderTile(
-              onChanged: (value) => setState(() => transactionsData.setIsSelectedOfAllMonth(value, widget.month)),
-              transactionsData: transactionsData,
-              month: widget.month,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                _HeaderTile(
+                  onChanged: (value) => setState(() => transactionsData.setIsSelectedOfAllMonth(value, widget.month)),
+                  transactionsData: transactionsData,
+                  month: widget.month,
+                ),
+                Expanded(
+                  child: _TransactionsListView(
+                    transactionsData: transactionsData,
+                    month: widget.month,
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            Expanded(
-              child: _TransactionsListView(
-                transactionsData: transactionsData,
-                month: widget.month,
+            Align(
+              alignment: const Alignment(0.98, -0.98),
+              child: CircleIconButton(
+                onPressed: () => transactionsData.createExcelFromTransactions(context, month: widget.month),
+                toolTipText: appLocalization(context).createExcelFromThisMonthsTransactions,
+                icon: Icons.content_copy,
               ),
             ),
-            const SizedBox(height: 20),
           ],
         );
       }),

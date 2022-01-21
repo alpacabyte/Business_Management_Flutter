@@ -19,10 +19,13 @@ class CostumersData extends ChangeNotifier {
 
   CostumersData() {
     _costumers = _costumerBox.values.toList();
+    _costumers.sort((a, b) => a.corporateTitle.toLowerCase().compareTo(b.corporateTitle.toLowerCase()));
   }
 
   void getCostumersList() async {
     _costumers = _costumerBox.values.toList();
+
+    _costumers.sort((a, b) => a.corporateTitle.toLowerCase().compareTo(b.corporateTitle.toLowerCase()));
 
     notifyListeners();
   }
@@ -34,17 +37,13 @@ class CostumersData extends ChangeNotifier {
   Future<void> deleteCostumer(key) async {
     await _costumerBox.delete(key);
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
+    getCostumersList();
   }
 
   Future<void> deleteAllCostumers() async {
     await _costumerBox.clear();
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
+    getCostumersList();
   }
 
   Future<void> addCostumer({
@@ -80,9 +79,7 @@ class CostumersData extends ChangeNotifier {
       ),
     );
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
+    getCostumersList();
   }
 
   void setIsSelectedOfAllCostumers(bool? value) {
@@ -108,9 +105,7 @@ class CostumersData extends ChangeNotifier {
       }
     }
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
+    getCostumersList();
   }
 
   Future<void> addTransactionToCurrentCostumer(Transaction newTransaction) async {
@@ -147,9 +142,7 @@ class CostumersData extends ChangeNotifier {
 
     _currentCostumer = _costumerBox.get(costumerIndex);
 
-    _costumers = _costumerBox.values.toList();
-
-    notifyListeners();
+    getCostumersList();
   }
 
   Future<void> deleteTransactionFromCurrentCostumer(int index) async {
@@ -166,6 +159,7 @@ class CostumersData extends ChangeNotifier {
 
   void setCurrentCostumer(key) async {
     _currentCostumer = _costumerBox.get(key);
+    _currentCostumer!.getTransactions();
 
     notifyListeners();
   }

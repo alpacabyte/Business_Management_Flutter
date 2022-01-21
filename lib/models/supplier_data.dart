@@ -19,10 +19,13 @@ class SuppliersData extends ChangeNotifier {
 
   SuppliersData() {
     _suppliers = _suppliersBox.values.toList();
+    _suppliers.sort((a, b) => a.corporateTitle.toLowerCase().compareTo(b.corporateTitle.toLowerCase()));
   }
 
   void getSuppliersList() async {
     _suppliers = _suppliersBox.values.toList();
+
+    _suppliers.sort((a, b) => a.corporateTitle.toLowerCase().compareTo(b.corporateTitle.toLowerCase()));
 
     notifyListeners();
   }
@@ -34,17 +37,13 @@ class SuppliersData extends ChangeNotifier {
   Future<void> deleteSupplier(key) async {
     await _suppliersBox.delete(key);
 
-    _suppliers = _suppliersBox.values.toList();
-
-    notifyListeners();
+    getSuppliersList();
   }
 
   Future<void> deleteAllSuppliers() async {
     await _suppliersBox.clear();
 
-    _suppliers = _suppliersBox.values.toList();
-
-    notifyListeners();
+    getSuppliersList();
   }
 
   Future<void> addSupplier({
@@ -80,9 +79,7 @@ class SuppliersData extends ChangeNotifier {
       ),
     );
 
-    _suppliers = _suppliersBox.values.toList();
-
-    notifyListeners();
+    getSuppliersList();
   }
 
   void setIsSelectedOfSuppliers(bool? value) {
@@ -108,9 +105,7 @@ class SuppliersData extends ChangeNotifier {
       }
     }
 
-    _suppliers = _suppliersBox.values.toList();
-
-    notifyListeners();
+    getSuppliersList();
   }
 
   Future<void> addTransactionToCurrentSuppliers(Transaction newTransaction) async {
@@ -147,14 +142,7 @@ class SuppliersData extends ChangeNotifier {
 
     _currentSupplier = _suppliersBox.get(supplierIndex);
 
-    _suppliers = _suppliersBox.values.toList();
-
-    notifyListeners();
-  }
-
-  Future<void> deleteTransactionFromCurrentSupplier(int index) async {
-    await currentSupplier!.deleteTransaction(index);
-    notifyListeners();
+    getSuppliersList();
   }
 
   Future<void> deleteSelectedTransactionsFromCurrentSupplier() async {
@@ -166,6 +154,7 @@ class SuppliersData extends ChangeNotifier {
 
   void setCurrentSupplier(key) async {
     _currentSupplier = _suppliersBox.get(key);
+    _currentSupplier!.getTransactions();
 
     notifyListeners();
   }
@@ -243,7 +232,6 @@ class SuppliersData extends ChangeNotifier {
     final List<Object> supplierInformationDataRows = buildSupplierInformationDataRows(supplier);
 
     final List<Object> eupplierInformationDataRowsHeaders = [
-      appLocalization(context).corporateTitle,
       appLocalization(context).corporateTitle,
       appLocalization(context).taxNumber,
       appLocalization(context).taxAdministration,

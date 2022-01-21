@@ -1,6 +1,7 @@
 import 'package:business_management/models/transaction.dart';
 import 'package:business_management/models/transaction_type.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 part 'costumer.g.dart';
 
@@ -47,6 +48,17 @@ class Costumer extends HiveObject {
 
   List<Transaction> get reversedTransactions => List.from(transactions.reversed);
 
+  Future<void> getTransactions() async {
+    transactions = transactionsHiveList.toList();
+
+    DateFormat format = DateFormat("dd/MM/yyyy");
+    transactions.sort((a, b) => format.parse(a.transactionDate).compareTo(format.parse(b.transactionDate)));
+
+    calculateBalance();
+
+    await save();
+  }
+
   void calculateBalance() {
     balance = 0;
 
@@ -62,16 +74,12 @@ class Costumer extends HiveObject {
   Future<void> addTransaction(Transaction newTransaction) async {
     transactionsBox.add(newTransaction);
     transactionsHiveList.add(newTransaction);
-    transactions = transactionsHiveList.toList();
-    calculateBalance();
-    await save();
+    await getTransactions();
   }
 
   Future<void> deleteTransaction(int index) async {
     transactionsBox.delete(index);
-    transactions = transactionsHiveList.toList();
-    calculateBalance();
-    await save();
+    await getTransactions();
   }
 
   Future<void> deleteSelectedTransactions() async {
@@ -80,9 +88,7 @@ class Costumer extends HiveObject {
         transaction.delete();
       }
     }
-    transactions = transactionsHiveList.toList();
-    calculateBalance();
-    await save();
+    await getTransactions();
   }
 
   Costumer({

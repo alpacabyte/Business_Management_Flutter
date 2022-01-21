@@ -43,6 +43,7 @@ class _VaultInTransactionAddPageState extends State<VaultInTransactionAddPage> {
             commentController: _commentController,
             amountController: _amountController,
             transactionDateController: _transactionDateController,
+            isCollection: true,
           ),
           const Spacer(),
           _AddTransactionPageButtons(addTransaction: addTransaction),

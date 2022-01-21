@@ -34,7 +34,7 @@ class _SupplierPurchaseTransactionAddPageState extends State<SupplierPurchaseTra
     super.initState();
 
     WidgetsBinding.instance!.addPostFrameCallback((timestamp) {
-      _commentController.text = appLocalization(context).purchase;
+      _commentController.text = "${Provider.of<SuppliersData>(context, listen: false).currentSupplier!.corporateTitle} Satın Alma";
     });
   }
 

@@ -13,8 +13,8 @@
     "taxNumber": "Vergi Numarası",
     "saveCostumer": "Müşteriyi kaydet",
     "cancelAndGoBack": "İptal et ve geri git",
-    "totalSales": "'Bütün satışlar",
-    "totalPayments": "Bütün ödemeler",
+    "totalSales": "'Bütün Satışlar",
+    "totalPayments": "Bütün Ödemeler",
     "totalBalance": "Toplam Bakiye",
     "date": "Tarih",
     "comment": "Açıklama",
@@ -109,5 +109,8 @@
     "newCollectionTransaction" : "Yeni Tahsil İşlemi",
     "collection" : "Tahsilat",
     "allTransactions" : "Tüm İşlemler",
-    "collections" : "Tahsilatlar"
+    "collections" : "Tahsilatlar",
+    "totalCollections": "Bütün Tahsilatlar",
+    "createExcelFromThisMonthsTransactions": "Bu ayın işlemlerinden excel dosyası oluştur",
+    "createExcelFromAllTransactions" : "Tüm işlemlerden excel dosyası oluştur"
 }

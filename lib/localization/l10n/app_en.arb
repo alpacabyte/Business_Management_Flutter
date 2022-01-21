@@ -107,5 +107,8 @@
     "newCollectionTransaction" : "New Collection Transaction",
     "collection" : "Collection",
     "allTransactions" : "All Transactions",
-    "collections" : "Collections"
+    "collections" : "Collections",
+    "totalCollections": "Total Collections",
+    "createExcelFromThisMonthsTransactions": "Create excel from this month's transactions",
+    "createExcelFromAllTransactions" : "Create excel from all transactions"
 }

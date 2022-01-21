@@ -23,9 +23,18 @@ class CostumerPaymentTransactionAddPage extends StatefulWidget {
 
 class _CostumerPaymentTransactionAddPageState extends State<CostumerPaymentTransactionAddPage> {
   // #region Controllers
-  final TextEditingController _commentController = TextEditingController(text: "Tahsilat");
+  final TextEditingController _commentController = TextEditingController();
   final TextEditingController _amountController = TextEditingController(text: "0");
   final TextEditingController _transactionDateController = TextEditingController(text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timestamp) {
+      _commentController.text = "${Provider.of<CostumersData>(context, listen: false).currentCostumer!.corporateTitle} Tahsilat";
+    });
+  }
 // #endregion
 
   @override
@@ -40,6 +49,7 @@ class _CostumerPaymentTransactionAddPageState extends State<CostumerPaymentTrans
             commentController: _commentController,
             amountController: _amountController,
             transactionDateController: _transactionDateController,
+            isCollection: true,
           ),
           const Spacer(),
           _AddTransactionPageButtons(addTransaction: addTransaction),
